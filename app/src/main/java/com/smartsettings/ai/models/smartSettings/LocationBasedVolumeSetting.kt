@@ -15,6 +15,14 @@ class LocationBasedVolumeSetting(
     private val phoneVolumeToSet: Int
 ) : SmartSetting {
 
+    override fun stopListeningChanges() {
+
+    }
+
+    override fun listenForChanges() {
+
+    }
+
     @Inject
     lateinit var audioManager: AudioManager
 
@@ -48,5 +56,29 @@ class LocationBasedVolumeSetting(
         }
 
         return false
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LocationBasedVolumeSetting
+
+        if (lat != other.lat) return false
+        if (lon != other.lon) return false
+        if (radiusInMetre != other.radiusInMetre) return false
+        if (phoneVolumeToSet != other.phoneVolumeToSet) return false
+        if (audioManager != other.audioManager) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = lat.hashCode()
+        result = 31 * result + lon.hashCode()
+        result = 31 * result + radiusInMetre
+        result = 31 * result + phoneVolumeToSet
+        result = 31 * result + audioManager.hashCode()
+        return result
     }
 }

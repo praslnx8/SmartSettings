@@ -58,4 +58,5 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
+    implementation "com.google.android.gms:play-services-location:17.0.0"
 }

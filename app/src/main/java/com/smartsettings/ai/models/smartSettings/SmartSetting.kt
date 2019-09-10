@@ -9,5 +9,5 @@ interface SmartSetting {
 
     fun askPermissions()
 
-    fun checkCriteria(changedData: ChangedData) : Boolean
+    fun criteriaMatching(changedData: ChangedData): Boolean
 }

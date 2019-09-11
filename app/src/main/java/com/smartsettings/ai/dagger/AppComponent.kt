@@ -3,8 +3,9 @@ package com.smartsettings.ai.dagger
 import com.smartsettings.ai.MainActivity
 import com.smartsettings.ai.listeners.CurrentLocationListener
 import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
-import com.smartsettings.ai.modules.home.HomeViewModel
 import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.uiModules.home.HomeViewModel
+import com.smartsettings.ai.uiModules.smartSettings.SmartSettingsViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -20,6 +21,8 @@ interface AppComponent {
     fun inject(target: SmartSettingRepository)
 
     fun inject(target: HomeViewModel)
+
+    fun inject(target: SmartSettingsViewModel)
 
     fun inject(target: CurrentLocationListener)
 }

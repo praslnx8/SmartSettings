@@ -1,6 +1,12 @@
 package com.smartsettings.ai.models.smartSettings
 
+import android.content.Context
 import android.media.AudioManager
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.CompoundButton
+import android.widget.Switch
+import com.smartsettings.ai.R
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.models.SettingState
 import com.smartsettings.ai.models.changedData.ChangedData
@@ -15,12 +21,38 @@ class LocationBasedVolumeSetting(
     private val phoneVolumeToSet: Int
 ) : SmartSetting {
 
-    override fun stopListeningChanges() {
+    override fun getView(context: Context): View {
+        val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)
 
+        val switchView = view.findViewById<Switch>(R.id.switch_view)
+
+        switchView.isChecked = isRunning
+
+        switchView.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+                if (p1 && !isRunning) {
+                    listenForChanges()
+                } else if (!p1 && isRunning) {
+                    stopListeningChanges()
+                }
+            }
+        })
+
+        return view
+    }
+
+    private var isRunning = false
+
+    override fun isRunning(): Boolean {
+        return isRunning
+    }
+
+    override fun stopListeningChanges() {
+        isRunning = false
     }
 
     override fun listenForChanges() {
-
+        isRunning = true
     }
 
     @Inject

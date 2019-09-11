@@ -25,4 +25,14 @@ object SmartProfile {
 
         return smartSettingsList
     }
+
+    fun isAnythingEnabled(): Boolean {
+        for ((_, value) in smartSettings) {
+            if (value) {
+                return true
+            }
+        }
+
+        return false
+    }
 }

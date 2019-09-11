@@ -1,13 +1,13 @@
-package com.smartsettings.ai.modules.home
+package com.smartsettings.ai.uiModules.smartSettings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.smartsettings.ai.SmartApp
+import com.smartsettings.ai.models.smartSettings.SmartSetting
 import com.smartsettings.ai.repositories.SmartSettingRepository
-import com.smartsettings.ai.resources.db.SmartSettingDBModel
 import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+class SmartSettingsViewModel : ViewModel() {
 
     init {
         SmartApp.appComponent.inject(this)
@@ -16,7 +16,10 @@ class HomeViewModel : ViewModel() {
     @Inject
     lateinit var smartSettingRepository: SmartSettingRepository
 
-    fun getSmartSettings(): LiveData<List<SmartSettingDBModel>> {
-        return smartSettingRepository.smartSettings
+    fun getSmartSettings(): LiveData<List<Pair<SmartSetting, Boolean>>> {
+
+        smartSettingRepository.getSmartSettings()
+
+        return smartSettingRepository.smartSettingsLiveData
     }
 }

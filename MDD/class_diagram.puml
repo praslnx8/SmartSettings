@@ -49,7 +49,7 @@ interface SmartSettingCallback {
 
 SmartSettingProvider .. SmartSettingCallback : to get SmartSetting
 
-SmartSettingCallback .. SmartSettingChooser
+SmartSettingChooser .. SmartSettingCallback
 
 SmartSettingProvider .. SmartSetting
 

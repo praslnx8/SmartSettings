@@ -120,4 +120,10 @@ SmartSettingProvider <|-- LocationAwareVolumeSmartSettingProvider
 
 LocationAwareVolumeSmartSettingProvider .. LocationAwareVolumeSmartSetting
 
+class SmartSettingRepository {
+    + void getSmartSettings()
+}
+
+SmartProfile o-- SmartSettingRepository
+
 @enduml

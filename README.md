@@ -1,4 +1,7 @@
 # SmartSettings
+
+We are following Model Driven Development here.
+
 SmartSettings Android app code.
 
 An Android app that can smartly set your phone setting based on contextual data such as location, time, activity etc.

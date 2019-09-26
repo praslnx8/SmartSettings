@@ -1,0 +1,35 @@
+@startuml
+
+class ContextData {
+
+}
+
+abstract class SmartSetting {
+    private boolean isRunning
+    public boolean isRunning()
+    public void start()
+    public void stop()
+    public void onChange(ContextData contextData)
+    public abstract void applyChanges()
+    public abstract void listenForContextChanges()
+    public abstract void stopListeningForContextChanges()
+    public abstract void isCriteriaMatching(ContextData contextData)
+}
+
+SmartSetting -- ContextData
+
+interface SmartSettingProvider {
+    public View getInputView(Callback getSmartSetting)
+}
+
+interface Callback {
+    public void getSmartSetting(SmartSetting smartSetting)
+}
+
+Callback -- SmartSetting
+
+SmartSettingProvider -- Callback
+
+
+
+@enduml

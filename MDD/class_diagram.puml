@@ -30,6 +30,16 @@ Callback -- SmartSetting
 
 SmartSettingProvider -- Callback
 
+class SmartProfile {
+    public Map<SmartSetting, Boolean> smartSettings
+    public void enableSmartSetting(SmartSetting smartSetting)
+    public void disableSmartSetting(SmartSetting smartSetting)
+}
 
+note left of SmartProfile
+Singleton object.
+end note
+
+SmartProfile *-- SmartSetting
 
 @enduml

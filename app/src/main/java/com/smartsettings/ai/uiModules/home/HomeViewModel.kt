@@ -18,8 +18,6 @@ class HomeViewModel : ViewModel() {
 
     fun getSmartSettings(): LiveData<List<Pair<SmartSetting, Boolean>>> {
 
-        smartSettingRepository.getSmartSettings()
-
-        return smartSettingRepository.smartSettingsLiveData
+        return smartSettingRepository.getSmartSettings()
     }
 }

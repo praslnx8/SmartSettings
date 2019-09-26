@@ -45,9 +45,9 @@ class MainForeGroundService : Service() {
 
         for (pair in smartSettingsPairs) {
             if (pair.first.isRunning() && !pair.second) {
-                pair.first.stopListeningChanges()
+                pair.first.start()
             } else if (!pair.first.isRunning() && pair.second) {
-                pair.first.listenForChanges()
+                pair.first.stop()
             }
         }
 

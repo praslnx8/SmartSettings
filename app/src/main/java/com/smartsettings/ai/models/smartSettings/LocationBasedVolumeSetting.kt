@@ -4,11 +4,9 @@ import android.content.Context
 import android.media.AudioManager
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.Switch
 import com.smartsettings.ai.R
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.SettingState
 import com.smartsettings.ai.models.changedData.ChangedData
 import com.smartsettings.ai.models.changedData.LocationData
 import com.smartsettings.ai.utils.LocationUtils
@@ -19,41 +17,7 @@ class LocationBasedVolumeSetting(
     private val lon: Double,
     private val radiusInMetre: Int,
     private val phoneVolumeToSet: Int
-) : SmartSetting {
-
-    override fun getView(context: Context): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)
-
-        val switchView = view.findViewById<Switch>(R.id.switch_view)
-
-        switchView.isChecked = isRunning
-
-        switchView.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-                if (p1 && !isRunning) {
-                    listenForChanges()
-                } else if (!p1 && isRunning) {
-                    stopListeningChanges()
-                }
-            }
-        })
-
-        return view
-    }
-
-    private var isRunning = false
-
-    override fun isRunning(): Boolean {
-        return isRunning
-    }
-
-    override fun stopListeningChanges() {
-        isRunning = false
-    }
-
-    override fun listenForChanges() {
-        isRunning = true
-    }
+) : SmartSetting() {
 
     @Inject
     lateinit var audioManager: AudioManager
@@ -62,14 +26,38 @@ class LocationBasedVolumeSetting(
         SmartApp.appComponent.inject(this)
     }
 
-    override fun applyChanges(currentState : SettingState): SettingState {
+    override fun listenForChanges() {
+
+    }
+
+    override fun stopListeningChanges() {
+
+    }
+
+    override fun getView(context: Context): View {
+        val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)
+
+        val switchView = view.findViewById<Switch>(R.id.switch_view)
+
+        switchView.isChecked = isRunning()
+
+        switchView.setOnCheckedChangeListener { _, isEnable ->
+            if (isEnable && !isRunning()) {
+                start()
+            } else if (!isEnable && isRunning()) {
+                stop()
+            }
+        }
+
+        return view
+    }
+
+    override fun applyChanges() {
         audioManager.setStreamVolume(
             AudioManager.STREAM_RING,
             audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
             phoneVolumeToSet
         )
-        currentState.volume = phoneVolumeToSet
-        return currentState
     }
 
     override fun askPermissions() {

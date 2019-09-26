@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.smartsettings.ai.MainForeGroundService
 import com.smartsettings.ai.R
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : Fragment() {
 
@@ -19,7 +19,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.getSmartSettings().observeForever {
 
-            parentLayout.removeAllViews()
+            view.parentLayout.removeAllViews()
 
             var isEnabled = false
             for (smartSetting in it) {
@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
                 }
                 val ctx = context
                 if (ctx != null) {
-                    parentLayout.addView(smartSetting.first.getView(ctx))
+                    view.parentLayout.addView(smartSetting.first.getView(ctx))
                 }
             }
 

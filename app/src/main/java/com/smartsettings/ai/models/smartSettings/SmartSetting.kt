@@ -2,22 +2,41 @@ package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
 import android.view.View
-import com.smartsettings.ai.models.SettingState
 import com.smartsettings.ai.models.changedData.ChangedData
 
-interface SmartSetting {
+abstract class SmartSetting {
 
-    fun applyChanges(currentState : SettingState) : SettingState
+    private var isRunning = false
 
-    fun askPermissions()
+    fun isRunning(): Boolean {
+        return isRunning
+    }
 
-    fun listenForChanges()
+    fun start() {
+        isRunning = true
+        listenForChanges()
+    }
 
-    fun stopListeningChanges()
+    fun stop() {
+        isRunning = false
+        stopListeningChanges()
+    }
 
-    fun isRunning(): Boolean
+    fun onChange(changedData: ChangedData) {
+        if (criteriaMatching(changedData)) {
+            applyChanges()
+        }
+    }
 
-    fun criteriaMatching(changedData: ChangedData): Boolean
+    protected abstract fun applyChanges()
 
-    fun getView(context: Context): View
+    protected abstract fun askPermissions()
+
+    protected abstract fun listenForChanges()
+
+    protected abstract fun stopListeningChanges()
+
+    protected abstract fun criteriaMatching(changedData: ChangedData): Boolean
+
+    abstract fun getView(context: Context): View
 }

@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "smart_settings")
 data class SmartSettingDBModel(
 
-    @PrimaryKey(autoGenerate = true) var id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
 
-    @ColumnInfo(name = "type") var type: String,
+    @ColumnInfo(name = "type") val type: String,
 
     @ColumnInfo(name = "enabled") var enabled: Boolean,
 

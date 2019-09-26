@@ -20,9 +20,9 @@ class SmartSettingRepository {
         SmartApp.appComponent.inject(this)
     }
 
-    val smartSettingsLiveData: MutableLiveData<List<Pair<SmartSetting, Boolean>>> = MutableLiveData()
+    private val smartSettingsLiveData: MutableLiveData<List<Pair<SmartSetting, Boolean>>> = MutableLiveData()
 
-    fun getSmartSettings() {
+    fun getSmartSettings(): MutableLiveData<List<Pair<SmartSetting, Boolean>>> {
         val smartSettings = SmartProfile.getSmartSettings()
         if (smartSettings.isEmpty()) {
 
@@ -49,6 +49,8 @@ class SmartSettingRepository {
         } else {
             smartSettingsLiveData.value = smartSettings
         }
+
+        return smartSettingsLiveData
     }
 
 

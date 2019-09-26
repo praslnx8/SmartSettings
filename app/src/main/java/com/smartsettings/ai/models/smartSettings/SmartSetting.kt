@@ -2,7 +2,7 @@ package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
 import android.view.View
-import com.smartsettings.ai.models.changedData.ChangedData
+import com.smartsettings.ai.models.changedData.ContextData
 
 abstract class SmartSetting {
 
@@ -22,8 +22,8 @@ abstract class SmartSetting {
         stopListeningChanges()
     }
 
-    fun onChange(changedData: ChangedData) {
-        if (criteriaMatching(changedData)) {
+    fun onChange(contextData: ContextData) {
+        if (criteriaMatching(contextData)) {
             applyChanges()
         }
     }
@@ -36,7 +36,7 @@ abstract class SmartSetting {
 
     protected abstract fun stopListeningChanges()
 
-    protected abstract fun criteriaMatching(changedData: ChangedData): Boolean
+    protected abstract fun criteriaMatching(contextData: ContextData): Boolean
 
     abstract fun getView(context: Context): View
 }

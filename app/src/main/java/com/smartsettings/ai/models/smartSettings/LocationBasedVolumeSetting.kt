@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Switch
 import com.smartsettings.ai.R
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.changedData.ChangedData
+import com.smartsettings.ai.models.changedData.ContextData
 import com.smartsettings.ai.models.changedData.LocationData
 import com.smartsettings.ai.utils.LocationUtils
 import javax.inject.Inject
@@ -64,10 +64,10 @@ class LocationBasedVolumeSetting(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun criteriaMatching(changedData: ChangedData): Boolean {
-        if(changedData is LocationData) {
+    override fun criteriaMatching(contextData: ContextData): Boolean {
+        if (contextData is LocationData) {
             if (LocationUtils.getDistanceInMetre(
-                    Pair(changedData.lat, changedData.lon),
+                    Pair(contextData.lat, contextData.lon),
                     Pair(lat, lon)
                 ) < radiusInMetre
             ) {

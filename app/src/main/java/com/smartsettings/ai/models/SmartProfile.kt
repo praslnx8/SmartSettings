@@ -1,38 +1,21 @@
 package com.smartsettings.ai.models
 
-import androidx.collection.ArrayMap
 import com.smartsettings.ai.models.smartSettings.SmartSetting
 
 object SmartProfile {
 
-    private val smartSettings : ArrayMap<SmartSetting, Boolean> = ArrayMap()
+    private val smartSettings: HashSet<SmartSetting<Any>> = HashSet()
 
-    fun enableSmartSetting(smartSetting: SmartSetting) {
-        smartSettings.putIfAbsent(smartSetting, true)
-        smartSettings[smartSetting] = true
+    fun enableSmartSetting(smartSetting: SmartSetting<Any>) {
+        smartSettings.add(smartSetting)
+        smartSetting.setEnabled(true)
     }
 
-    fun disableSmartSetting(smartSetting: SmartSetting) {
-        smartSettings[smartSetting] = false
+    fun disableSmartSetting(smartSetting: SmartSetting<Any>) {
+        smartSetting.setEnabled(false)
     }
 
-    fun getSmartSettings(): List<Pair<SmartSetting, Boolean>> {
-        val smartSettingsList: ArrayList<Pair<SmartSetting, Boolean>> = ArrayList()
-
-        for ((key, value) in smartSettings) {
-            smartSettingsList.add(Pair(key, value))
-        }
-
-        return smartSettingsList
-    }
-
-    fun isAnythingEnabled(): Boolean {
-        for ((_, value) in smartSettings) {
-            if (value) {
-                return true
-            }
-        }
-
-        return false
+    fun getSmartSettings(): List<SmartSetting<Any>> {
+        return smartSettings.toList()
     }
 }

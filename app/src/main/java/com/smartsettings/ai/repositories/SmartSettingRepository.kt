@@ -1,9 +1,7 @@
 package com.smartsettings.ai.repositories
 
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.SmartProfile
 import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
 import com.smartsettings.ai.models.smartSettings.SmartSetting
 import com.smartsettings.ai.resources.db.SmartSettingDao
@@ -20,39 +18,28 @@ class SmartSettingRepository {
         SmartApp.appComponent.inject(this)
     }
 
-    private val smartSettingsLiveData: MutableLiveData<List<Pair<SmartSetting, Boolean>>> = MutableLiveData()
+    fun getSmartSettings(smartSettingsCallBack: (List<SmartSetting<Any>>) -> Unit) {
 
-    fun getSmartSettings(): MutableLiveData<List<Pair<SmartSetting, Boolean>>> {
-        val smartSettings = SmartProfile.getSmartSettings()
-        if (smartSettings.isEmpty()) {
+        doAsync {
 
-            doAsync {
-                val smartSettingsFromDb = smartSettingDao.getSmartSettings()
+            val smartSettings = ArrayList<SmartSetting<Any>>()
 
-                for (smartSettingDbData in smartSettingsFromDb) {
-                    if (smartSettingDbData.type == "LOC") {
-                        val locationBasedVolumeSetting =
-                            Gson().fromJson(smartSettingDbData.serializedObject, LocationBasedVolumeSetting::class.java)
-                        if (smartSettingDbData.enabled) {
-                            SmartProfile.enableSmartSetting(locationBasedVolumeSetting)
-                        } else {
-                            SmartProfile.disableSmartSetting(locationBasedVolumeSetting)
-                        }
+            val smartSettingsFromDb = smartSettingDao.getSmartSettings()
+
+            for (smartSettingDbData in smartSettingsFromDb) {
+                if (smartSettingDbData.type == "LOC") {
+                    val locationBasedVolumeSetting =
+                        Gson().fromJson(smartSettingDbData.serializedObject, LocationBasedVolumeSetting::class.java)
+
+                    if (locationBasedVolumeSetting != null) {
+                        smartSettings.add(locationBasedVolumeSetting)
                     }
-                }
-
-                uiThread {
-                    smartSettingsLiveData.value = SmartProfile.getSmartSettings()
                 }
             }
 
-        } else {
-            smartSettingsLiveData.value = smartSettings
+            uiThread {
+                smartSettingsCallBack(smartSettings)
+            }
         }
-
-        return smartSettingsLiveData
     }
-
-
-
 }

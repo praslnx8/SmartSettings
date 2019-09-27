@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.changedData
+package com.smartsettings.ai.models.contextData
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

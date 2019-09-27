@@ -11,8 +11,6 @@ data class SmartSettingDBModel(
 
     @ColumnInfo(name = "type") val type: String,
 
-    @ColumnInfo(name = "enabled") var enabled: Boolean,
-
     @ColumnInfo(name = "serialized_object") var serializedObject: String,
 
     @ColumnInfo(name = "order") var order: Int

@@ -1,7 +1,7 @@
 package com.smartsettings.ai.dagger
 
 import com.smartsettings.ai.MainActivity
-import com.smartsettings.ai.listeners.CurrentLocationListener
+import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
 import com.smartsettings.ai.repositories.SmartSettingRepository
 import com.smartsettings.ai.uiModules.home.HomeViewModel

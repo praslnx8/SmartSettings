@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.AudioManager
 import com.nhaarman.mockitokotlin2.times
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.changedData.LocationData
+import com.smartsettings.ai.models.contextData.LocationData
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

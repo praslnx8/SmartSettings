@@ -4,52 +4,34 @@ class ContextData {
 
 }
 
-abstract class SmartSetting {
+abstract class SmartSetting<T extends ContextData> {
     - boolean isRunning
     + boolean isRunning()
     + void start()
     + void stop()
     # abstract void applySettingChanges()
-    # abstract Listener getListener()
-    # abstract void isCriteriaMatching(ContextData contextData)
+    # abstract Listener<T> getListener()
+    # abstract void isCriteriaMatching(ContextData<T> contextData)
     + abstract View getView(Context context)
-    + abstract void askSettingChangePermissionIfAny()
-    - void startListenForContextChanges()
+    + abstract void askSettingChangePermissionIfAny((Boolean))
+    - void startListenForContextChanges((T))
     - void stopListeningToContextChanges()
 }
 
-interface ContextCallback {
-    + void onContextChange(ContextData contextData)
-}
-
-abstract class Listener {
-    - ContextCallback contextCallback
-    # abstract void startListenForContextChanges()
+abstract class Listener<T extends ContextData> {
+    # abstract void startListenForContextChanges((Boolean))
     # abstract void stopListeningToContextChanges()
     + abstract void askListeningPermissionIfAny()
-    - onContextChange(ContextData contextData)
+    - onContextChange(T contextData)
 }
 
-Listener o-- ContextCallback
-
-SmartSetting .. ContextCallback
-
-SmartSetting o-- Listener
+SmartSetting *-- Listener
 
 SmartSetting .. ContextData : listens to contextData
 
 interface SmartSettingProvider {
-    + View getInputView(SmartSettingCallback getSmartSetting)
+    + View getInputView((SmartSetting))
 }
-
-interface SmartSettingCallback {
-    + void getSmartSetting(SmartSetting smartSetting)
-}
-
-
-SmartSettingProvider .. SmartSettingCallback : to get SmartSetting
-
-SmartSettingChooser .. SmartSettingCallback
 
 SmartSettingProvider .. SmartSetting
 
@@ -62,11 +44,11 @@ class SmartProfile <<(S,red) Singleton>> {
     - void reInitializeSmartSettingsFromMemory()
 }
 
-note left of SmartProfile
+note right of SmartProfile
 Singleton object.
 end note
 
-SmartProfile *-- SmartSetting : has List of created smart setting
+SmartProfile o-- SmartSetting : has List of created smart setting
 
 class SmartSettingChooser {
     - List<SmartSettingProvider> smartSettingProvider;
@@ -88,9 +70,9 @@ note left of Home {
 }
 
 Home .. SmartProfile : enables/diabled smartSetting
-Home .. SmartSettingChooser : asks to provide SmartSetting
+Home o-- SmartSettingChooser : asks to provide SmartSetting
 
-class MainService {
+class MainService<<(S,red) Singleton>> {
     - void startSmartSettings()
     - void stopSmartSettings()
 }
@@ -102,23 +84,6 @@ end note
 MainService .. SmartProfile : start/stop the smartSettings
 
 Home .. MainService : Starts service
-
-
-class LocationAwareVolumeSmartSetting {
-    - double lat
-    - double lon
-    - int radiusInMetre
-    - double phoneVolumeToSet
-}
-
-SmartSetting <|-- LocationAwareVolumeSmartSetting
-
-class LocationAwareVolumeSmartSettingProvider {
-}
-
-SmartSettingProvider <|-- LocationAwareVolumeSmartSettingProvider
-
-LocationAwareVolumeSmartSettingProvider .. LocationAwareVolumeSmartSetting
 
 class SmartSettingRepository {
     + void getSmartSettings()

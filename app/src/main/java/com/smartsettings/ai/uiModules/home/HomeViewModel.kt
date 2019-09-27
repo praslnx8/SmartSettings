@@ -16,7 +16,7 @@ class HomeViewModel : ViewModel() {
     @Inject
     lateinit var smartSettingRepository: SmartSettingRepository
 
-    fun getSmartSettings(): LiveData<List<Pair<SmartSetting, Boolean>>> {
+    fun getSmartSettings(): LiveData<List<Pair<SmartSetting<Any>, Boolean>>> {
 
         return smartSettingRepository.getSmartSettings()
     }

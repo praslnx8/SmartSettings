@@ -1,14 +1,16 @@
 package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
+import android.location.Location
 import android.media.AudioManager
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Switch
 import com.smartsettings.ai.R
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.changedData.ContextData
-import com.smartsettings.ai.models.changedData.LocationData
+import com.smartsettings.ai.models.contextData.ContextData
+import com.smartsettings.ai.models.contextListeners.ContextListener
+import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.utils.LocationUtils
 import javax.inject.Inject
 
@@ -17,21 +19,24 @@ class LocationBasedVolumeSetting(
     private val lon: Double,
     private val radiusInMetre: Int,
     private val phoneVolumeToSet: Int
-) : SmartSetting() {
+) : SmartSetting<Location>() {
+
+    @Inject
+    private lateinit var currentLocationListener: CurrentLocationListener
+
+    override fun askSettingChangePermissionIfAny(locationGranterCallback: (Boolean) -> Unit) {
+
+    }
+
+    override fun getContextListener(): ContextListener<Location> {
+        return currentLocationListener
+    }
 
     @Inject
     lateinit var audioManager: AudioManager
 
     init {
         SmartApp.appComponent.inject(this)
-    }
-
-    override fun listenForChanges() {
-
-    }
-
-    override fun stopListeningChanges() {
-
     }
 
     override fun getView(context: Context): View {
@@ -60,19 +65,13 @@ class LocationBasedVolumeSetting(
         )
     }
 
-    override fun askPermissions() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun criteriaMatching(contextData: ContextData): Boolean {
-        if (contextData is LocationData) {
-            if (LocationUtils.getDistanceInMetre(
-                    Pair(contextData.lat, contextData.lon),
-                    Pair(lat, lon)
-                ) < radiusInMetre
-            ) {
-                return true
-            }
+    override fun criteriaMatching(contextData: ContextData<Location>): Boolean {
+        if (LocationUtils.getDistanceInMetre(
+                Pair(contextData.getChangedData().latitude, contextData.getChangedData().longitude),
+                Pair(lat, lon)
+            ) < radiusInMetre
+        ) {
+            return true
         }
 
         return false

@@ -41,13 +41,13 @@ class MainForeGroundService : Service() {
 
         showNotification()
 
-        val smartSettingsPairs = SmartProfile.getSmartSettings()
+        val smartSettings = SmartProfile.getSmartSettings()
 
-        for (pair in smartSettingsPairs) {
-            if (pair.first.isRunning() && !pair.second) {
-                pair.first.start()
-            } else if (!pair.first.isRunning() && pair.second) {
-                pair.first.stop()
+        for (smartSetting in smartSettings) {
+            if (smartSetting.isEnabled()) {
+                smartSetting.start()
+            } else {
+                smartSetting.stop()
             }
         }
 

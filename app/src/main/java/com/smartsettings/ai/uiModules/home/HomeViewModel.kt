@@ -1,23 +1,27 @@
 package com.smartsettings.ai.uiModules.home
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.smartsettings.ai.SmartApp
+import com.smartsettings.ai.models.SmartProfile
 import com.smartsettings.ai.models.smartSettings.SmartSetting
 import com.smartsettings.ai.repositories.SmartSettingRepository
 import javax.inject.Inject
 
 class HomeViewModel : ViewModel() {
 
+    @Inject
+    lateinit var smartSettingRepository: SmartSettingRepository
+
     init {
         SmartApp.appComponent.inject(this)
     }
 
-    @Inject
-    lateinit var smartSettingRepository: SmartSettingRepository
+    val smartSettingLiveData = MutableLiveData<List<SmartSetting<out Any>>>()
 
-    fun getSmartSettings(): LiveData<List<Pair<SmartSetting<Any>, Boolean>>> {
-
-        return smartSettingRepository.getSmartSettings()
+    fun getSmartSettings() {
+        SmartProfile.load(smartSettingRepository) {
+            smartSettingLiveData.value = SmartProfile.getSmartSettings()
+        }
     }
 }

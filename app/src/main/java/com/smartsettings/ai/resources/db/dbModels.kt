@@ -11,7 +11,7 @@ data class SmartSettingDBModel(
 
     @ColumnInfo(name = "type") val type: String,
 
-    @ColumnInfo(name = "serialized_object") var serializedObject: String,
+    @ColumnInfo(name = "serialized_object_file_name") var serializedObjectFileName: String,
 
     @ColumnInfo(name = "order") var order: Int
 )

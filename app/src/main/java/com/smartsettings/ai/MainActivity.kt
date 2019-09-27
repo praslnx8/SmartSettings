@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.smartsettings.ai.ext.inTransaction
 import com.smartsettings.ai.uiModules.home.HomeFragment
-import com.smartsettings.ai.uiModules.smartSettings.SmartSettingsActivity
+import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            SmartSettingsActivity.open(this, reqForAddSmartSetting)
+            SmartSettingsChooserActivity.open(this, reqForAddSmartSetting)
         }
 
         supportFragmentManager.inTransaction {

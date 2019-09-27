@@ -10,15 +10,15 @@ import kotlinx.android.synthetic.main.item_loc_smart_setting_provider.view.*
 
 class LocationSmartSettingProvider : SmartSettingProvider {
 
-    var lat: Double = 0.0
+    private var lat: Double = 0.0
 
-    var lon: Double = 0.0
+    private var lon: Double = 0.0
 
-    var volume: Int = 100
+    private var volume: Int = 100
 
-    var radiusInMetre: Int = 500
+    private var radiusInMetre: Int = 500
 
-    override fun getView(context: Context, getSmartSetting: (SmartSetting) -> Unit): View {
+    override fun getView(context: Context, getSmartSetting: (SmartSetting<out Any>) -> Unit): View {
         val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting_provider, null)
 
         view.addBtn.setOnClickListener {

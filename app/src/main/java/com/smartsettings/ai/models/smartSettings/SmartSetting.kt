@@ -4,8 +4,12 @@ import android.content.Context
 import android.view.View
 import com.smartsettings.ai.models.contextData.ContextData
 import com.smartsettings.ai.models.contextListeners.ContextListener
+import java.io.Serializable
+import java.util.concurrent.atomic.AtomicInteger
 
-abstract class SmartSetting<out T> {
+abstract class SmartSetting<T> : Serializable {
+
+    val id = AtomicInteger().incrementAndGet()
 
     private var isRunning = false
 

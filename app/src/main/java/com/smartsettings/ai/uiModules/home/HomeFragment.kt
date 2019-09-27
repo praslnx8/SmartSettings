@@ -12,36 +12,38 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : Fragment() {
 
+    private var homeViewModel: HomeViewModel? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        homeViewModel.getSmartSettings().observeForever {
-
+        homeViewModel?.smartSettingLiveData?.observeForever {
             view.parentLayout.removeAllViews()
-
-            var isEnabled = false
-            for (smartSetting in it) {
-                if (smartSetting.second) {
-                    isEnabled = true
-                }
-                val ctx = context
-                if (ctx != null) {
-                    view.parentLayout.addView(smartSetting.first.getView(ctx))
-                }
-            }
 
             val ctx = context
             if (ctx != null) {
-                if (isEnabled) {
-                    MainForeGroundService.startService(ctx)
-                } else {
-                    MainForeGroundService.stopService(ctx)
+                for (smartSetting in it) {
+                    view.parentLayout.addView(smartSetting.getView(ctx))
                 }
+
+                startMainService()
             }
         }
 
+        val ctx = context
+        if (ctx != null) {
+            homeViewModel?.getSmartSettings()
+        }
+
         return view
+    }
+
+    private fun startMainService() {
+        val ctx = context
+        if (ctx != null) {
+            MainForeGroundService.startService(ctx)
+        }
     }
 }

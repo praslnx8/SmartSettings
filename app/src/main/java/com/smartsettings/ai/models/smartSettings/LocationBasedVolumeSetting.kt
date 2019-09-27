@@ -21,8 +21,12 @@ class LocationBasedVolumeSetting(
     private val phoneVolumeToSet: Int
 ) : SmartSetting<Location>() {
 
+    init {
+        SmartApp.appComponent.inject(this)
+    }
+
     @Inject
-    private lateinit var currentLocationListener: CurrentLocationListener
+    lateinit var currentLocationListener: CurrentLocationListener
 
     override fun askSettingChangePermissionIfAny(locationGranterCallback: (Boolean) -> Unit) {
 
@@ -34,10 +38,6 @@ class LocationBasedVolumeSetting(
 
     @Inject
     lateinit var audioManager: AudioManager
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
 
     override fun getView(context: Context): View {
         val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)

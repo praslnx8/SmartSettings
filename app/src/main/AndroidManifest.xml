@@ -3,6 +3,7 @@
           package="com.smartsettings.ai">
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
             android:name=".SmartApp"
@@ -21,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".uiModules.smartSettings.SmartSettingsActivity"/>
+        <activity android:name=".uiModules.smartSettingsChooser.SmartSettingsChooserActivity"/>
 
 
         <service android:name=".MainForeGroundService"/>

@@ -1,26 +1,29 @@
 package com.smartsettings.ai.models
 
-import com.smartsettings.ai.models.smartSettings.SmartSetting
+import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
+import com.smartsettings.ai.repositories.SmartSettingRepository
 import org.junit.Test
 import org.mockito.Mockito.mock
 
 class SmartProfileTest {
 
+    val smartSettingRepository = mock(SmartSettingRepository::class.java)
+
     @Test
     fun enable_smart_setting_should_set_true_against_setting() {
 
-        val smartSetting = mock(SmartSetting::class.java)
+        val smartSetting = mock(LocationBasedVolumeSetting::class.java)
 
-        SmartProfile.enableSmartSetting(smartSetting)
-        assert(SmartProfile.getSmartSettings().contains(Pair(smartSetting, true)))
+        SmartProfile.enableSmartSetting(smartSettingRepository, smartSetting)
+        assert(SmartProfile.getSmartSettings().contains(smartSetting))
     }
 
     @Test
     fun disable_smart_setting_should_set_false_against_setting() {
 
-        val smartSetting = mock(SmartSetting::class.java)
+        val smartSetting = mock(LocationBasedVolumeSetting::class.java)
 
         SmartProfile.disableSmartSetting(smartSetting)
-        assert(SmartProfile.getSmartSettings().contains(Pair(smartSetting, false)))
+        assert(SmartProfile.getSmartSettings().contains(smartSetting))
     }
 }

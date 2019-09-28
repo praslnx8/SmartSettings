@@ -11,7 +11,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app: Context) {
+open class AppModule(private val app: Context) {
 
     @Provides
     @Singleton
@@ -19,23 +19,23 @@ class AppModule(private val app: Context) {
 
     @Provides
     @Singleton
-    fun provideAudioManager(): AudioManager = app.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    open fun provideAudioManager(): AudioManager = app.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     @Provides
     @Singleton
-    fun provideSmartSettingDao(): SmartSettingDao {
+    open fun provideSmartSettingDao(): SmartSettingDao {
         return SmartSettingDatabase.getDb(app).getSmartSettingDao()
     }
 
     @Provides
     @Singleton
-    fun provideSmartSettingsRepo(): SmartSettingRepository {
+    open fun provideSmartSettingsRepo(): SmartSettingRepository {
         return SmartSettingRepository()
     }
 
     @Provides
     @Singleton
-    fun provideCurrentLocationListener(): CurrentLocationListener {
+    open fun provideCurrentLocationListener(): CurrentLocationListener {
         return CurrentLocationListener()
     }
 }

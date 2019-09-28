@@ -2,40 +2,30 @@ package com.smartsettings.ai
 
 import android.content.Context
 import android.media.AudioManager
+import com.smartsettings.ai.dagger.AppModule
 import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.repositories.SmartSettingRepository
 import com.smartsettings.ai.resources.db.SmartSettingDao
-import dagger.Module
-import dagger.Provides
 import org.mockito.Mockito.mock
-import javax.inject.Singleton
 
-@Module
-class TestAppModule {
+class TestAppModule : AppModule(mock(Context::class.java)) {
 
-    @Provides
-    @Singleton
-    fun provideContext(): Context = mock(Context::class.java)
+    val audioManager: AudioManager = mock(AudioManager::class.java)
+    val smartSettingDao: SmartSettingDao = mock(SmartSettingDao::class.java)
+    val smartSettingRepository: SmartSettingRepository = mock(SmartSettingRepository::class.java)
+    val currentLocationListener: CurrentLocationListener = mock(CurrentLocationListener::class.java)
 
-    @Provides
-    @Singleton
-    fun provideAudioManager(): AudioManager = mock(AudioManager::class.java)
+    override fun provideAudioManager(): AudioManager = audioManager
 
-    @Provides
-    @Singleton
-    fun provideSmartSettingDao(): SmartSettingDao {
-        return mock(SmartSettingDao::class.java)
+    override fun provideSmartSettingDao(): SmartSettingDao {
+        return smartSettingDao
     }
 
-    @Provides
-    @Singleton
-    fun provideSmartSettingsRepo(): SmartSettingRepository {
-        return mock(SmartSettingRepository::class.java)
+    override fun provideSmartSettingsRepo(): SmartSettingRepository {
+        return smartSettingRepository
     }
 
-    @Provides
-    @Singleton
-    fun provideCurrentLocationListener(): CurrentLocationListener {
-        return mock(CurrentLocationListener::class.java)
+    override fun provideCurrentLocationListener(): CurrentLocationListener {
+        return currentLocationListener
     }
 }

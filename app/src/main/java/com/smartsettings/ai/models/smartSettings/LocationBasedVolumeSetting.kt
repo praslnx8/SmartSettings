@@ -12,11 +12,15 @@ import com.smartsettings.ai.models.contextData.LocationContext
 import com.smartsettings.ai.models.contextListeners.ContextListener
 import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.models.criteriaData.LocationData
+import com.smartsettings.ai.models.serializables.SerializableData
 import com.smartsettings.ai.utils.LocationUtils
 import javax.inject.Inject
 
 class LocationBasedVolumeSetting(locationData: LocationData, volumeActionData: VolumeActionData) :
-    SmartSetting<LocationContext, LocationData, VolumeActionData>(locationData, volumeActionData) {
+    SmartSetting<LocationContext, LocationData, VolumeActionData>(
+        SerializableData(locationData),
+        SerializableData(volumeActionData)
+    ) {
 
     init {
         SmartApp.appComponent.inject(this)

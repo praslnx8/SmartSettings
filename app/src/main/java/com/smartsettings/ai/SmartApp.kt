@@ -1,7 +1,6 @@
 package com.smartsettings.ai
 
 import android.app.Application
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.smartsettings.ai.dagger.AppComponent
 import com.smartsettings.ai.dagger.AppModule
@@ -13,9 +12,9 @@ class SmartApp : Application() {
         lateinit var appComponent: AppComponent
 
         @VisibleForTesting
-        fun setDaggerComponentForTesting(context: Context) {
+        fun setDaggerComponentForTesting(appModule: AppModule) {
             appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(context))
+                .appModule(appModule)
                 .build()
         }
     }

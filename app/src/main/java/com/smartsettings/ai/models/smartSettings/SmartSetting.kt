@@ -2,12 +2,12 @@ package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
 import android.view.View
-import com.google.gson.Gson
 import com.smartsettings.ai.models.contextListeners.ContextListener
+import com.smartsettings.ai.models.serializables.SerializableData
 
 abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
-    private val criteriaData: CRITERIA,
-    private val settingData: ACTION
+    val criteriaData: SerializableData<CRITERIA>,
+    val actionData: SerializableData<ACTION>
 ) {
 
     private var isRunning = false
@@ -32,8 +32,8 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
                 if (isPermissionGranted) {
                     isRunning = true
                     getContextListener().startListeningToContextChanges { contextData ->
-                        if (criteriaMatching(criteriaData, contextData)) {
-                            applyChanges(settingData)
+                        if (criteriaMatching(criteriaData.data, contextData)) {
+                            applyChanges(actionData.data)
                         }
                     }
                 }
@@ -56,14 +56,6 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
     fun stop() {
         isRunning = false
         getContextListener().stopListeningToContextChanges()
-    }
-
-    fun serializeCriteriaData(): String {
-        return Gson().toJson(criteriaData)
-    }
-
-    fun serializeActionData(): String {
-        return Gson().toJson(settingData)
     }
 
     protected abstract fun applyChanges(settingData: ACTION)

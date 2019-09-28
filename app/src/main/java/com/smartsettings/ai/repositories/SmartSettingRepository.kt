@@ -62,8 +62,8 @@ class SmartSettingRepository {
             val smartSettingDBModel = SmartSettingDBModel(
                 1,
                 "LOC",
-                smartSetting.serializeCriteriaData(),
-                smartSetting.serializeCriteriaData(),
+                smartSetting.criteriaData.serialize(),
+                smartSetting.actionData.serialize(),
                 1
             )
 

@@ -39,7 +39,7 @@ class SmartSettingRepository {
                     if (smartSettingDbData.type == "LOC") {
 
                         val criteriaData =
-                            Gson().fromJson(smartSettingDbData.serializedCriteraData, LocationData::class.java)
+                            Gson().fromJson(smartSettingDbData.serializedCriteriaData, LocationData::class.java)
                         val actionData =
                             Gson().fromJson(smartSettingDbData.serializedActionData, VolumeActionData::class.java)
 

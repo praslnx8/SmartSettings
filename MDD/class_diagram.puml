@@ -1,24 +1,23 @@
 @startuml
 
-class ContextData {
 
-}
-
-abstract class SmartSetting<T extends ContextData> {
+abstract class SmartSetting<CONTEXT, CRITERIA, ACTION> {
+    - CRITERIA criteriaData
+    - ACTION actionData
     - boolean isRunning
     + boolean isRunning()
     + void start()
     + void stop()
     # abstract void applySettingChanges()
-    # abstract Listener<T> getListener()
-    # abstract void isCriteriaMatching(ContextData<T> contextData)
+    # abstract Listener<CONTEXT> getListener()
+    # abstract void isCriteriaMatching(CRITERIA criteriaData, CONTEXT contextData)
     + abstract View getView(Context context)
     + abstract void askSettingChangePermissionIfAny((Boolean))
-    - void startListenForContextChanges((T))
+    - void startListenForContextChanges((CONTEXT))
     - void stopListeningToContextChanges()
 }
 
-abstract class Listener<T extends ContextData> {
+abstract class Listener<T> {
     # abstract void startListenForContextChanges((Boolean))
     # abstract void stopListeningToContextChanges()
     + abstract void askListeningPermissionIfAny()
@@ -27,7 +26,6 @@ abstract class Listener<T extends ContextData> {
 
 SmartSetting *-- Listener
 
-SmartSetting .. ContextData : listens to contextData
 
 interface SmartSettingProvider {
     + View getInputView((SmartSetting))

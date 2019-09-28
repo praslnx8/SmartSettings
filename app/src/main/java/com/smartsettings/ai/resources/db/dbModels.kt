@@ -11,7 +11,7 @@ data class SmartSettingDBModel(
 
     @ColumnInfo(name = "type") val type: String,
 
-    @ColumnInfo(name = "criteriaData") var serializedCriteraData: String,
+    @ColumnInfo(name = "criteriaData") var serializedCriteriaData: String,
 
     @ColumnInfo(name = "actionData") var serializedActionData: String,
 

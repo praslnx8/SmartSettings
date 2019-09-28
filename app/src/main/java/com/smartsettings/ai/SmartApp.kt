@@ -3,7 +3,9 @@ package com.smartsettings.ai
 import android.app.Application
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.smartsettings.ai.dagger.*
+import com.smartsettings.ai.dagger.AppComponent
+import com.smartsettings.ai.dagger.AppModule
+import com.smartsettings.ai.dagger.DaggerAppComponent
 
 class SmartApp : Application() {
 
@@ -14,8 +16,6 @@ class SmartApp : Application() {
         fun setDaggerComponentForTesting(context: Context) {
             appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(context))
-                .daoModule(DaoModule(context))
-                .repoModule(RepoModule())
                 .build()
         }
     }
@@ -28,7 +28,5 @@ class SmartApp : Application() {
     private fun initDagger(app: SmartApp): AppComponent =
         DaggerAppComponent.builder()
             .appModule(AppModule(app))
-            .daoModule(DaoModule(app))
-            .repoModule(RepoModule())
             .build()
 }

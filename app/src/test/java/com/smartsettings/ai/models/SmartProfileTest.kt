@@ -7,7 +7,7 @@ import org.mockito.Mockito.mock
 
 class SmartProfileTest {
 
-    val smartSettingRepository = mock(SmartSettingRepository::class.java)
+    private val smartSettingRepository: SmartSettingRepository = mock(SmartSettingRepository::class.java)
 
     @Test
     fun enable_smart_setting_should_set_true_against_setting() {
@@ -23,7 +23,9 @@ class SmartProfileTest {
 
         val smartSetting = mock(LocationBasedVolumeSetting::class.java)
 
+        SmartProfile.enableSmartSetting(smartSettingRepository, smartSetting)
         SmartProfile.disableSmartSetting(smartSetting)
         assert(SmartProfile.getSmartSettings().contains(smartSetting))
+        assert(!SmartProfile.getSmartSettings()[0].isEnabled())
     }
 }

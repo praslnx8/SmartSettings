@@ -17,7 +17,7 @@ class HomeViewModel : ViewModel() {
         SmartApp.appComponent.inject(this)
     }
 
-    val smartSettingLiveData = MutableLiveData<List<SmartSetting<out Any>>>()
+    val smartSettingLiveData = MutableLiveData<List<SmartSetting<out Any, out Any, out Any>>>()
 
     fun getSmartSettings() {
         SmartProfile.load(smartSettingRepository) {

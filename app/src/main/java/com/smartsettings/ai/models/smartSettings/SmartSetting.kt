@@ -2,14 +2,13 @@ package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
 import android.view.View
-import com.smartsettings.ai.models.contextData.ContextData
+import com.google.gson.Gson
 import com.smartsettings.ai.models.contextListeners.ContextListener
-import java.io.Serializable
-import java.util.concurrent.atomic.AtomicInteger
 
-abstract class SmartSetting<T> : Serializable {
-
-    val id = AtomicInteger().incrementAndGet()
+abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
+    private val criteriaData: CRITERIA,
+    private val settingData: ACTION
+) {
 
     private var isRunning = false
 
@@ -21,12 +20,6 @@ abstract class SmartSetting<T> : Serializable {
 
     fun setEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
-
-        if (isEnabled) {
-            start()
-        } else {
-            stop()
-        }
     }
 
     fun isEnabled(): Boolean {
@@ -39,8 +32,8 @@ abstract class SmartSetting<T> : Serializable {
                 if (isPermissionGranted) {
                     isRunning = true
                     getContextListener().startListeningToContextChanges { contextData ->
-                        if (criteriaMatching(contextData)) {
-                            applyChanges()
+                        if (criteriaMatching(criteriaData, contextData)) {
+                            applyChanges(settingData)
                         }
                     }
                 }
@@ -65,13 +58,21 @@ abstract class SmartSetting<T> : Serializable {
         getContextListener().stopListeningToContextChanges()
     }
 
-    protected abstract fun applyChanges()
+    fun serializeCriteriaData(): String {
+        return Gson().toJson(criteriaData)
+    }
+
+    fun serializeActionData(): String {
+        return Gson().toJson(settingData)
+    }
+
+    protected abstract fun applyChanges(settingData: ACTION)
 
     protected abstract fun askSettingChangePermissionIfAny(locationGranterCallback: (Boolean) -> Unit)
 
-    protected abstract fun getContextListener(): ContextListener<T>
+    protected abstract fun getContextListener(): ContextListener<CONTEXT>
 
-    protected abstract fun criteriaMatching(contextData: ContextData<T>): Boolean
+    protected abstract fun criteriaMatching(criteria: CRITERIA, contextData: CONTEXT): Boolean
 
     abstract fun getView(context: Context): View
 }

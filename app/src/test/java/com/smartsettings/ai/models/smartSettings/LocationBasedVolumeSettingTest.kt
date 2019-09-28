@@ -2,9 +2,14 @@ package com.smartsettings.ai.models.smartSettings
 
 import android.content.Context
 import android.media.AudioManager
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.whenever
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.contextData.LocationData
+import com.smartsettings.ai.models.actionData.VolumeActionData
+import com.smartsettings.ai.models.contextData.LocationContext
+import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
+import com.smartsettings.ai.models.criteriaData.LocationData
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,6 +31,9 @@ class LocationBasedVolumeSettingTest {
     @Mock
     lateinit var context: Context
 
+    @Mock
+    lateinit var currentLocationListener: CurrentLocationListener
+
     @Before
     fun setUp() {
 
@@ -39,10 +47,25 @@ class LocationBasedVolumeSettingTest {
     @Test
     fun check_criteria_should_return_true_for_valid_location_change() {
 
-        val locationBasedVolumeSetting = LocationBasedVolumeSetting(12.12, 80.80, 10000, 80)
-        val changedData = LocationData(12.12, 80.80)
+        val criteriaData = LocationData(12.12, 80.80, 10000)
+        val actionData = VolumeActionData(80)
 
-        locationBasedVolumeSetting.onChange(changedData)
+        val locationBasedVolumeSetting = LocationBasedVolumeSetting(criteriaData, actionData)
+        val changedData = LocationContext(12.12, 80.80)
+
+        whenever(locationBasedVolumeSetting.currentLocationListener.askListeningPermissionIfAny { }).thenAnswer {
+            val callBack = it.getArgument<((Boolean) -> Unit)>(0)
+            callBack.invoke(true)
+        }
+
+        Mockito.`when`(locationBasedVolumeSetting.currentLocationListener.startListeningToContextChanges(any()))
+            .thenAnswer {
+                val callBack = it.getArgument<((LocationContext) -> Unit)>(0)
+                callBack.invoke(changedData)
+            }
+
+        locationBasedVolumeSetting.setEnabled(true)
+        locationBasedVolumeSetting.start()
 
         Mockito.verify(audioManager, times(1))
             .setStreamVolume(AudioManager.STREAM_RING, audioManager.getStreamMaxVolume(AudioManager.STREAM_RING), 80)

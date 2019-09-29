@@ -10,7 +10,9 @@ import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserV
 import dagger.Component
 import javax.inject.Singleton
 
-
+/**
+ * Exclude test case for this module.
+ */
 @Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {

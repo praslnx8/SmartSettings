@@ -2,6 +2,7 @@ package com.smartsettings.ai.dagger
 
 import android.content.Context
 import android.media.AudioManager
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.repositories.SmartSettingRepository
 import com.smartsettings.ai.resources.db.SmartSettingDao
@@ -10,6 +11,9 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+/**
+ * Exclude test case for this module.
+ */
 @Module
 open class AppModule(private val app: Context) {
 
@@ -37,5 +41,11 @@ open class AppModule(private val app: Context) {
     @Singleton
     open fun provideCurrentLocationListener(): CurrentLocationListener {
         return CurrentLocationListener()
+    }
+
+    @Provides
+    @Singleton
+    open fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
+        return FusedLocationProviderClient(app)
     }
 }

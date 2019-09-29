@@ -69,6 +69,7 @@ class MainForeGroundService : Service() {
             .setContentText("Running")
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentIntent(pendingIntent)
+            .setSound(null)
             .build()
 
         startForeground(1, notification)

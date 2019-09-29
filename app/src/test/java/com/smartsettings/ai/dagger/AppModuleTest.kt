@@ -3,7 +3,6 @@ package com.smartsettings.ai.dagger
 import android.content.Context
 import android.media.AudioManager
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -31,7 +30,7 @@ class AppModuleTest {
 
     @Test
     fun provide_context_returns_context() {
-        assertEquals(AppModule(context).provideContext(), context)
+        assertEquals(context, AppModule(context).provideContext())
     }
 
     @Test
@@ -39,6 +38,6 @@ class AppModuleTest {
 
         Mockito.`when`(context.getSystemService(Context.AUDIO_SERVICE)).thenReturn(audioManager)
 
-        assertNotNull(AppModule(context).provideAudioManager())
+        assertEquals(audioManager, AppModule(context).provideAudioManager())
     }
 }

@@ -36,6 +36,8 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
                             applyChanges(actionData.data)
                         }
                     }
+                } else {
+                    isEnabled = false
                 }
             }
         }

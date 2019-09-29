@@ -48,6 +48,7 @@ class LocationBasedVolumeSetting(locationData: LocationData, volumeActionData: V
         switchView.isChecked = isRunning()
 
         switchView.setOnCheckedChangeListener { _, isEnable ->
+            setEnabled(isEnable)
             if (isEnable && !isRunning()) {
                 start()
             } else if (!isEnable && isRunning()) {

@@ -26,7 +26,7 @@ class SmartSettingsChooserActivity : AppCompatActivity() {
         val viewModel = ViewModelProviders.of(this).get(SmartSettingsChooserViewModel::class.java)
 
         container.addView(LocationSmartSettingProvider().getView(this) {
-            viewModel.addSmartSetting(this, it)
+            viewModel.addSmartSetting(it)
             Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show()
         })
     }

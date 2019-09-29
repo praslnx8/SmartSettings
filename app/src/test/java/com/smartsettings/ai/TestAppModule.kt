@@ -2,6 +2,7 @@ package com.smartsettings.ai
 
 import android.content.Context
 import android.media.AudioManager
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.dagger.AppModule
 import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.repositories.SmartSettingRepository
@@ -14,6 +15,7 @@ class TestAppModule : AppModule(mock(Context::class.java)) {
     val smartSettingDao: SmartSettingDao = mock(SmartSettingDao::class.java)
     val smartSettingRepository: SmartSettingRepository = mock(SmartSettingRepository::class.java)
     val currentLocationListener: CurrentLocationListener = mock(CurrentLocationListener::class.java)
+    val fusedLocationProviderClient: FusedLocationProviderClient = mock(FusedLocationProviderClient::class.java)
 
     override fun provideAudioManager(): AudioManager = audioManager
 
@@ -27,5 +29,9 @@ class TestAppModule : AppModule(mock(Context::class.java)) {
 
     override fun provideCurrentLocationListener(): CurrentLocationListener {
         return currentLocationListener
+    }
+
+    override fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
+        return fusedLocationProviderClient
     }
 }

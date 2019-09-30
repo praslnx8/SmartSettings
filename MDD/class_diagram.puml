@@ -1,5 +1,25 @@
 @startuml
 
+package UI {
+class Home {
+
+}
+
+note left of Home {
+    App main UI.
+}
+
+interface SmartSettingProvider {
+    + View getInputView((SmartSetting))
+}
+
+note right of SmartSettingChooser
+UI for showing list of smart setting types available.
+end note
+
+SmartSettingChooser *-- SmartSettingProvider
+
+}
 
 abstract class SmartSetting<CONTEXT, CRITERIA, ACTION> {
     - CRITERIA criteriaData
@@ -11,7 +31,6 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION> {
     # abstract void applySettingChanges()
     # abstract Listener<CONTEXT> getListener()
     # abstract void isCriteriaMatching(CRITERIA criteriaData, CONTEXT contextData)
-    + abstract View getView(Context context)
     + abstract void askSettingChangePermissionIfAny((Boolean))
     - void startListenForContextChanges((CONTEXT))
     - void stopListeningToContextChanges()
@@ -25,11 +44,6 @@ abstract class Listener<T> {
 }
 
 SmartSetting *-- Listener
-
-
-interface SmartSettingProvider {
-    + View getInputView((SmartSetting))
-}
 
 SmartSettingProvider .. SmartSetting
 
@@ -50,21 +64,6 @@ SmartProfile o-- SmartSetting : has List of created smart setting
 
 class SmartSettingChooser {
     - List<SmartSettingProvider> smartSettingProvider;
-}
-
-note right of SmartSettingChooser
-UI for showing list of smart setting types available.
-end note
-
-SmartSettingChooser *-- SmartSettingProvider
-
-
-class Home {
-
-}
-
-note left of Home {
-    App main UI.
 }
 
 Home .. SmartProfile : enables/diabled smartSetting

@@ -36,14 +36,15 @@ class SmartSettingRepository {
 
             for (smartSettingDbData in smartSettingsFromDb) {
                 if (smartSettingDbData.id != null) {
-                    if (smartSettingDbData.type == "LOC") {
+                    if (smartSettingDbData.type == SmartSettingType.LOCBASEDAUDIO.value) {
 
                         val criteriaData =
                             Gson().fromJson(smartSettingDbData.serializedCriteriaData, LocationData::class.java)
                         val actionData =
                             Gson().fromJson(smartSettingDbData.serializedActionData, VolumeActionData::class.java)
 
-                        val locationBasedVolumeSetting = LocationBasedVolumeSetting(criteriaData, actionData)
+                        val locationBasedVolumeSetting =
+                            LocationBasedVolumeSetting(smartSettingDbData.name, criteriaData, actionData)
 
                         smartSettings.add(locationBasedVolumeSetting)
                     }
@@ -61,7 +62,8 @@ class SmartSettingRepository {
         if (smartSetting is LocationBasedVolumeSetting) {
             val smartSettingDBModel = SmartSettingDBModel(
                 1,
-                "LOC",
+                SmartSettingType.LOCBASEDAUDIO.value,
+                smartSetting.name,
                 smartSetting.criteriaData.serialize(),
                 smartSetting.actionData.serialize(),
                 1
@@ -72,4 +74,54 @@ class SmartSettingRepository {
             }
         }
     }
+
+    fun updateSmartSetting(smartSetting: SmartSetting<out Any, out Any, out Any>) {
+
+        if (smartSetting is LocationBasedVolumeSetting) {
+            val smartSettingDBModelToUpdate = SmartSettingDBModel(
+                null,
+                SmartSettingType.LOCBASEDAUDIO.value,
+                smartSetting.name,
+                smartSetting.criteriaData.serialize(),
+                smartSetting.actionData.serialize(),
+                1
+            )
+
+            doAsync {
+
+                val smartSettingDbModelFromDb = smartSettingDao.getSmartSettingByName(smartSetting.name)
+                if (smartSettingDbModelFromDb != null) {
+                    smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
+                    smartSettingDao.updateSmartSetting(smartSettingDBModelToUpdate)
+                }
+            }
+        }
+    }
+
+    fun deleteSmartSetting(smartSetting: SmartSetting<out Any, out Any, out Any>) {
+
+        if (smartSetting is LocationBasedVolumeSetting) {
+            val smartSettingDBModelToUpdate = SmartSettingDBModel(
+                null,
+                SmartSettingType.LOCBASEDAUDIO.value,
+                smartSetting.name,
+                smartSetting.criteriaData.serialize(),
+                smartSetting.actionData.serialize(),
+                1
+            )
+
+            doAsync {
+
+                val smartSettingDbModelFromDb = smartSettingDao.getSmartSettingByName(smartSetting.name)
+                if (smartSettingDbModelFromDb != null) {
+                    smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
+                    smartSettingDao.deleteSmartSetting(smartSettingDBModelToUpdate)
+                }
+            }
+        }
+    }
+}
+
+enum class SmartSettingType(val value: String) {
+    LOCBASEDAUDIO("locbasedaudio")
 }

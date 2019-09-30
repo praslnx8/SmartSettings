@@ -24,7 +24,7 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
@@ -93,6 +93,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:17.0.0"
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
-    implementation 'com.github.kaknazaveshtakipishi:PermissionEverywhere:1.0.2'
     implementation project(path: ':permissionhelper')
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -40,6 +41,10 @@ class CurrentLocationListener : ContextListener<LocationContext>() {
     override fun askListeningPermissionIfAny(permissionGrantCallback: (Boolean) -> Unit) {
         if (ContextCompat.checkSelfPermission(
                 context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(
+                context,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -65,7 +70,9 @@ class CurrentLocationListener : ContextListener<LocationContext>() {
 
         override fun onLocationResult(p0: LocationResult?) {
             super.onLocationResult(p0)
+            Log.d("XDFCE", "location callback received")
             if (p0 != null && p0.lastLocation != null) {
+                Log.d("XDFCE", "location callback valid")
                 contextChangeCallback?.let { it(LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)) }
             }
         }

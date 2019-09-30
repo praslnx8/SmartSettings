@@ -17,6 +17,6 @@ class SmartSettingsChooserViewModel : ViewModel() {
     lateinit var smartSettingRepository: SmartSettingRepository
 
     fun addSmartSetting(smartSetting: SmartSetting<out Any, out Any, out Any>) {
-        SmartProfile.enableSmartSetting(smartSettingRepository, smartSetting)
+        SmartProfile.addSmartSetting(smartSettingRepository, smartSetting)
     }
 }

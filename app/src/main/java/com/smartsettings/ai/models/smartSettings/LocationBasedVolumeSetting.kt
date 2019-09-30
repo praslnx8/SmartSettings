@@ -1,11 +1,7 @@
 package com.smartsettings.ai.models.smartSettings
 
-import android.content.Context
 import android.media.AudioManager
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Switch
-import com.smartsettings.ai.R
+import android.util.Log
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.models.actionData.VolumeActionData
 import com.smartsettings.ai.models.contextData.LocationContext
@@ -16,8 +12,9 @@ import com.smartsettings.ai.models.serializables.SerializableData
 import com.smartsettings.ai.utils.LocationUtils
 import javax.inject.Inject
 
-class LocationBasedVolumeSetting(locationData: LocationData, volumeActionData: VolumeActionData) :
+class LocationBasedVolumeSetting(name: String, locationData: LocationData, volumeActionData: VolumeActionData) :
     SmartSetting<LocationContext, LocationData, VolumeActionData>(
+        name,
         SerializableData(locationData),
         SerializableData(volumeActionData)
     ) {
@@ -40,26 +37,9 @@ class LocationBasedVolumeSetting(locationData: LocationData, volumeActionData: V
     @Inject
     lateinit var audioManager: AudioManager
 
-    override fun getView(context: Context): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)
-
-        val switchView = view.findViewById<Switch>(R.id.switch_view)
-
-        switchView.isChecked = isRunning()
-
-        switchView.setOnCheckedChangeListener { _, isEnable ->
-            setEnabled(isEnable)
-            if (isEnable && !isRunning()) {
-                start()
-            } else if (!isEnable && isRunning()) {
-                stop()
-            }
-        }
-
-        return view
-    }
-
     override fun applyChanges(settingData: VolumeActionData) {
+        Log.d("XDFCE", "changes applied")
+
         audioManager.setStreamVolume(
             AudioManager.STREAM_RING,
             audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
@@ -73,8 +53,11 @@ class LocationBasedVolumeSetting(locationData: LocationData, volumeActionData: V
                 Pair(criteria.lat, criteria.lon)
             ) < criteria.radiusInMetre
         ) {
+            Log.d("XDFCE", "criteria matched")
             return true
         }
+
+        Log.d("XDFCE", "criteria failed")
 
         return false
     }

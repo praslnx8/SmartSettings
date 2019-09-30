@@ -3,18 +3,20 @@ package com.smartsettings.ai
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.Observer
 import com.smartsettings.ai.models.SmartProfile
+import com.smartsettings.ai.models.smartSettings.SmartSetting
 import com.smartsettings.ai.repositories.SmartSettingRepository
 import javax.inject.Inject
 
 
-class MainForeGroundService : Service() {
+class MainForeGroundService : LifecycleService() {
 
     val CHANNEL_ID = "ForegroundServiceChannel"
 
@@ -33,25 +35,28 @@ class MainForeGroundService : Service() {
         }
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
+    override fun onCreate() {
+        super.onCreate()
+
+        SmartProfile.getSmartSettingLiveData()
+            .observe(this, Observer<Set<SmartSetting<out Any, out Any, out Any>>> { smartSettings ->
+                smartSettings.forEach { smartSetting ->
+                    Log.d("XDFCE", "service refreshed")
+                    if (smartSetting.isEnabled()) {
+                        smartSetting.start()
+                    } else {
+                        smartSetting.stop()
+                    }
+                }
+            })
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         showNotification()
 
-        val smartSettings = SmartProfile.getSmartSettings()
-
-        for (smartSetting in smartSettings) {
-            if (smartSetting.isEnabled()) {
-                smartSetting.start()
-            } else {
-                smartSetting.stop()
-            }
-        }
-
         return START_STICKY
+
     }
 
     private fun showNotification() {
@@ -84,7 +89,7 @@ class MainForeGroundService : Service() {
             )
 
             val manager = getSystemService(NotificationManager::class.java)
-            manager!!.createNotificationChannel(serviceChannel)
+            manager?.createNotificationChannel(serviceChannel)
         }
     }
 }

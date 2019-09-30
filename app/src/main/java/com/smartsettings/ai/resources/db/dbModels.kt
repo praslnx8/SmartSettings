@@ -7,9 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "smart_settings")
 data class SmartSettingDBModel(
 
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) var id: Int? = null,
 
     @ColumnInfo(name = "type") val type: String,
+
+    @ColumnInfo(name = "name") var name: String,
 
     @ColumnInfo(name = "criteriaData") var serializedCriteriaData: String,
 

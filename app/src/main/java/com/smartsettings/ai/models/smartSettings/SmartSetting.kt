@@ -1,11 +1,10 @@
 package com.smartsettings.ai.models.smartSettings
 
-import android.content.Context
-import android.view.View
 import com.smartsettings.ai.models.contextListeners.ContextListener
 import com.smartsettings.ai.models.serializables.SerializableData
 
 abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
+    val name: String,
     val criteriaData: SerializableData<CRITERIA>,
     val actionData: SerializableData<ACTION>
 ) {
@@ -13,6 +12,10 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
     private var isRunning = false
 
     private var isEnabled = false
+
+    private var isChangesApplied = false
+
+    private var settingChangesCallback: ((SmartSetting<out CONTEXT, out CRITERIA, out ACTION>) -> Unit)? = null
 
     fun isRunning(): Boolean {
         return isRunning
@@ -26,21 +29,38 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
         return isEnabled
     }
 
+    fun isChangesApplied(): Boolean {
+        return isChangesApplied
+    }
+
+    fun setChangesCallback(settingChangesCallback: ((SmartSetting<out CONTEXT, out CRITERIA, out ACTION>) -> Unit)) {
+        this.settingChangesCallback = settingChangesCallback
+    }
+
     fun start() {
         if (isEnabled && !isRunning) {
             askPermissions { isPermissionGranted ->
                 if (isPermissionGranted) {
                     isRunning = true
                     getContextListener().startListeningToContextChanges { contextData ->
-                        if (criteriaMatching(criteriaData.data, contextData)) {
-                            applyChanges(actionData.data)
-                        }
+                        onContextChange(contextData)
                     }
                 } else {
                     isEnabled = false
+                    settingChangesCallback?.invoke(this)
                 }
             }
         }
+    }
+
+    private fun onContextChange(contextData: CONTEXT) {
+        isChangesApplied = if (criteriaMatching(criteriaData.data, contextData) && !isChangesApplied) {
+            applyChanges(actionData.data)
+            true
+        } else {
+            false
+        }
+        settingChangesCallback?.invoke(this)
     }
 
     private fun askPermissions(permissionCallback: (Boolean) -> Unit) {
@@ -56,8 +76,11 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
     }
 
     fun stop() {
-        isRunning = false
-        getContextListener().stopListeningToContextChanges()
+        if (isRunning) {
+            isRunning = false
+            getContextListener().stopListeningToContextChanges()
+            settingChangesCallback?.invoke(this)
+        }
     }
 
     protected abstract fun applyChanges(settingData: ACTION)
@@ -67,6 +90,4 @@ abstract class SmartSetting<CONTEXT, CRITERIA, ACTION>(
     protected abstract fun getContextListener(): ContextListener<CONTEXT>
 
     protected abstract fun criteriaMatching(criteria: CRITERIA, contextData: CONTEXT): Boolean
-
-    abstract fun getView(context: Context): View
 }

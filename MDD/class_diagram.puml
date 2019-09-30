@@ -37,7 +37,7 @@ class SmartProfile <<(S,red) Singleton>> {
     - Map<SmartSetting, Boolean> smartSettings
     + void enableSmartSetting(SmartSetting smartSetting)
     + void disableSmartSetting(SmartSetting smartSetting)
-    + Map<SmartSetting, Boolean> getSmartSettings()
+    + Map<SmartSetting, Boolean> getSmartSettingsLiveData()
     - void persistSmartSettingToMemory()
     - void reInitializeSmartSettingsFromMemory()
 }
@@ -84,7 +84,7 @@ MainService .. SmartProfile : start/stop the smartSettings
 Home .. MainService : Starts service
 
 class SmartSettingRepository {
-    + void getSmartSettings()
+    + void getSmartSettingsLiveData()
 }
 
 SmartProfile o-- SmartSettingRepository

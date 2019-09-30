@@ -8,6 +8,9 @@ interface SmartSettingDao {
     @Query("SELECT * FROM smart_settings ORDER BY `order`")
     fun getSmartSettings(): List<SmartSettingDBModel>
 
+    @Query("SELECT * FROM smart_settings WHERE name = :name")
+    fun getSmartSettingByName(name: String): SmartSettingDBModel?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSmartSetting(smartSettingDBModel: SmartSettingDBModel)
 

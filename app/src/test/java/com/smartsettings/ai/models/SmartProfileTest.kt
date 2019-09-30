@@ -14,8 +14,8 @@ class SmartProfileTest {
 
         val smartSetting = mock(LocationBasedVolumeSetting::class.java)
 
-        SmartProfile.enableSmartSetting(smartSettingRepository, smartSetting)
-        assert(SmartProfile.getSmartSettings().contains(smartSetting))
+        SmartProfile.addSmartSetting(smartSettingRepository, smartSetting)
+        assert((SmartProfile.getSmartSettingLiveData().value ?: HashSet()).contains(smartSetting))
     }
 
     @Test
@@ -23,9 +23,8 @@ class SmartProfileTest {
 
         val smartSetting = mock(LocationBasedVolumeSetting::class.java)
 
-        SmartProfile.enableSmartSetting(smartSettingRepository, smartSetting)
-        SmartProfile.disableSmartSetting(smartSetting)
-        assert(SmartProfile.getSmartSettings().contains(smartSetting))
-        assert(!SmartProfile.getSmartSettings()[0].isEnabled())
+        SmartProfile.addSmartSetting(smartSettingRepository, smartSetting)
+        assert((SmartProfile.getSmartSettingLiveData().value ?: HashSet()).contains(smartSetting))
+        assert((SmartProfile.getSmartSettingLiveData().value ?: HashSet()).iterator().next().isEnabled())
     }
 }

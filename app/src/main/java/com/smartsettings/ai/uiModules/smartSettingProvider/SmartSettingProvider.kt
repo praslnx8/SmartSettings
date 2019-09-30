@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.smartSettingProvider
+package com.smartsettings.ai.uiModules.smartSettingProvider
 
 import android.content.Context
 import android.view.View

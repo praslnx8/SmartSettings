@@ -43,7 +43,7 @@ class LocationBasedVolumeSettingTest {
         val criteriaData = LocationData(12.12, 80.80, 10000)
         val actionData = VolumeActionData(80)
 
-        val locationBasedVolumeSetting = LocationBasedVolumeSetting(criteriaData, actionData)
+        val locationBasedVolumeSetting = LocationBasedVolumeSetting("", criteriaData, actionData)
         val changedData = LocationContext(12.12, 80.80)
 
         locationBasedVolumeSetting.setEnabled(true)

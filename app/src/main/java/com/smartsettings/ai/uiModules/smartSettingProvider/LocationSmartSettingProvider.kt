@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.smartSettingProvider
+package com.smartsettings.ai.uiModules.smartSettingProvider
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -29,7 +29,13 @@ class LocationSmartSettingProvider : SmartSettingProvider {
             lon = view.longitudeText.text.toString().toDouble()
             volume = view.volumeText.text.toString().toInt()
 
-            getSmartSetting(LocationBasedVolumeSetting(LocationData(lat, lon, radiusInMetre), VolumeActionData(volume)))
+            getSmartSetting(
+                LocationBasedVolumeSetting(
+                    "Location",
+                    LocationData(lat, lon, radiusInMetre),
+                    VolumeActionData(volume)
+                )
+            )
         }
 
         return view

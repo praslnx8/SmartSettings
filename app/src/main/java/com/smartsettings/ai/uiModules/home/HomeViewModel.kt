@@ -1,6 +1,5 @@
 package com.smartsettings.ai.uiModules.home
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.models.SmartProfile
@@ -17,11 +16,13 @@ class HomeViewModel : ViewModel() {
         SmartApp.appComponent.inject(this)
     }
 
-    val smartSettingLiveData = MutableLiveData<List<SmartSetting<out Any, out Any, out Any>>>()
+    val smartSettingLiveData = SmartProfile.getSmartSettingLiveData()
 
     fun getSmartSettings() {
-        SmartProfile.load(smartSettingRepository) {
-            smartSettingLiveData.value = SmartProfile.getSmartSettings()
-        }
+        SmartProfile.load(smartSettingRepository)
+    }
+
+    fun smartSettingChangedFromUser(smartSetting: SmartSetting<out Any, out Any, out Any>) {
+        SmartProfile.updateSmartSetting(smartSettingRepository, smartSetting)
     }
 }

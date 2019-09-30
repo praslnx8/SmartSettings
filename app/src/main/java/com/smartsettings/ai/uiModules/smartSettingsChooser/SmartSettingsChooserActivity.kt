@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.smartsettings.ai.R
-import com.smartsettings.ai.models.smartSettingProvider.LocationSmartSettingProvider
+import com.smartsettings.ai.uiModules.smartSettingProvider.LocationSmartSettingProvider
 import kotlinx.android.synthetic.main.activity_add_settings.*
 
 class SmartSettingsChooserActivity : AppCompatActivity() {

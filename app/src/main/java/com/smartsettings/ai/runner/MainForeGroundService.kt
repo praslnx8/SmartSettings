@@ -1,4 +1,4 @@
-package com.smartsettings.ai
+package com.smartsettings.ai.runner
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.Observer
+import com.smartsettings.ai.MainActivity
+import com.smartsettings.ai.R
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.smartSettings.SmartSetting

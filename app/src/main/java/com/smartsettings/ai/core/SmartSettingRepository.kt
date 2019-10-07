@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.settingChangers.SettingChanger
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
-import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
+import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
@@ -17,11 +17,6 @@ import org.jetbrains.anko.uiThread
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.Set
-import kotlin.collections.arrayListOf
-import kotlin.collections.forEach
-import kotlin.collections.mutableSetOf
 
 
 class SmartSettingRepository {
@@ -53,7 +48,7 @@ class SmartSettingRepository {
                         val settingChangers = createSettingChangersFromDbModels(smartSettingDbData.settingChangers)
 
                         val locationBasedVolumeSetting =
-                            LocationBasedVolumeSetting(smartSettingDbData.name, criteriaData)
+                            LocationBasedSmartSetting(smartSettingDbData.name, criteriaData)
                         locationBasedVolumeSetting.settingChangers.addAll(settingChangers)
 
                         smartSettings.add(locationBasedVolumeSetting)
@@ -82,7 +77,7 @@ class SmartSettingRepository {
 
     fun addSmartSetting(smartSetting: SmartSetting<out Any>) {
 
-        if (smartSetting is LocationBasedVolumeSetting) {
+        if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModel = SmartSettingDBModel(
                 1,
                 SmartSettingType.LOCBASEDAUDIO.value,
@@ -117,7 +112,7 @@ class SmartSettingRepository {
 
     fun updateSmartSetting(smartSetting: SmartSetting<out Any>) {
 
-        if (smartSetting is LocationBasedVolumeSetting) {
+        if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModelToUpdate = SmartSettingDBModel(
                 null,
                 SmartSettingType.LOCBASEDAUDIO.value,
@@ -140,7 +135,7 @@ class SmartSettingRepository {
 
     fun deleteSmartSetting(smartSetting: SmartSetting<out Any>) {
 
-        if (smartSetting is LocationBasedVolumeSetting) {
+        if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModelToUpdate = SmartSettingDBModel(
                 null,
                 SmartSettingType.LOCBASEDAUDIO.value,

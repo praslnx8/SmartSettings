@@ -9,7 +9,7 @@ import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.utils.LocationUtils
 import javax.inject.Inject
 
-class LocationBasedVolumeSetting(name: String, locationData: LocationData) :
+class LocationBasedSmartSetting(name: String, locationData: LocationData) :
     SmartSetting<LocationData>(
         name,
         SerializableData(locationData)

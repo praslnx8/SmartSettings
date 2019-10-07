@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import com.smartsettings.ai.R
-import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
+import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 object SmartSettingViewProvider {
@@ -19,7 +19,7 @@ object SmartSettingViewProvider {
         changesCallback: ((SmartSetting<out Any>) -> Unit)
     ): View {
 
-        if (smartSetting is LocationBasedVolumeSetting) {
+        if (smartSetting is LocationBasedSmartSetting) {
             val view = LayoutInflater.from(context).inflate(R.layout.item_loc_smart_setting, null)
 
             val nameText = view.findViewById<TextView>(R.id.nameText)

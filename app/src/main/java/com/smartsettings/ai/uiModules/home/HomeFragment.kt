@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.smartsettings.ai.MainForeGroundService
 import com.smartsettings.ai.R
+import com.smartsettings.ai.runner.MainForeGroundService
 import com.smartsettings.ai.uiModules.SmartSettingViewProvider
 import kotlinx.android.synthetic.main.fragment_home.view.*
 

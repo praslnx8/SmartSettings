@@ -62,12 +62,14 @@ SmartProfile *-- SmartSettingRepository : Load SmartSetting from db >
 package CREATE {
 
 class SmartSettingProvider {
+    - List<SmartSettingTemplate> smartSettingTemplates;
     + SmartSetting createSmartSetting()
 }
 
 SmartSettingProvider o-- SmartSetting : Creates >
 
 class SettingChangersProvider {
+    - List<SettingChangerTemplate> settingChangerTemplates;
     + Set<SettingChanger> createSettingChangers()
 }
 

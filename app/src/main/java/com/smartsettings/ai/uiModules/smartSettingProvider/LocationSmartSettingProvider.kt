@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import com.smartsettings.ai.R
-import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
+import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.criteriaData.LocationData
 import kotlinx.android.synthetic.main.item_loc_smart_setting_provider.view.*
@@ -29,7 +29,7 @@ class LocationSmartSettingProvider : SmartSettingProvider {
             volume = view.volumeText.text.toString().toInt()
 
             getSmartSetting(
-                LocationBasedVolumeSetting(
+                LocationBasedSmartSetting(
                     "Location",
                     LocationData(lat, lon, radiusInMetre)
                 )

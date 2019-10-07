@@ -27,7 +27,7 @@
         <activity android:name=".uiModules.smartSettingsChooser.SmartSettingsChooserActivity"/>
 
 
-        <service android:name=".MainForeGroundService"/>
+        <service android:name=".runner.MainForeGroundService"/>
     </application>
 
 </manifest>

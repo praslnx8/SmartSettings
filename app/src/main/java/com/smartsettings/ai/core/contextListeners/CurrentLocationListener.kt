@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.contextListeners
+package com.smartsettings.ai.core.contextListeners
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -14,16 +14,22 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.contextData.LocationContext
+import com.smartsettings.ai.data.contextData.LocationContext
 import com.smartsettings.permissionhelper.PermissionManager
 import javax.inject.Inject
 
-class CurrentLocationListener : ContextListener<LocationContext>() {
+class CurrentLocationListener : ContextListener {
+
+    override fun getContextData(): LocationContext? {
+        return locationContext
+    }
 
     @Inject
     lateinit var context: Context
 
-    private var contextChangeCallback: ((LocationContext) -> Unit)? = null
+    private var contextChangeCallback: (() -> Unit)? = null
+
+    private var locationContext: LocationContext? = null
 
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -33,7 +39,7 @@ class CurrentLocationListener : ContextListener<LocationContext>() {
     }
 
     @SuppressLint("MissingPermission")
-    override fun startListeningToContextChanges(contextChangeCallback: (LocationContext) -> Unit) {
+    override fun startListeningToContextChanges(contextChangeCallback: () -> Unit) {
         this.contextChangeCallback = contextChangeCallback
         startLocationUpdates()
     }
@@ -73,7 +79,8 @@ class CurrentLocationListener : ContextListener<LocationContext>() {
             Log.d("XDFCE", "location callback received")
             if (p0 != null && p0.lastLocation != null) {
                 Log.d("XDFCE", "location callback valid")
-                contextChangeCallback?.let { it(LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)) }
+                locationContext = LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)
+                contextChangeCallback?.invoke()
             }
         }
     }

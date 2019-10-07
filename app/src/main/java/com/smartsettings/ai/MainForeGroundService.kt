@@ -10,9 +10,9 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.Observer
-import com.smartsettings.ai.models.SmartProfile
-import com.smartsettings.ai.models.smartSettings.SmartSetting
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.SmartProfile
+import com.smartsettings.ai.core.SmartSettingRepository
+import com.smartsettings.ai.core.smartSettings.SmartSetting
 import javax.inject.Inject
 
 
@@ -38,8 +38,8 @@ class MainForeGroundService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        SmartProfile.getSmartSettingLiveData()
-            .observe(this, Observer<Set<SmartSetting<out Any, out Any, out Any>>> { smartSettings ->
+        SmartProfile.getSmartSettingListLiveData()
+            .observe(this, Observer<Set<SmartSetting<out Any>>> { smartSettings ->
                 smartSettings.forEach { smartSetting ->
                     Log.d("XDFCE", "service refreshed")
                     if (smartSetting.isEnabled()) {

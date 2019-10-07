@@ -1,10 +1,11 @@
 package com.smartsettings.ai.dagger
 
 import com.smartsettings.ai.MainActivity
-import com.smartsettings.ai.models.SmartProfile
-import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
-import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.SmartProfile
+import com.smartsettings.ai.core.SmartSettingRepository
+import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
+import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
+import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
 import com.smartsettings.ai.uiModules.home.HomeViewModel
 import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserViewModel
 import dagger.Component
@@ -30,4 +31,6 @@ interface AppComponent {
     fun inject(target: CurrentLocationListener)
 
     fun inject(target: SmartProfile)
+
+    fun inject(target: VolumeSettingChanger)
 }

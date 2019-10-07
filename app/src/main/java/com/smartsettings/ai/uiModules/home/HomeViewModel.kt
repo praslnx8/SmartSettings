@@ -2,9 +2,9 @@ package com.smartsettings.ai.uiModules.home
 
 import androidx.lifecycle.ViewModel
 import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.models.SmartProfile
-import com.smartsettings.ai.models.smartSettings.SmartSetting
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.SmartProfile
+import com.smartsettings.ai.core.SmartSettingRepository
+import com.smartsettings.ai.core.smartSettings.SmartSetting
 import javax.inject.Inject
 
 class HomeViewModel : ViewModel() {
@@ -22,7 +22,7 @@ class HomeViewModel : ViewModel() {
         SmartProfile.load(smartSettingRepository)
     }
 
-    fun smartSettingChangedFromUser(smartSetting: SmartSetting<out Any, out Any, out Any>) {
+    fun smartSettingChangedFromUser(smartSetting: SmartSetting<out Any>) {
         SmartProfile.updateSmartSetting(smartSettingRepository, smartSetting)
     }
 }

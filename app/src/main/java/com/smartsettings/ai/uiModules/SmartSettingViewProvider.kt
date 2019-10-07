@@ -8,15 +8,15 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import com.smartsettings.ai.R
-import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
-import com.smartsettings.ai.models.smartSettings.SmartSetting
+import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
+import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 object SmartSettingViewProvider {
 
     fun getView(
         context: Context,
-        smartSetting: SmartSetting<out Any, out Any, out Any>,
-        changesCallback: ((SmartSetting<out Any, out Any, out Any>) -> Unit)
+        smartSetting: SmartSetting<out Any>,
+        changesCallback: ((SmartSetting<out Any>) -> Unit)
     ): View {
 
         if (smartSetting is LocationBasedVolumeSetting) {

@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.criteriaData
+package com.smartsettings.ai.data.criteriaData
 
 data class LocationData(
     val lat: Double,

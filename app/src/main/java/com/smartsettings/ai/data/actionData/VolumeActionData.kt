@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.actionData
+package com.smartsettings.ai.data.actionData
 
 data class VolumeActionData(
     val volumeToBeSet: Int

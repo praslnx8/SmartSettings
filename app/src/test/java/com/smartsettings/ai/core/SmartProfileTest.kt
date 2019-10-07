@@ -1,7 +1,6 @@
-package com.smartsettings.ai.models
+package com.smartsettings.ai.core
 
-import com.smartsettings.ai.models.smartSettings.LocationBasedVolumeSetting
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.smartSettings.LocationBasedVolumeSetting
 import org.junit.Test
 import org.mockito.Mockito.mock
 

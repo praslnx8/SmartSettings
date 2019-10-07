@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.contextListeners
+package com.smartsettings.ai.core.contextListeners
 
 import android.Manifest
 import android.content.pm.PackageManager

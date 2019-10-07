@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.serializables
+package com.smartsettings.ai.core.serializables
 
 import com.google.gson.Gson
 

@@ -3,9 +3,9 @@ package com.smartsettings.ai
 import android.content.Context
 import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.smartsettings.ai.core.SmartSettingRepository
+import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.dagger.AppModule
-import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
-import com.smartsettings.ai.repositories.SmartSettingRepository
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import org.mockito.Mockito.mock
 

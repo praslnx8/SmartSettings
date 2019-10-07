@@ -1,21 +1,24 @@
-package com.smartsettings.ai.models
+package com.smartsettings.ai.core
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.smartsettings.ai.models.smartSettings.SmartSetting
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 object SmartProfile {
 
-    private val smartSettings = HashSet<SmartSetting<out Any, out Any, out Any>>()
+    private val smartSettings = HashSet<SmartSetting<out Any>>()
 
-    private val smartSettingsLiveData: MutableLiveData<Set<SmartSetting<out Any, out Any, out Any>>> = MutableLiveData(
+    private val smartSettingsLiveData: MutableLiveData<Set<SmartSetting<out Any>>> = MutableLiveData(
+        smartSettings
+    )
+
+    private val smartSettingsListLiveData: MutableLiveData<Set<SmartSetting<out Any>>> = MutableLiveData(
         smartSettings
     )
 
     private var isLoaded = false
 
-    private val smartSettingChangeCallback: ((SmartSetting<out Any, out Any, out Any>) -> Unit) = {
+    private val smartSettingChangeCallback: ((SmartSetting<out Any>) -> Unit) = {
         smartSettings.add(it)
         smartSettingsLiveData.value = smartSettings
     }
@@ -31,44 +34,52 @@ object SmartProfile {
                     smartSettings.add(smartSetting)
                 }
                 smartSettingsLiveData.value = smartSettings
+                smartSettingsListLiveData.value = smartSettings
                 isLoaded = true
             }
         }
     }
 
-    fun getSmartSettingLiveData(): LiveData<Set<SmartSetting<out Any, out Any, out Any>>> {
+    fun getSmartSettingLiveData(): LiveData<Set<SmartSetting<out Any>>> {
         return smartSettingsLiveData
+    }
+
+    fun getSmartSettingListLiveData(): LiveData<Set<SmartSetting<out Any>>> {
+        return smartSettingsListLiveData
     }
 
     fun addSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any, out Any, out Any>
+        smartSetting: SmartSetting<out Any>
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.addSmartSetting(smartSetting)
         smartSettingsLiveData.value = smartSettings
+        smartSettingsListLiveData.value = smartSettings
     }
 
     fun updateSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any, out Any, out Any>
+        smartSetting: SmartSetting<out Any>
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.updateSmartSetting(smartSetting)
         smartSettingsLiveData.value = smartSettings
+        smartSettingsListLiveData.value = smartSettings
     }
 
     fun deleteSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any, out Any, out Any>
+        smartSetting: SmartSetting<out Any>
     ) {
         smartSettings.remove(smartSetting)
         smartSettingRepository.deleteSmartSetting(smartSetting)
         smartSettingsLiveData.value = smartSettings
+        smartSettingsListLiveData.value = smartSettings
     }
 
     private fun checkAndAdd(
-        smartSetting: SmartSetting<out Any, out Any, out Any>
+        smartSetting: SmartSetting<out Any>
     ) {
         if (!smartSettings.contains(smartSetting)) {
             smartSetting.setChangesCallback(smartSettingChangeCallback)

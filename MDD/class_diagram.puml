@@ -1,91 +1,106 @@
 @startuml
 
-package UI {
-class Home {
+package CORE {
 
-}
-
-note left of Home {
-    App main UI.
-}
-
-interface SmartSettingProvider {
-    + View getInputView((SmartSetting))
-}
-
-note right of SmartSettingChooser
-UI for showing list of smart setting types available.
-end note
-
-SmartSettingChooser *-- SmartSettingProvider
-
-}
-
-abstract class SmartSetting<CONTEXT, CRITERIA, ACTION> {
-    - CRITERIA criteriaData
-    - ACTION actionData
-    - boolean isRunning
-    + boolean isRunning()
-    + void start()
-    + void stop()
-    # abstract void applySettingChanges()
-    # abstract Listener<CONTEXT> getListener()
-    # abstract void isCriteriaMatching(CRITERIA criteriaData, CONTEXT contextData)
-    + abstract void askSettingChangePermissionIfAny((Boolean))
-    - void startListenForContextChanges((CONTEXT))
-    - void stopListeningToContextChanges()
-}
-
-abstract class Listener<T> {
+abstract class ContextListener<ContextData> {
     # abstract void startListenForContextChanges((Boolean))
     # abstract void stopListeningToContextChanges()
-    + abstract void askListeningPermissionIfAny()
-    - onContextChange(T contextData)
+    + abstract void askListeningPermissionIfAny((boolean))
+    + abstract void isListeningPermissionGranterIfAny()
+    - void onContextChange((ContextData))
 }
 
-SmartSetting *-- Listener
+interface SettingChanger<ActionData> {
+    - ActionData actionData
+    + abstract void applySettingChanges()
+    + abstract void isApplyPermissionGranterIfAny()
+    + abstract void askApplyPermissionIfAny((boolean))
+}
 
-SmartSettingProvider .. SmartSetting
+abstract class SmartSetting<CriteriaData> {
+    - boolean enabled
+    - boolean isChangesApplied
+    - CriteriaData criteriaData
+    - ConjunctionLogic logic
+    # Set<ContextListener> listeners
+    # Set<SettingChanger> settingChangers
+    - void applySettingChanges()
+    # abstract void isCriteriaMatching(CriteriaData criteriaData, Set<ContextData> contextData, (boolean))
+    + boolean isEnabled()
+    + start()
+    + stop()
+    + boolean isSettingApplied()
+}
+
+SmartSetting *-- ContextListener : Composed of >
+SmartSetting o-- SettingChanger : Has list of >
+
+class SmartSettingRepository {
+
+    + List<SmartSetting> getSmartSetting()
+    + void insertSmartSetting(SmartSetting smartSetting)
+    + void deleteSmartSetting(SmartSetting smartSetting)
+}
+
+note top of SmartSettingRepository : Perform persisting smartsettings \nmeta informantion to database and \nreconstructing it.
+
+SmartSettingRepository o-- SmartSetting : Recreate/persist >
 
 class SmartProfile <<(S,red) Singleton>> {
-    - Map<SmartSetting, Boolean> smartSettings
+    - Set<SmartSetting> smartSettings
     + void enableSmartSetting(SmartSetting smartSetting)
     + void disableSmartSetting(SmartSetting smartSetting)
-    + Map<SmartSetting, Boolean> getSmartSettingsLiveData()
+    + Set<SmartSetting> getSmartSettingsLiveData()
     - void persistSmartSettingToMemory()
     - void reInitializeSmartSettingsFromMemory()
 }
 
-note right of SmartProfile
-Singleton object.
-end note
-
-SmartProfile o-- SmartSetting : has List of created smart setting
-
-class SmartSettingChooser {
-    - List<SmartSettingProvider> smartSettingProvider;
+SmartProfile o-- SmartSetting : Has Set of >
+SmartProfile *-- SmartSettingRepository : Load SmartSetting from db >
 }
 
-Home .. SmartProfile : enables/diabled smartSetting
-Home o-- SmartSettingChooser : asks to provide SmartSetting
+package CREATE {
 
-class MainService<<(S,red) Singleton>> {
-    - void startSmartSettings()
-    - void stopSmartSettings()
+class SmartSettingProvider {
+    + SmartSetting createSmartSetting()
 }
 
-note left of MainService
-Never ending non ui process
-end note
+SmartSettingProvider o-- SmartSetting : Creates >
 
-MainService .. SmartProfile : start/stop the smartSettings
-
-Home .. MainService : Starts service
-
-class SmartSettingRepository {
-    + void getSmartSettingsLiveData()
+class SettingChangersProvider {
+    + Set<SettingChanger> createSettingChangers()
 }
 
-SmartProfile o-- SmartSettingRepository
+SettingChangersProvider o-- SettingChanger : Creates >
+
+class SmartSettingBuilder {
+    - SmartSettingProvider smartSettingProvider
+    - SettingChangersProvider settingChangersProvider
+    + SmartSetting buildSmartSetting()
+}
+
+SmartSettingBuilder *-- SmartSettingProvider
+SmartSettingBuilder *-- SettingChangersProvider
+SmartSettingBuilder o-- SmartSetting : Builds >
+
+}
+
+package RUNNER {
+
+class MainService {
+    - void runSmartSettings()
+}
+
+MainService - SmartSetting : Runs smart settings >
+MainService - SmartProfile : Get List of SmartSetting >
+}
+
+package VIEW {
+    class SmartSettingView {
+        - void showSmartSettings(Set<SmartSetting> smartSettings)
+    }
+
+    SmartSettingView o-- SmartProfile : Load SmartSettings >
+}
 
 @enduml

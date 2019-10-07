@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 @Database(entities = arrayOf(SmartSettingDBModel::class), version = 1)
+@TypeConverters(SettingChangerConverter::class)
 abstract class SmartSettingDatabase : RoomDatabase() {
 
     abstract fun getSmartSettingDao(): SmartSettingDao

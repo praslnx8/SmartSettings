@@ -1,4 +1,4 @@
-package com.smartsettings.ai.models.smartSettings
+package com.smartsettings.ai.core.smartSettings
 
 import android.content.Context
 import android.media.AudioManager
@@ -6,9 +6,9 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.TestAppModule
-import com.smartsettings.ai.models.actionData.VolumeActionData
-import com.smartsettings.ai.models.contextData.LocationContext
-import com.smartsettings.ai.models.criteriaData.LocationData
+import com.smartsettings.ai.data.actionData.VolumeActionData
+import com.smartsettings.ai.data.contextData.LocationContext
+import com.smartsettings.ai.data.criteriaData.LocationData
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

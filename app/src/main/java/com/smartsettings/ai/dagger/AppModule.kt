@@ -3,8 +3,8 @@ package com.smartsettings.ai.dagger
 import android.content.Context
 import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.smartsettings.ai.models.contextListeners.CurrentLocationListener
-import com.smartsettings.ai.repositories.SmartSettingRepository
+import com.smartsettings.ai.core.SmartSettingRepository
+import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import com.smartsettings.ai.resources.db.SmartSettingDatabase
 import dagger.Module

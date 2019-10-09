@@ -180,6 +180,10 @@ abstract class SmartSetting<CRITERIA>(
         this.settingChangers.addAll(settingChangers)
     }
 
+    fun getSettingChangers(): Set<SettingChanger<Any>> {
+        return settingChangers
+    }
+
     protected abstract fun criteriaMatchingForContextDataFromListener(
         criteria: CRITERIA,
         contextListener: ContextListener

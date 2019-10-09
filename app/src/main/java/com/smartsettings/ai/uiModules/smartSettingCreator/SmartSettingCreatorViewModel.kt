@@ -5,7 +5,9 @@ import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.settingChangers.SettingChanger
+import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.smartSettings.SmartSetting
+import com.smartsettings.ai.core.smartSettings.SmartSettingType
 import javax.inject.Inject
 
 class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
@@ -23,8 +25,10 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
     override fun setView(view: SmartSettingCreatorView) {
         this.view = view
+    }
 
-        view.showChooseSmartSettingMenu()
+    override fun onViewLoaded() {
+        view?.showChooseSmartSettingMenu()
     }
 
     override fun onSmartSettingTypeSelected(smartSettingType: SmartSettingType) {
@@ -37,6 +41,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
     override fun onSmartSettingCreated(smartSetting: SmartSetting<out Any>) {
         this.smartSetting = smartSetting
+        view?.showChooseSettingChangerMenu()
     }
 
     override fun onSettingChangersCreated(settingChangers: Set<SettingChanger<Any>>) {

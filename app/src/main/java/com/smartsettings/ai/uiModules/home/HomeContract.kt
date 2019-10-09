@@ -15,4 +15,6 @@ interface HomePresenter {
     fun getSmartSettings(lifecycleOwner: LifecycleOwner)
 
     fun smartSettingChangedFromUser(smartSetting: SmartSetting<out Any>)
+
+    fun deleteSmartSetting(smartSetting: SmartSetting<out Any>)
 }

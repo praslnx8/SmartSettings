@@ -36,4 +36,8 @@ class HomeViewModel : ViewModel(), HomePresenter {
     override fun smartSettingChangedFromUser(smartSetting: SmartSetting<out Any>) {
         SmartProfile.updateSmartSetting(smartSettingRepository, smartSetting)
     }
+
+    override fun deleteSmartSetting(smartSetting: SmartSetting<out Any>) {
+        SmartProfile.deleteSmartSetting(smartSettingRepository, smartSetting)
+    }
 }

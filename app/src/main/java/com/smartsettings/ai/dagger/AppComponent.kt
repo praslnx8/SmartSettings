@@ -4,11 +4,12 @@ import com.smartsettings.ai.MainActivity
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
+import com.smartsettings.ai.core.contextListeners.WifiListener
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
+import com.smartsettings.ai.core.smartSettings.WifiBasedSmartSetting
 import com.smartsettings.ai.uiModules.home.HomeViewModel
 import com.smartsettings.ai.uiModules.smartSettingCreator.SmartSettingCreatorViewModel
-import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -27,13 +28,15 @@ interface AppComponent {
 
     fun inject(target: HomeViewModel)
 
-    fun inject(target: SmartSettingsChooserViewModel)
-
     fun inject(target: CurrentLocationListener)
 
     fun inject(target: SmartProfile)
 
     fun inject(target: VolumeSettingChanger)
 
-    fun inject(smartSettingCreatorViewModel: SmartSettingCreatorViewModel)
+    fun inject(target: SmartSettingCreatorViewModel)
+
+    fun inject(target: WifiBasedSmartSetting)
+
+    fun inject(target: WifiListener)
 }

@@ -4,9 +4,11 @@ import android.content.Context
 import com.google.gson.Gson
 import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.settingChangers.SettingChanger
+import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSetting
+import com.smartsettings.ai.core.smartSettings.SmartSettingType
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.resources.db.SettingChangerDBModel
@@ -14,9 +16,7 @@ import com.smartsettings.ai.resources.db.SmartSettingDBModel
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class SmartSettingRepository {
@@ -41,7 +41,7 @@ class SmartSettingRepository {
 
             for (smartSettingDbData in smartSettingsFromDb) {
                 if (smartSettingDbData.id != null) {
-                    if (smartSettingDbData.type == SmartSettingType.LOCBASEDAUDIO.value) {
+                    if (smartSettingDbData.type == SmartSettingType.LOCATION_BASED_SETTING.value) {
 
                         val criteriaData =
                             Gson().fromJson(smartSettingDbData.serializedCriteriaData, LocationData::class.java)
@@ -49,7 +49,7 @@ class SmartSettingRepository {
 
                         val locationBasedVolumeSetting =
                             LocationBasedSmartSetting(smartSettingDbData.name, criteriaData)
-                        locationBasedVolumeSetting.settingChangers.addAll(settingChangers)
+                        locationBasedVolumeSetting.addSettingChangers(settingChangers)
 
                         smartSettings.add(locationBasedVolumeSetting)
                     }
@@ -66,7 +66,7 @@ class SmartSettingRepository {
         val settingChangers = mutableSetOf<SettingChanger<Any>>()
 
         settingChangerDbModels.forEach {
-            if (it.type == SettingChangetType.VOLUMECHANGER.value) {
+            if (it.type == SettingChangerType.VOLUME_CHANGER.value) {
                 val volumeActionData = Gson().fromJson(it.serializedActionData, VolumeActionData::class.java)
                 settingChangers.add(VolumeSettingChanger(volumeActionData))
             }
@@ -80,10 +80,10 @@ class SmartSettingRepository {
         if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModel = SmartSettingDBModel(
                 1,
-                SmartSettingType.LOCBASEDAUDIO.value,
+                SmartSettingType.LOCATION_BASED_SETTING.value,
                 smartSetting.name,
                 smartSetting.criteriaData.serialize(),
-                convertToSettingChangerDBList(smartSetting.settingChangers),
+                convertToSettingChangerDBList(smartSetting.getSettingChangers()),
                 1
             )
 
@@ -93,14 +93,14 @@ class SmartSettingRepository {
         }
     }
 
-    private fun convertToSettingChangerDBList(settingChangers: HashSet<SettingChanger<out Any>>): List<SettingChangerDBModel> {
+    private fun convertToSettingChangerDBList(settingChangers: Set<SettingChanger<Any>>): List<SettingChangerDBModel> {
         val settingChangerDbModels = arrayListOf<SettingChangerDBModel>()
 
         settingChangers.forEach {
             if (it is VolumeSettingChanger) {
                 settingChangerDbModels.add(
                     SettingChangerDBModel(
-                        SettingChangetType.VOLUMECHANGER.value,
+                        SettingChangerType.VOLUME_CHANGER.value,
                         it.serializableActionData.serialize()
                     )
                 )
@@ -115,10 +115,10 @@ class SmartSettingRepository {
         if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModelToUpdate = SmartSettingDBModel(
                 null,
-                SmartSettingType.LOCBASEDAUDIO.value,
+                SmartSettingType.LOCATION_BASED_SETTING.value,
                 smartSetting.name,
                 smartSetting.criteriaData.serialize(),
-                convertToSettingChangerDBList(smartSetting.settingChangers),
+                convertToSettingChangerDBList(smartSetting.getSettingChangers()),
                 1
             )
 
@@ -138,10 +138,10 @@ class SmartSettingRepository {
         if (smartSetting is LocationBasedSmartSetting) {
             val smartSettingDBModelToUpdate = SmartSettingDBModel(
                 null,
-                SmartSettingType.LOCBASEDAUDIO.value,
+                SmartSettingType.LOCATION_BASED_SETTING.value,
                 smartSetting.name,
                 smartSetting.criteriaData.serialize(),
-                convertToSettingChangerDBList(smartSetting.settingChangers),
+                convertToSettingChangerDBList(smartSetting.getSettingChangers()),
                 1
             )
 
@@ -155,12 +155,4 @@ class SmartSettingRepository {
             }
         }
     }
-}
-
-enum class SmartSettingType(val value: String) {
-    LOCBASEDAUDIO("locbasedaudio")
-}
-
-enum class SettingChangetType(val value: String) {
-    VOLUMECHANGER("volumechanger")
 }

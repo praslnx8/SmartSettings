@@ -6,13 +6,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.smartsettings.ai.ext.inTransaction
 import com.smartsettings.ai.uiModules.home.HomeFragment
-import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserActivity
+import com.smartsettings.ai.uiModules.smartSettingCreator.SmartSettingCreatorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private val reqForAddSmartSetting = 21
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            SmartSettingsChooserActivity.open(this, reqForAddSmartSetting)
+            SmartSettingCreatorActivity.open(this)
         }
 
         supportFragmentManager.inTransaction {

@@ -20,9 +20,11 @@ class HomeFragment : Fragment(), HomeView {
         val ctx = context
         if (ctx != null) {
             for (smartSetting in smartSettings) {
-                parentLayout.addView(SmartSettingViewProvider.getView(ctx, smartSetting) {
-                    homePresenter?.smartSettingChangedFromUser(smartSetting)
-                })
+                parentLayout.addView(SmartSettingViewProvider.getView(ctx, smartSetting, { changedSmartSetting ->
+                    homePresenter?.smartSettingChangedFromUser(changedSmartSetting)
+                }, {
+                    homePresenter?.deleteSmartSetting(smartSetting)
+                }))
             }
         }
     }

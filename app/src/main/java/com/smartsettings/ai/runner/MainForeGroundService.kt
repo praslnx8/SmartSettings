@@ -6,24 +6,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.Observer
 import com.smartsettings.ai.MainActivity
 import com.smartsettings.ai.R
-import com.smartsettings.ai.core.SmartProfile
-import com.smartsettings.ai.core.SmartSettingRepository
-import com.smartsettings.ai.core.smartSettings.SmartSetting
-import javax.inject.Inject
 
 
 class MainForeGroundService : LifecycleService() {
 
-    val CHANNEL_ID = "ForegroundServiceChannel"
-
-    @Inject
-    lateinit var smartSettingRepository: SmartSettingRepository
+    private val CHANNEL_ID = "ForegroundServiceChannel"
 
     companion object {
         fun startService(context: Context) {
@@ -40,22 +31,19 @@ class MainForeGroundService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        SmartProfile.getSmartSettingListLiveData()
-            .observe(this, Observer<Set<SmartSetting<out Any>>> { smartSettings ->
-                smartSettings.forEach { smartSetting ->
-                    Log.d("XDFCE", "service refreshed")
-                    if (smartSetting.isEnabled()) {
-                        smartSetting.start()
-                    } else {
-                        smartSetting.stop()
-                    }
-                }
-            })
+        showNotification()
+
+        MainService.onCreate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        MainService.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        showNotification()
 
         return START_STICKY
 

@@ -29,7 +29,7 @@ abstract class SmartSetting<CRITERIA>(
 
     private var settingChangesCallback: ((SmartSetting<CRITERIA>) -> Unit)? = null
 
-    val settingChangers = HashSet<SettingChanger<Any>>()
+    private val settingChangers = HashSet<SettingChanger<Any>>()
 
     private val contextListeners by lazy {
         createContextListeners()
@@ -171,6 +171,13 @@ abstract class SmartSetting<CRITERIA>(
             }
             settingChangesCallback?.invoke(this)
         }
+    }
+
+    fun addSettingChangers(settingChangers: Set<SettingChanger<Any>>, isClearPrevious: Boolean = false) {
+        if (isClearPrevious) {
+            this.settingChangers.clear()
+        }
+        this.settingChangers.addAll(settingChangers)
     }
 
     protected abstract fun criteriaMatchingForContextDataFromListener(

@@ -63,14 +63,14 @@ package CREATE {
 
 class SmartSettingProvider {
     - List<SmartSettingTemplate> smartSettingTemplates;
-    + SmartSetting createSmartSetting()
+    + SmartSetting getSmartSetting()
 }
 
 SmartSettingProvider o-- SmartSetting : Creates >
 
 class SettingChangersProvider {
     - List<SettingChangerTemplate> settingChangerTemplates;
-    + Set<SettingChanger> createSettingChangers()
+    + Set<SettingChanger> getSettingChangers()
 }
 
 SettingChangersProvider o-- SettingChanger : Creates >
@@ -89,9 +89,11 @@ SmartSettingBuilder o-- SmartSetting : Builds >
 
 package RUNNER {
 
-class MainService {
+class MainService <<(S,red) Singleton>> {
     - void runSmartSettings()
 }
+
+note top of MainService : Should be invoked \nby Android Service.
 
 MainService - SmartSetting : Runs smart settings >
 MainService - SmartProfile : Get List of SmartSetting >

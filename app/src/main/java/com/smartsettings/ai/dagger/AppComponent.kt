@@ -7,6 +7,7 @@ import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.uiModules.home.HomeViewModel
+import com.smartsettings.ai.uiModules.smartSettingCreator.SmartSettingCreatorViewModel
 import com.smartsettings.ai.uiModules.smartSettingsChooser.SmartSettingsChooserViewModel
 import dagger.Component
 import javax.inject.Singleton
@@ -33,4 +34,6 @@ interface AppComponent {
     fun inject(target: SmartProfile)
 
     fun inject(target: VolumeSettingChanger)
+
+    fun inject(smartSettingCreatorViewModel: SmartSettingCreatorViewModel)
 }

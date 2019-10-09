@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".uiModules.smartSettingsChooser.SmartSettingsChooserActivity"/>
+        <activity android:name=".uiModules.smartSettingCreator.SmartSettingCreatorActivity"/>
+        <activity android:name=".uiModules.smartSettingCreator.LocationBasedSettingInputActivity"/>
 
 
         <service android:name=".runner.MainForeGroundService"/>

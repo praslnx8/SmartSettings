@@ -1,0 +1,8 @@
+@startuml
+
+SmartSetting -> ContextListener : Listen to Context Change
+ContextListener --> SmartSetting : Context Data
+SmartSetting -> SmartSetting : If Criteria Matches
+SmartSetting -> SettingChanger : Apply Changes
+
+@enduml

@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.core.app.ActivityCompat
+import com.smartsettings.ai.R
 
 
 object InputDialogUtils {
@@ -64,6 +66,7 @@ object InputDialogUtils {
             layout.orientation = LinearLayout.VERTICAL
             for (hint in hintText) {
                 val editText = EditText(context)
+                editText.background = ActivityCompat.getDrawable(context, R.drawable.edit_text)
                 editText.hint = hint
                 layout.addView(editText)
             }
@@ -91,6 +94,10 @@ object InputDialogUtils {
                     dialog?.dismiss()
                 }
             }
+        }
+
+        dialogBuilder.setOnCancelListener {
+            callBack(false, arrayOf())
         }
 
         dialog = dialogBuilder.create()

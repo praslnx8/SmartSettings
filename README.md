@@ -12,5 +12,9 @@ This project also uses REST API for few features such as FindMyDevice, Change PI
 
 The Web version, will give user the GUI to locate phone and change PIN. The Web GUI part will be handled by React.
 
+Sequence Diagram:
+![Sequence Diagram](https://raw.githubusercontent.com/praslnx8/SmartSettings/master/MDD/sequence_diagram.png)
+
+Class Diagram:
 ![Class Diagram](https://raw.githubusercontent.com/praslnx8/SmartSettings/master/MDD/class_diagram.png)
 

@@ -2,11 +2,25 @@ package com.smartsettings.ai.core.settingChangers
 
 import com.smartsettings.ai.core.serializables.SerializableData
 
-abstract class SettingChanger<out T>(val serializableActionData: SerializableData<out T>) {
+abstract class SettingChanger<T>(val serializableActionData: SerializableData<out T>) {
 
-    val actionData = serializableActionData.data
+    private var isChangesApplied = false
 
     abstract fun askSettingChangePermissionIfAny(permissionGrantCallback: (Boolean) -> Unit)
 
-    abstract fun applyChanges()
+    abstract fun isPermissionGranted(): Boolean
+
+    fun applyChanges() {
+        isChangesApplied = isPermissionGranted() && applySettingChanges(serializableActionData.data)
+    }
+
+    protected abstract fun applySettingChanges(actionData: T): Boolean
+
+    fun isChangesApplied(): Boolean {
+        return isChangesApplied
+    }
+
+    fun getSerializableData(): SerializableData<out T> {
+        return serializableActionData
+    }
 }

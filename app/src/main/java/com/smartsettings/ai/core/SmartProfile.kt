@@ -20,21 +20,25 @@ object SmartProfile {
 
     private val smartSettingChangeCallback: ((SmartSetting<out Any>) -> Unit) = {
         smartSettings.add(it)
+        smartSettingsLiveData.postValue(smartSettings)
+    }
+
+    private fun updateLiveData() {
         smartSettingsLiveData.value = smartSettings
+        smartSettingsListLiveData.value = smartSettings
     }
 
     fun load(smartSettingRepository: SmartSettingRepository) {
 
         if (isLoaded) {
-            smartSettingsLiveData.value = smartSettings
+            updateLiveData()
         } else {
             smartSettingRepository.getSmartSettings {
-                for (smartSetting in smartSettings) {
+                for (smartSetting in it) {
                     smartSetting.setChangesCallback(smartSettingChangeCallback)
                     smartSettings.add(smartSetting)
                 }
-                smartSettingsLiveData.value = smartSettings
-                smartSettingsListLiveData.value = smartSettings
+                updateLiveData()
                 isLoaded = true
             }
         }
@@ -54,8 +58,7 @@ object SmartProfile {
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.addSmartSetting(smartSetting)
-        smartSettingsLiveData.value = smartSettings
-        smartSettingsListLiveData.value = smartSettings
+        updateLiveData()
     }
 
     fun updateSmartSetting(
@@ -64,8 +67,7 @@ object SmartProfile {
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.updateSmartSetting(smartSetting)
-        smartSettingsLiveData.value = smartSettings
-        smartSettingsListLiveData.value = smartSettings
+        updateLiveData()
     }
 
     fun deleteSmartSetting(
@@ -74,8 +76,7 @@ object SmartProfile {
     ) {
         smartSettings.remove(smartSetting)
         smartSettingRepository.deleteSmartSetting(smartSetting)
-        smartSettingsLiveData.value = smartSettings
-        smartSettingsListLiveData.value = smartSettings
+        updateLiveData()
     }
 
     private fun checkAndAdd(

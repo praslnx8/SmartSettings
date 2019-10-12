@@ -53,7 +53,7 @@ class CurrentLocationListenerTest {
             )
         ).thenReturn(PackageManager.PERMISSION_GRANTED)
 
-        CurrentLocationListener().askListeningPermissionIfAny {
+        CurrentLocationListener().askListeningPermission {
             isPermissionGranted = it
         }
 

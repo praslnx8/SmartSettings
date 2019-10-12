@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <FrameLayout
+                android:id="@+id/smartSettingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:background="@drawable/border_enabled">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                <TextView
+                        android:id="@+id/nameText"
+                        style="@style/TextItemHeading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@id/deleteIcon"
+                        tools:text="Silent at Office"/>
+
+                <ImageView
+                        android:id="@+id/deleteIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_toStartOf="@id/switchView"
+                        android:contentDescription="@string/delete_setting"
+                        android:background="@drawable/ic_delete_black_24dp"/>
+
+                <Switch
+                        android:id="@+id/switchView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:checked="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="8dp"/>
+
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+            android:id="@+id/connector"
+            android:layout_width="2dp"
+            android:layout_height="24dp"
+            android:background="@color/divider"
+            tools:background="@color/enabled"
+            android:layout_gravity="center"/>
+
+    <LinearLayout
+            android:id="@+id/actionsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:padding="@dimen/card_padding"
+            android:background="@drawable/border_success_green"
+            android:gravity="center">
+
+        <!--Sample layout for UI Preview-->
+        <include layout="@layout/item_setting_changer"/>
+
+    </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/card_padding"
+            android:background="@color/divider"
+            android:layout_marginBottom="@dimen/card_padding"/>
+
+</LinearLayout>

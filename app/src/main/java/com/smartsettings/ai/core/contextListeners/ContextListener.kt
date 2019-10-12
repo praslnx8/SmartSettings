@@ -1,12 +1,22 @@
 package com.smartsettings.ai.core.contextListeners
 
-interface ContextListener {
+abstract class ContextListener {
 
-    fun startListeningToContextChanges(contextChangeCallback: () -> Unit)
+    abstract fun startListeningToContextChanges(contextChangeCallback: () -> Unit)
 
-    fun stopListeningToContextChanges()
+    abstract fun stopListeningToContextChanges()
 
-    fun getContextData(): Any?
+    abstract fun getContextData(): Any?
 
-    fun askListeningPermissionIfAny(permissionGrantCallback: (Boolean) -> Unit)
+    protected abstract fun askListeningPermission(permissionGrantCallback: (Boolean) -> Unit)
+
+    abstract fun isListeningPermissionGranted(): Boolean
+
+    fun askListeningPermissionIfAny(permissionGrantCallback: (Boolean) -> Unit) {
+        if (isListeningPermissionGranted()) {
+            permissionGrantCallback(true)
+        } else {
+            askListeningPermission(permissionGrantCallback)
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSettingType
+import com.smartsettings.ai.core.smartSettings.WifiBasedSmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.resources.db.SettingChangerDBModel
@@ -40,20 +41,27 @@ class SmartSettingRepository {
             val smartSettingsFromDb = smartSettingDao.getSmartSettings()
 
             for (smartSettingDbData in smartSettingsFromDb) {
-                if (smartSettingDbData.id != null) {
-                    if (smartSettingDbData.type == SmartSettingType.LOCATION_BASED_SETTING.value) {
+                val settingChangers = createSettingChangersFromDbModels(smartSettingDbData.settingChangers)
 
-                        val criteriaData =
-                            Gson().fromJson(smartSettingDbData.serializedCriteriaData, LocationData::class.java)
-                        val settingChangers = createSettingChangersFromDbModels(smartSettingDbData.settingChangers)
+                val smartSetting = if (smartSettingDbData.type == SmartSettingType.LOCATION_BASED_SETTING.value) {
 
-                        val locationBasedVolumeSetting =
-                            LocationBasedSmartSetting(smartSettingDbData.name, criteriaData)
-                        locationBasedVolumeSetting.addSettingChangers(settingChangers)
+                    val criteriaData =
+                        Gson().fromJson(smartSettingDbData.serializedCriteriaData, LocationData::class.java)
+                    val locationBasedVolumeSetting =
+                        LocationBasedSmartSetting(smartSettingDbData.name, criteriaData)
+                    locationBasedVolumeSetting.addSettingChangers(settingChangers)
+                    locationBasedVolumeSetting
+                } else if (smartSettingDbData.type == SmartSettingType.WIFI_BASED_SETTING.value) {
 
-                        smartSettings.add(locationBasedVolumeSetting)
-                    }
+                    val wifiBasedSmartSetting =
+                        WifiBasedSmartSetting(smartSettingDbData.name, smartSettingDbData.serializedCriteriaData)
+                    wifiBasedSmartSetting.addSettingChangers(settingChangers)
+                    wifiBasedSmartSetting
+                } else {
+                    throw IllegalArgumentException("Undefined setting type from db")
                 }
+
+                smartSettings.add(smartSetting)
             }
 
             uiThread {
@@ -62,8 +70,8 @@ class SmartSettingRepository {
         }
     }
 
-    private fun createSettingChangersFromDbModels(settingChangerDbModels: List<SettingChangerDBModel>): Set<SettingChanger<Any>> {
-        val settingChangers = mutableSetOf<SettingChanger<Any>>()
+    private fun createSettingChangersFromDbModels(settingChangerDbModels: List<SettingChangerDBModel>): Set<SettingChanger<out Any>> {
+        val settingChangers = mutableSetOf<SettingChanger<out Any>>()
 
         settingChangerDbModels.forEach {
             if (it.type == SettingChangerType.VOLUME_CHANGER.value) {
@@ -77,34 +85,45 @@ class SmartSettingRepository {
 
     fun addSmartSetting(smartSetting: SmartSetting<out Any>) {
 
-        if (smartSetting is LocationBasedSmartSetting) {
-            val smartSettingDBModel = SmartSettingDBModel(
-                1,
-                SmartSettingType.LOCATION_BASED_SETTING.value,
-                smartSetting.name,
-                smartSetting.criteriaData.serialize(),
-                convertToSettingChangerDBList(smartSetting.getSettingChangers()),
-                1
-            )
+        val smartSettingType = if (smartSetting is LocationBasedSmartSetting) {
+            SmartSettingType.LOCATION_BASED_SETTING.value
+        } else if (smartSetting is WifiBasedSmartSetting) {
+            SmartSettingType.WIFI_BASED_SETTING.value
+        } else {
+            throw IllegalArgumentException("Type not added as functionality")
+        }
 
-            doAsync {
-                smartSettingDao.insertSmartSetting(smartSettingDBModel)
-            }
+        val smartSettingDBModel = SmartSettingDBModel(
+            null,
+            smartSettingType,
+            smartSetting.name,
+            smartSetting.criteriaData.serialize(),
+            convertToSettingChangerDBList(smartSetting.getSettingChangers()),
+            1
+        )
+
+        doAsync {
+            smartSettingDao.insertSmartSetting(smartSettingDBModel)
         }
     }
 
-    private fun convertToSettingChangerDBList(settingChangers: Set<SettingChanger<Any>>): List<SettingChangerDBModel> {
+    private fun convertToSettingChangerDBList(settingChangers: Set<SettingChanger<out Any>>): List<SettingChangerDBModel> {
         val settingChangerDbModels = arrayListOf<SettingChangerDBModel>()
 
         settingChangers.forEach {
-            if (it is VolumeSettingChanger) {
-                settingChangerDbModels.add(
-                    SettingChangerDBModel(
-                        SettingChangerType.VOLUME_CHANGER.value,
-                        it.serializableActionData.serialize()
-                    )
-                )
+
+            val settingChangerType = if (it is VolumeSettingChanger) {
+                SettingChangerType.VOLUME_CHANGER.value
+            } else {
+                throw IllegalArgumentException("Type not added as functinality")
             }
+
+            settingChangerDbModels.add(
+                SettingChangerDBModel(
+                    settingChangerType,
+                    it.serializableActionData.serialize()
+                )
+            )
         }
 
         return settingChangerDbModels
@@ -112,23 +131,29 @@ class SmartSettingRepository {
 
     fun updateSmartSetting(smartSetting: SmartSetting<out Any>) {
 
-        if (smartSetting is LocationBasedSmartSetting) {
-            val smartSettingDBModelToUpdate = SmartSettingDBModel(
-                null,
-                SmartSettingType.LOCATION_BASED_SETTING.value,
-                smartSetting.name,
-                smartSetting.criteriaData.serialize(),
-                convertToSettingChangerDBList(smartSetting.getSettingChangers()),
-                1
-            )
+        val smartSettingType = if (smartSetting is LocationBasedSmartSetting) {
+            SmartSettingType.LOCATION_BASED_SETTING.value
+        } else if (smartSetting is WifiBasedSmartSetting) {
+            SmartSettingType.WIFI_BASED_SETTING.value
+        } else {
+            throw IllegalArgumentException("Undefined type")
+        }
 
-            doAsync {
+        val smartSettingDBModelToUpdate = SmartSettingDBModel(
+            null,
+            smartSettingType,
+            smartSetting.name,
+            smartSetting.criteriaData.serialize(),
+            convertToSettingChangerDBList(smartSetting.getSettingChangers()),
+            1
+        )
 
-                val smartSettingDbModelFromDb = smartSettingDao.getSmartSettingByName(smartSetting.name)
-                if (smartSettingDbModelFromDb != null) {
-                    smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
-                    smartSettingDao.updateSmartSetting(smartSettingDBModelToUpdate)
-                }
+        doAsync {
+
+            val smartSettingDbModelFromDb = smartSettingDao.getSmartSettingByName(smartSetting.name)
+            if (smartSettingDbModelFromDb != null) {
+                smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
+                smartSettingDao.updateSmartSetting(smartSettingDBModelToUpdate)
             }
         }
     }

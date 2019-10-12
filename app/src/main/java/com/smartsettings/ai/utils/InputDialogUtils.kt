@@ -71,7 +71,7 @@ object InputDialogUtils {
             dialogBuilder.setView(layout)
         }
 
-        dialogBuilder.setPositiveButton(positiveBtnText) { p0, p1 ->
+        dialogBuilder.setPositiveButton(positiveBtnText) { _, _ ->
             val valueArrayList = arrayListOf<String>()
             for (i in 0 until layout.childCount) {
                 val editText = layout.getChildAt(i) as EditText
@@ -85,7 +85,8 @@ object InputDialogUtils {
 
         negativeBtnText?.let {
 
-            dialogBuilder.setNegativeButton(negativeBtnText) { p0, p1 ->
+            dialogBuilder.setCancelable(false)
+            dialogBuilder.setNegativeButton(negativeBtnText) { _, _ ->
                 if (callBack(false, arrayOf())) {
                     dialog?.dismiss()
                 }

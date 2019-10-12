@@ -18,7 +18,7 @@ import com.smartsettings.ai.data.contextData.LocationContext
 import com.smartsettings.permissionhelper.PermissionManager
 import javax.inject.Inject
 
-class CurrentLocationListener : ContextListener {
+class CurrentLocationListener : ContextListener() {
 
     override fun getContextData(): LocationContext? {
         return locationContext
@@ -44,30 +44,36 @@ class CurrentLocationListener : ContextListener {
         startLocationUpdates()
     }
 
-    override fun askListeningPermissionIfAny(permissionGrantCallback: (Boolean) -> Unit) {
-        if (ContextCompat.checkSelfPermission(
+    override fun isListeningPermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(
+                    && ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionGrantCallback(true)
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                PermissionManager.requestPermission(
-                    context,
-                    21,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                ) {
-                    permissionGrantCallback(it.isAllGranted())
-                }
-            } else {
-                PermissionManager.requestPermission(context, 21, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    permissionGrantCallback(it.isAllGranted())
-                }
+            return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    override fun askListeningPermission(permissionGrantCallback: (Boolean) -> Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            PermissionManager.requestPermission(
+                context,
+                21,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            ) {
+                permissionGrantCallback(it.isAllGranted())
+            }
+        } else {
+            PermissionManager.requestPermission(context, 21, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                permissionGrantCallback(it.isAllGranted())
             }
         }
     }

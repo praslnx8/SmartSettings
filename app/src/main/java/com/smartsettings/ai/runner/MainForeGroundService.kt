@@ -3,20 +3,16 @@ package com.smartsettings.ai.runner
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
 import com.smartsettings.ai.MainActivity
 import com.smartsettings.ai.R
 
 
-class MainForeGroundService : Service() {
-    override fun onBind(p0: Intent?): IBinder? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class MainForeGroundService : LifecycleService() {
 
     private val CHANNEL_ID = "ForegroundServiceChannel"
 

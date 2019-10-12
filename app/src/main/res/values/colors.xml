@@ -2,5 +2,17 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#03A9F4</color>
+
+    <color name="divider">#BDBDBD</color>
+
+    <color name="successGreen">#8BC34A</color>
+    <color name="failureRed">#F44336</color>
+    <color name="enabled">#03A9F4</color>
+    <color name="disabled">#607D8B</color>
+
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+
+    <color name="icon">#727272</color>
 </resources>

@@ -44,7 +44,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
         view?.showChooseSettingChangerMenu()
     }
 
-    override fun onSettingChangersCreated(settingChangers: Set<SettingChanger<Any>>) {
+    override fun onSettingChangersCreated(settingChangers: Set<SettingChanger<out Any>>) {
         smartSetting?.addSettingChangers(settingChangers)
 
         smartSetting?.let {

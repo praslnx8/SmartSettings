@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">SmartSettings</string>
     <string name="action_settings">Settings</string>
+    <string name="setting_changer">Setting Changer</string>
+    <string name="empty_settings_message">No Settings added.\nAdd settings by tapping the + Button</string>
+    <string name="delete_setting">Delete Setting</string>
 </resources>

@@ -29,7 +29,7 @@ abstract class SmartSetting<CRITERIA>(
 
     private var settingChangesCallback: ((SmartSetting<CRITERIA>) -> Unit)? = null
 
-    private val settingChangers = HashSet<SettingChanger<Any>>()
+    private val settingChangers = HashSet<SettingChanger<out Any>>()
 
     private val contextListeners by lazy {
         createContextListeners()
@@ -55,6 +55,16 @@ abstract class SmartSetting<CRITERIA>(
         this.settingChangesCallback = settingChangesCallback
     }
 
+    fun isListeningPermissionGranted(): Boolean {
+        for (contextListener in contextListeners) {
+            if (!contextListener.isListeningPermissionGranted()) {
+                return false
+            }
+        }
+
+        return true
+    }
+
     fun start() {
         if (isEnabled && !isRunning) {
             askPermissions { isPermissionGranted ->
@@ -65,6 +75,7 @@ abstract class SmartSetting<CRITERIA>(
                             onContextChange()
                         }
                     }
+                    settingChangesCallback?.invoke(this)
                 } else {
                     isEnabled = false
                     settingChangesCallback?.invoke(this)
@@ -129,7 +140,7 @@ abstract class SmartSetting<CRITERIA>(
 
     private fun askSettingChangePermission(
         previousVal: Boolean,
-        iterator: Iterator<SettingChanger<Any>>,
+        iterator: Iterator<SettingChanger<out Any>>,
         callBack: (Boolean) -> Unit
     ) {
         if (iterator.hasNext()) {
@@ -173,14 +184,14 @@ abstract class SmartSetting<CRITERIA>(
         }
     }
 
-    fun addSettingChangers(settingChangers: Set<SettingChanger<Any>>, isClearPrevious: Boolean = false) {
+    fun addSettingChangers(settingChangers: Set<SettingChanger<out Any>>, isClearPrevious: Boolean = false) {
         if (isClearPrevious) {
             this.settingChangers.clear()
         }
         this.settingChangers.addAll(settingChangers)
     }
 
-    fun getSettingChangers(): Set<SettingChanger<Any>> {
+    fun getSettingChangers(): Set<SettingChanger<out Any>> {
         return settingChangers
     }
 
@@ -190,4 +201,5 @@ abstract class SmartSetting<CRITERIA>(
     ): Boolean
 
     protected abstract fun createContextListeners(): Set<ContextListener>
+
 }

@@ -11,6 +11,7 @@ import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import com.smartsettings.ai.core.smartSettings.SmartSettingType
+import com.smartsettings.ai.core.smartSettings.WifiBasedSmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.utils.InputDialogUtils
@@ -50,6 +51,31 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
                         val locationBasedSmartSetting = LocationBasedSmartSetting(name, LocationData(lat, lon, radius))
                         smartSettingCreatorPresenter?.onSmartSettingCreated(locationBasedSmartSetting)
+                        true
+                    } catch (e: NumberFormatException) {
+                        false
+                    }
+                } else {
+                    true
+                }
+            }
+
+            otherDialog?.show()
+        } else if (smartSettingType == SmartSettingType.WIFI_BASED_SETTING) {
+            otherDialog = InputDialogUtils.ask(
+                this,
+                "Enter Details",
+                "OK",
+                arrayOf("Name", "SSID")
+            ) { isPositve, valueArray ->
+
+                if (isPositve) {
+                    try {
+                        val name = valueArray[0]
+                        val ssid = valueArray[1]
+
+                        val wifiBasedSmartSetting = WifiBasedSmartSetting(name, ssid)
+                        smartSettingCreatorPresenter?.onSmartSettingCreated(wifiBasedSmartSetting)
                         true
                     } catch (e: NumberFormatException) {
                         false

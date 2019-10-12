@@ -5,24 +5,22 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.smartsettings.ai.ext.inTransaction
-import com.smartsettings.ai.uiModules.home.HomeFragment
 import com.smartsettings.ai.uiModules.smartSettingCreator.SmartSettingCreatorActivity
+import com.smartsettings.ai.uiModules.smartSettingView.SmartSettingViewFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
             SmartSettingCreatorActivity.open(this)
         }
 
         supportFragmentManager.inTransaction {
-            add(container.id, HomeFragment())
+            add(container.id, SmartSettingViewFragment())
         }
     }
 

@@ -30,5 +30,5 @@ interface SmartSettingCreatorPresenter {
 
     fun onSmartSettingCreated(smartSetting: SmartSetting<out Any>)
 
-    fun onSettingChangersCreated(settingChangers: Set<SettingChanger<Any>>)
+    fun onSettingChangersCreated(settingChangers: Set<SettingChanger<out Any>>)
 }

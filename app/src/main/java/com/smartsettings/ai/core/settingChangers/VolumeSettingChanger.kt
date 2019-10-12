@@ -20,11 +20,17 @@ class VolumeSettingChanger(volumeActionData: VolumeActionData) :
         permissionGrantCallback(true)
     }
 
-    override fun applyChanges() {
+    override fun isPermissionGranted(): Boolean {
+        return true
+    }
+
+    override fun applySettingChanges(actionData: VolumeActionData): Boolean {
         audioManager.setStreamVolume(
             AudioManager.STREAM_RING,
-            audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
-            actionData.volumeToBeSet
+            serializableActionData.data.volumeToBeSet,
+            audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)
         )
+
+        return true
     }
 }

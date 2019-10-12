@@ -5,6 +5,7 @@ import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.contextListeners.CurrentLocationListener
+import com.smartsettings.ai.core.contextListeners.WifiListener
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import com.smartsettings.ai.resources.db.SmartSettingDatabase
 import dagger.Module
@@ -38,14 +39,17 @@ open class AppModule(private val app: Context) {
     }
 
     @Provides
-    @Singleton
     open fun provideCurrentLocationListener(): CurrentLocationListener {
         return CurrentLocationListener()
     }
 
     @Provides
-    @Singleton
     open fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
         return FusedLocationProviderClient(app)
+    }
+
+    @Provides
+    open fun provideWifiListener(): WifiListener {
+        return WifiListener()
     }
 }

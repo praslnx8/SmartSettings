@@ -20,6 +20,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnit4"
+
+        resValue "string", "google_maps_key",
+                (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
     buildTypes {
         debug {
@@ -86,12 +89,15 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    def room_version = "2.1.0"
+    def room_version = "2.2.0"
     //annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
-    implementation "com.google.android.gms:play-services-location:17.0.0"
+    def play_service_version = "17.0.0"
+    implementation "com.google.android.gms:play-services-location:$play_service_version"
+    implementation "com.google.android.gms:play-services-maps:$play_service_version"
+
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
     implementation project(path: ':permissionhelper')

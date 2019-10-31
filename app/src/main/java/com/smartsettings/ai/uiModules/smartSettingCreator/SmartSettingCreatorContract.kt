@@ -26,7 +26,7 @@ interface SmartSettingCreatorPresenter {
 
     fun onSmartSettingTypeSelected(smartSettingType: SmartSettingType)
 
-    fun onSettingChangerSelected(settingChangerType: SettingChangerType)
+    fun onSettingChangerSelected(settingChangerType: Array<SettingChangerType>)
 
     fun onSmartSettingCreated(smartSetting: SmartSetting<out Any>)
 

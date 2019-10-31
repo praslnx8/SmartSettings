@@ -18,7 +18,7 @@ class SmartSettingViewFragment : Fragment(), SmartSettingView {
     private var smartSettingViewPresenter: SmartSettingViewPresenter? = null
 
     private var adapter = SmartSettingRecyclerViewAdapter({
-        smartSettingViewPresenter?.smartSettingChangedFromUser(it)
+        smartSettingViewPresenter?.updateSmartSetting(it)
     }, {
         smartSettingViewPresenter?.deleteSmartSetting(it)
     })

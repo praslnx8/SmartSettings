@@ -15,15 +15,15 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
     @Inject
     lateinit var smartSettingRepository: SmartSettingRepository
 
+    private val smartSettingLiveData = SmartProfile.getSmartSettingLiveData()
+
+    private lateinit var smartSettingView: SmartSettingView
+
+    private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting<out Any>>()
+
     init {
         SmartApp.appComponent.inject(this)
     }
-
-    private val smartSettingLiveData = SmartProfile.getSmartSettingLiveData()
-
-    private var smartSettingView: SmartSettingView? = null
-
-    private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting<out Any>>()
 
     override fun setHomeView(smartSettingView: SmartSettingView) {
         this.smartSettingView = smartSettingView
@@ -31,24 +31,22 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
 
     override fun getSmartSettings(lifecycleOwner: LifecycleOwner) {
         SmartProfile.load(smartSettingRepository)
-        smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting<out Any>>> {
+        smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting<out Any>>> { smartSettings ->
 
-            val smartSettingViewDataList = ArrayList<SmartSettingViewData>()
-            for ((key, smartSetting) in it.withIndex()) {
-                val smartSettingViewData = SmartSettingViewData.getSmartSetting(key, smartSetting)
-                smartSettingViewDataMap[key] = smartSetting
-                smartSettingViewDataList.add(smartSettingViewData)
+            val smartSettingViewDataList = smartSettings.withIndex().map { it ->
+                smartSettingViewDataMap[it.index] = it.value
+                SmartSettingViewData.getSmartSetting(it.index, it.value)
             }
 
             if (smartSettingViewDataList.isNotEmpty()) {
-                smartSettingView?.showSmartSettings(smartSettingViewDataList)
+                smartSettingView.showSmartSettings(smartSettingViewDataList)
             } else {
-                smartSettingView?.showEmptyView()
+                smartSettingView.showEmptyView()
             }
         })
     }
 
-    override fun smartSettingChangedFromUser(smartSettingViewData: SmartSettingViewData) {
+    override fun updateSmartSetting(smartSettingViewData: SmartSettingViewData) {
         smartSettingViewDataMap[smartSettingViewData.key]?.let {
             it.setEnabled(smartSettingViewData.isEnabled)
             SmartProfile.updateSmartSetting(smartSettingRepository, it)

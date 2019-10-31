@@ -16,7 +16,7 @@ interface SmartSettingViewPresenter {
 
     fun getSmartSettings(lifecycleOwner: LifecycleOwner)
 
-    fun smartSettingChangedFromUser(smartSettingViewData: SmartSettingViewData)
+    fun updateSmartSetting(smartSettingViewData: SmartSettingViewData)
 
     fun deleteSmartSetting(smartSettingViewData: SmartSettingViewData)
 }

@@ -55,15 +55,8 @@ abstract class SmartSetting<CRITERIA>(
         this.settingChangesCallback = settingChangesCallback
     }
 
-    fun isListeningPermissionGranted(): Boolean {
-        for (contextListener in contextListeners) {
-            if (!contextListener.isListeningPermissionGranted()) {
-                return false
-            }
-        }
-
-        return true
-    }
+    fun isListeningPermissionGranted(): Boolean
+            = contextListeners.any { it.isListeningPermissionGranted() }
 
     fun start() {
         if (isEnabled && !isRunning) {

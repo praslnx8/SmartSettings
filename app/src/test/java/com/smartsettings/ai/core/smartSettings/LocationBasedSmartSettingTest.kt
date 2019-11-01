@@ -48,11 +48,11 @@ class LocationBasedSmartSettingTest {
         locationBasedVolumeSetting.settingChangers.add(volumeSettingMock)
         locationBasedVolumeSetting.setEnabled(true)
 
-        Mockito.`when`(testAppModule.currentLocationListener.askListeningPermission(any())).then {
+        Mockito.`when`(testAppModule.locationContextListener.askListeningPermission(any())).then {
             it.getArgument<((Boolean) -> Unit)>(0)(true)
         }
 
-        Mockito.`when`(testAppModule.currentLocationListener.startListeningToContextChanges(any())).then {
+        Mockito.`when`(testAppModule.locationContextListener.startListeningToContextChanges(any())).then {
             it.getArgument<(() -> Unit)>(0)()
         }
 
@@ -60,7 +60,7 @@ class LocationBasedSmartSettingTest {
             it.getArgument<((Boolean) -> Unit)>(0)(true)
         }
 
-        Mockito.`when`(testAppModule.currentLocationListener.getContextData())
+        Mockito.`when`(testAppModule.locationContextListener.getContextData())
             .thenReturn(changedData)
 
         locationBasedVolumeSetting.start()

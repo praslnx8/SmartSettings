@@ -14,20 +14,18 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.smartsettings.ai.SmartApp
+import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.contextData.LocationContext
+import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.utils.LocationUtils
 import com.smartsettings.permissionhelper.PermissionManager
 import javax.inject.Inject
 
-class CurrentLocationListener : ContextListener() {
-
-    override fun getContextData(): LocationContext? {
-        return locationContext
-    }
+class LocationContextListener(locationData: LocationData) :
+    ContextListener<LocationData>(SerializableData(locationData)) {
 
     @Inject
     lateinit var context: Context
-
-    private var contextChangeCallback: (() -> Unit)? = null
 
     private var locationContext: LocationContext? = null
 
@@ -39,23 +37,22 @@ class CurrentLocationListener : ContextListener() {
     }
 
     @SuppressLint("MissingPermission")
-    override fun startListeningToContextChanges(contextChangeCallback: () -> Unit) {
-        this.contextChangeCallback = contextChangeCallback
+    override fun startListeningToContextChanges() {
         startLocationUpdates()
     }
 
     override fun isListeningPermissionGranted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return ContextCompat.checkSelfPermission(
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED)
         } else {
-            return ContextCompat.checkSelfPermission(
+            ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
@@ -86,7 +83,7 @@ class CurrentLocationListener : ContextListener() {
             if (p0 != null && p0.lastLocation != null) {
                 Log.d("XDFCE", "location callback valid")
                 locationContext = LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)
-                contextChangeCallback?.invoke()
+                onContextChange()
             }
         }
     }
@@ -104,6 +101,19 @@ class CurrentLocationListener : ContextListener() {
             locationCallback,
             Looper.getMainLooper()
         )
+    }
+
+    override fun isCriteriaMatches(criteriaData: LocationData): Boolean {
+        if (LocationUtils.getDistanceInMetre(
+                Pair(locationContext?.lat ?: 0.0, locationContext?.lon ?: 0.0),
+                Pair(criteriaData.lat, criteriaData.lon)
+            ) < criteriaData.radiusInMetre
+        ) {
+            Log.d("XDFCE", "criteria matched")
+            return true
+        }
+
+        return false
     }
 
     override fun stopListeningToContextChanges() {

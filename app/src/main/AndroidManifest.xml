@@ -28,10 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".uiModules.smartSettingCreator.SmartSettingCreatorActivity"/>
-        <activity android:name=".uiModules.smartSettingCreator.views.SmartSettingChooserActivity"/>
-        <activity android:name=".uiModules.smartSettingCreator.views.LocationBasedSmartSettingInputActivity"/>
-
 
         <service android:name=".runner.MainForeGroundService"/>
 

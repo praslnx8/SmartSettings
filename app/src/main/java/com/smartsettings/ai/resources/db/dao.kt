@@ -5,7 +5,7 @@ import androidx.room.*
 @Dao
 interface SmartSettingDao {
 
-    @Query("SELECT * FROM smart_settings ORDER BY `order`")
+    @Query("SELECT * FROM smart_settings")
     fun getSmartSettings(): List<SmartSettingDBModel>
 
     @Query("SELECT * FROM smart_settings WHERE name = :name")

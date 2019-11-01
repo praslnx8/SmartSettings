@@ -9,19 +9,23 @@ data class SmartSettingDBModel(
 
     @PrimaryKey(autoGenerate = true) var id: Int? = null,
 
-    @ColumnInfo(name = "type") var type: String,
-
     @ColumnInfo(name = "name") var name: String,
-
-    @ColumnInfo(name = "criteriaData") var serializedCriteriaData: String,
 
     @ColumnInfo(name = "setting_changers") var settingChangers: List<SettingChangerDBModel>,
 
-    @ColumnInfo(name = "order") var order: Int
+    @ColumnInfo(name = "context_listeners") var contextListeners: List<ContextListenerDBModel>,
+
+    @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String
+
 )
 
 data class SettingChangerDBModel(
     var type: String,
     var serializedActionData: String
+)
+
+data class ContextListenerDBModel(
+    var type: String,
+    var serializedCriteriaData: String
 )
 

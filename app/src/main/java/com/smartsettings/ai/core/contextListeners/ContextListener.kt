@@ -1,12 +1,39 @@
 package com.smartsettings.ai.core.contextListeners
 
-abstract class ContextListener {
+import com.smartsettings.ai.core.serializables.SerializableData
 
-    abstract fun startListeningToContextChanges(contextChangeCallback: () -> Unit)
+abstract class ContextListener<T>(val serializableCriteriaData: SerializableData<out T>) {
+
+    private lateinit var criteriaMatchedCallback: () -> Unit
+
+    private var isCriteriaMatches = false
+
+    fun startListeningToContextChanges(criteriaMatchedCallback: () -> Unit) {
+        this.criteriaMatchedCallback = criteriaMatchedCallback
+        startListeningToContextChanges()
+    }
+
+    protected abstract fun startListeningToContextChanges()
 
     abstract fun stopListeningToContextChanges()
 
-    abstract fun getContextData(): Any?
+    /**
+     * Should be called when there is context change happens from the listener.
+     * This method should be called by the child classes.
+     */
+    protected fun onContextChange() {
+        if (isCriteriaMatches(serializableCriteriaData.data)) {
+            isCriteriaMatches = true
+            criteriaMatchedCallback()
+        } else {
+            isCriteriaMatches = false
+        }
+    }
+
+    /**
+     * Check the criteriaData against ContextData that is fetched from the ContextListener
+     */
+    protected abstract fun isCriteriaMatches(criteriaData: T): Boolean
 
     protected abstract fun askListeningPermission(permissionGrantCallback: (Boolean) -> Unit)
 
@@ -18,5 +45,9 @@ abstract class ContextListener {
         } else {
             askListeningPermission(permissionGrantCallback)
         }
+    }
+
+    fun isCriteriaMatches(): Boolean {
+        return isCriteriaMatches
     }
 }

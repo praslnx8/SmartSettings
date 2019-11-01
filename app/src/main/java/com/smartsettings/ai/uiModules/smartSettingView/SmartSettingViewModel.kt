@@ -19,7 +19,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
 
     private lateinit var smartSettingView: SmartSettingView
 
-    private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting<out Any>>()
+    private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting>()
 
     init {
         SmartApp.appComponent.inject(this)
@@ -31,7 +31,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
 
     override fun getSmartSettings(lifecycleOwner: LifecycleOwner) {
         SmartProfile.load(smartSettingRepository)
-        smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting<out Any>>> { smartSettings ->
+        smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting>> { smartSettings ->
 
             val smartSettingViewDataList = smartSettings.withIndex().map { it ->
                 smartSettingViewDataMap[it.index] = it.value

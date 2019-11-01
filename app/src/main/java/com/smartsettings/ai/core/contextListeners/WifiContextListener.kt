@@ -1,6 +1,5 @@
 package com.smartsettings.ai.core.contextListeners
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -9,15 +8,13 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.util.Log
 import com.smartsettings.ai.SmartApp
+import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.contextData.WifiContext
 import javax.inject.Inject
 
 
-class WifiListener : ContextListener() {
+class WifiContextListener(SSID: String) : ContextListener<String>(SerializableData(SSID)) {
 
-    override fun getContextData(): WifiContext? {
-        return wifiContext
-    }
 
     @Inject
     lateinit var context: Context
@@ -46,9 +43,7 @@ class WifiListener : ContextListener() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    override fun startListeningToContextChanges(contextChangeCallback: () -> Unit) {
-        this.contextChangeCallback = contextChangeCallback
+    override fun startListeningToContextChanges() {
         registerBroadcastReceiver()
     }
 
@@ -66,6 +61,14 @@ class WifiListener : ContextListener() {
 
     override fun askListeningPermission(permissionGrantCallback: (Boolean) -> Unit) {
         permissionGrantCallback(true)
+    }
+
+    override fun isCriteriaMatches(criteriaData: String): Boolean {
+        if (wifiContext?.ssid == criteriaData) {
+            return true
+        }
+
+        return false
     }
 
     override fun stopListeningToContextChanges() {

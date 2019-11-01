@@ -2,12 +2,12 @@ package com.smartsettings.ai.core.smartSettings
 
 import androidx.annotation.StringDef
 import com.smartsettings.ai.core.contextListeners.ContextListener
-import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.core.settingChangers.SettingChanger
 
-abstract class SmartSetting<CRITERIA>(
+class SmartSetting(
     val name: String,
-    val criteriaData: SerializableData<CRITERIA>,
+    val contextListeners: Set<ContextListener<out Any>>,
+    val settingChangers: Set<SettingChanger<out Any>>,
     @ConjunctionLogic val conjunctionLogic: String = AND
 ) {
 
@@ -27,13 +27,7 @@ abstract class SmartSetting<CRITERIA>(
 
     private var isChangesApplied = false
 
-    private var settingChangesCallback: ((SmartSetting<CRITERIA>) -> Unit)? = null
-
-    private val settingChangers = HashSet<SettingChanger<out Any>>()
-
-    private val contextListeners by lazy {
-        createContextListeners()
-    }
+    private var settingChangesCallback: ((SmartSetting) -> Unit)? = null
 
     fun isRunning(): Boolean {
         return isRunning
@@ -51,7 +45,7 @@ abstract class SmartSetting<CRITERIA>(
         return isChangesApplied
     }
 
-    fun setChangesCallback(settingChangesCallback: ((SmartSetting<CRITERIA>) -> Unit)) {
+    fun setChangesCallback(settingChangesCallback: ((SmartSetting) -> Unit)) {
         this.settingChangesCallback = settingChangesCallback
     }
 
@@ -98,18 +92,10 @@ abstract class SmartSetting<CRITERIA>(
         var isCriteriaMatches = conjunctionLogic != OR
 
         for (contextListener in contextListeners) {
-            if (conjunctionLogic == OR && criteriaMatchingForContextDataFromListener(
-                    criteriaData.data,
-                    contextListener
-                )
-            ) {
+            if (conjunctionLogic == OR && contextListener.isCriteriaMatches()) {
                 isCriteriaMatches = true
                 break
-            } else if (conjunctionLogic == AND && !criteriaMatchingForContextDataFromListener(
-                    criteriaData.data,
-                    contextListener
-                )
-            ) {
+            } else if (conjunctionLogic == AND && !contextListener.isCriteriaMatches()) {
                 isCriteriaMatches = false
                 break
             }
@@ -151,7 +137,7 @@ abstract class SmartSetting<CRITERIA>(
 
     private fun askContextListenerPermission(
         previousVal: Boolean,
-        iterator: Iterator<ContextListener>,
+        iterator: Iterator<ContextListener<out Any>>,
         callBack: (Boolean) -> Unit
     ) {
         if (iterator.hasNext()) {
@@ -176,23 +162,4 @@ abstract class SmartSetting<CRITERIA>(
             settingChangesCallback?.invoke(this)
         }
     }
-
-    fun addSettingChangers(settingChangers: Set<SettingChanger<out Any>>, isClearPrevious: Boolean = false) {
-        if (isClearPrevious) {
-            this.settingChangers.clear()
-        }
-        this.settingChangers.addAll(settingChangers)
-    }
-
-    fun getSettingChangers(): Set<SettingChanger<out Any>> {
-        return settingChangers
-    }
-
-    protected abstract fun criteriaMatchingForContextDataFromListener(
-        criteria: CRITERIA,
-        contextListener: ContextListener
-    ): Boolean
-
-    protected abstract fun createContextListeners(): Set<ContextListener>
-
 }

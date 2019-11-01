@@ -13,7 +13,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito
 
-class CurrentLocationListenerTest {
+class LocationContextListenerTest {
 
     private val testAppModule = TestAppModule()
 
@@ -24,12 +24,12 @@ class CurrentLocationListenerTest {
 
     @Test
     fun check_context_not_null() {
-        Assert.assertNotNull(CurrentLocationListener().context)
+        Assert.assertNotNull(LocationContextListener().context)
     }
 
     @Test
     fun start_listening_to_context_should_call_fused_location_provider() {
-        CurrentLocationListener().startLocationUpdates()
+        LocationContextListener().startLocationUpdates()
 
         val locationRequest = LocationRequest()
         locationRequest.fastestInterval = 10000 / 2
@@ -53,7 +53,7 @@ class CurrentLocationListenerTest {
             )
         ).thenReturn(PackageManager.PERMISSION_GRANTED)
 
-        CurrentLocationListener().askListeningPermission {
+        LocationContextListener().askListeningPermission {
             isPermissionGranted = it
         }
 

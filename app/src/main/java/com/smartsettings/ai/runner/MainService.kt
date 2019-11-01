@@ -7,7 +7,7 @@ import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 object MainService {
 
-    private val observer = Observer<Set<SmartSetting<out Any>>> { smartSettings ->
+    private val observer = Observer<Set<SmartSetting>> { smartSettings ->
         smartSettings?.forEach { smartSetting ->
             Log.d("XDFCE", "service refreshed")
             if (smartSetting.isEnabled()) {

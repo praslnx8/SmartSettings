@@ -1,5 +1,6 @@
 package com.smartsettings.ai.uiModules.uiModels
 
+import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 
@@ -10,12 +11,12 @@ data class SmartSettingViewData(
     val isRunning: Boolean,
     val isChangesApplied: Boolean,
     val isPermissionGranted: Boolean,
-    val criteriaData: String,
     val conjunctionLogic: String,
-    val settingChangers: List<SettingChangerViewData>
+    val settingChangers: List<SettingChangerViewData>,
+    val contextListeners: List<ContextListenerViewData>
 ) {
     companion object {
-        fun getSmartSetting(smartSettings: List<SmartSetting<out Any>>): List<SmartSettingViewData> {
+        fun getSmartSetting(smartSettings: List<SmartSetting>): List<SmartSettingViewData> {
             val smartSettingViewDataList = ArrayList<SmartSettingViewData>()
 
             for ((key, smartSetting) in smartSettings.withIndex()) {
@@ -25,7 +26,7 @@ data class SmartSettingViewData(
             return smartSettingViewDataList
         }
 
-        fun getSmartSetting(key: Int, smartSetting: SmartSetting<out Any>): SmartSettingViewData {
+        fun getSmartSetting(key: Int, smartSetting: SmartSetting): SmartSettingViewData {
             return SmartSettingViewData(
                 key,
                 smartSetting.isEnabled(),
@@ -33,9 +34,9 @@ data class SmartSettingViewData(
                 smartSetting.isRunning(),
                 smartSetting.isChangesApplied(),
                 smartSetting.isListeningPermissionGranted(),
-                smartSetting.criteriaData.serialize(),
                 smartSetting.conjunctionLogic,
-                SettingChangerViewData.getSettingChangerViewData(smartSetting.getSettingChangers().toList())
+                SettingChangerViewData.getSettingChangerViewData(smartSetting.settingChangers.toList()),
+                ContextListenerViewData.getContextListenerViewData(smartSetting.contextListeners.toList())
             )
         }
     }
@@ -62,6 +63,31 @@ data class SettingChangerViewData(
             }
 
             return settingChangerViewDataList
+        }
+    }
+}
+
+data class ContextListenerViewData(
+    val serializedData: String,
+    val isCriteriaMatches: Boolean,
+    val isPermissionGranted: Boolean
+) {
+
+    companion object {
+        fun getContextListenerViewData(settingChangers: List<ContextListener<out Any>>): List<ContextListenerViewData> {
+            val contextListenerViewDataList = ArrayList<ContextListenerViewData>()
+
+            for (settingChanger in settingChangers) {
+                contextListenerViewDataList.add(
+                    ContextListenerViewData(
+                        settingChanger.serializableCriteriaData.serialize(),
+                        settingChanger.isCriteriaMatches(),
+                        settingChanger.isListeningPermissionGranted()
+                    )
+                )
+            }
+
+            return contextListenerViewDataList
         }
     }
 }

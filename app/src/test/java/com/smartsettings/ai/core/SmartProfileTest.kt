@@ -1,7 +1,6 @@
 package com.smartsettings.ai.core
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.smartsettings.ai.core.smartSettings.LocationBasedSmartSetting
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock

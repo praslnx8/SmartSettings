@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsettings.ai.R
+import com.smartsettings.ai.uiModules.uiModels.ContextListenerViewData
 import com.smartsettings.ai.uiModules.uiModels.SettingChangerViewData
 import com.smartsettings.ai.uiModules.uiModels.SmartSettingViewData
-import com.smartsettings.ai.utils.InputDialogUtils
 
 class SmartSettingRecyclerViewAdapter(
     private val onChangesCallback: (SmartSettingViewData) -> Unit,
@@ -51,58 +52,30 @@ class SmartSettingViewHolder(
     private val onDeleteCallback: (SmartSettingViewData) -> Unit
 ) : RecyclerView.ViewHolder(view) {
 
+    private val smartSettingLayout: CardView = view.findViewById(R.id.smartSettingLayout)
     private val nameText: TextView = view.findViewById(R.id.nameText)
     private val switchView: Switch = view.findViewById(R.id.switchView)
-    private val smartSettingLayout: ViewGroup = view.findViewById(R.id.smartSettingLayout)
-    private val actionsLayout: ViewGroup = view.findViewById(R.id.actionsLayout)
-    private val connector: View = view.findViewById(R.id.connector)
-    private val deleteIcon: ImageView = view.findViewById(R.id.deleteIcon)
+    private val statusIcon: ImageView = view.findViewById(R.id.statusIcon)
 
     fun setData(smartSettingViewData: SmartSettingViewData) {
         nameText.text = smartSettingViewData.name
         switchView.isChecked = smartSettingViewData.isEnabled
 
 
-        if (smartSettingViewData.isEnabled && smartSettingViewData.isRunning) {
+        if (smartSettingViewData.isEnabled) {
             if (smartSettingViewData.isChangesApplied) {
                 smartSettingLayout.background =
                     ActivityCompat.getDrawable(view.context, R.drawable.border_success_green)
-                actionsLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_success_green)
-                connector.background = ActivityCompat.getDrawable(view.context, R.color.successGreen)
             } else {
                 smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_enabled)
-                actionsLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_enabled)
-                connector.background = ActivityCompat.getDrawable(view.context, R.color.enabled)
             }
         } else {
             smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_disabled)
-            actionsLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_disabled)
-            connector.background = ActivityCompat.getDrawable(view.context, R.color.disabled)
-        }
-
-        actionsLayout.removeAllViews()
-        for (settingChanger in smartSettingViewData.settingChangers) {
-            actionsLayout.addView(
-                SettingChangerViewProvider.getView(
-                    actionsLayout,
-                    settingChanger,
-                    smartSettingViewData.isRunning
-                )
-            )
         }
 
         switchView.setOnCheckedChangeListener { _, isChecked ->
             smartSettingViewData.isEnabled = isChecked
             onChangesCallback(smartSettingViewData)
-        }
-
-        deleteIcon.setOnClickListener {
-            InputDialogUtils.askConfirmation(view.context, "Delete setting", "Delete the setting!") { isPositive, _ ->
-                if (isPositive) {
-                    onDeleteCallback(smartSettingViewData)
-                }
-                true
-            }.show()
         }
     }
 }
@@ -130,8 +103,11 @@ class SmartSettingDiffCallback(
 
         if ((oldItem.key != newItem.key) || (oldItem.isEnabled != newItem.isEnabled) || (oldItem.isRunning != newItem.isRunning) ||
             (oldItem.isChangesApplied != newItem.isChangesApplied) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
-            (oldItem.criteriaData != newItem.criteriaData) || (oldItem.name != newItem.name) ||
-            (!isSame(oldItem.settingChangers, newItem.settingChangers))
+            (oldItem.name != newItem.name) || (!isSameSettingChangers(
+                oldItem.settingChangers,
+                newItem.settingChangers
+            )) ||
+            (!isSameContextListeners(oldItem.contextListeners, newItem.contextListeners))
         ) {
             return false
         }
@@ -139,7 +115,7 @@ class SmartSettingDiffCallback(
         return true
     }
 
-    private fun isSame(
+    private fun isSameSettingChangers(
         oldSettingChangers: List<SettingChangerViewData>,
         newSettingChangers: List<SettingChangerViewData>
     ): Boolean {
@@ -151,6 +127,27 @@ class SmartSettingDiffCallback(
         for (i in oldSettingChangers.indices) {
             val oldSettingChanger = oldSettingChangers[i]
             val newSettingChanger = newSettingChangers[i]
+
+            if ((oldSettingChanger.serializedData != newSettingChanger.serializedData)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private fun isSameContextListeners(
+        oldContextListeners: List<ContextListenerViewData>,
+        newContextListeners: List<ContextListenerViewData>
+    ): Boolean {
+
+        if (oldContextListeners.size != newContextListeners.size) {
+            return false
+        }
+
+        for (i in oldContextListeners.indices) {
+            val oldSettingChanger = oldContextListeners[i]
+            val newSettingChanger = newContextListeners[i]
 
             if ((oldSettingChanger.serializedData != newSettingChanger.serializedData)) {
                 return false

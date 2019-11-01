@@ -2,12 +2,13 @@
 
 package CORE {
 
-abstract class ContextListener<ContextData> {
+abstract class ContextListener<CriteriaData> {
     # abstract void startListenForContextChanges((Boolean))
     # abstract void stopListeningToContextChanges()
-    + abstract void askListeningPermissionIfAny((boolean))
+    + abstract void askListeningPermissionIfAny((Boolean))
     + abstract void isListeningPermissionGranterIfAny()
-    - void onContextChange((ContextData))
+    # void onContextChange((ContextData))
+    # abstract void isCriteriaMatches(CriteriaData criteriaData)
 }
 
 interface SettingChanger<ActionData> {
@@ -15,17 +16,18 @@ interface SettingChanger<ActionData> {
     + abstract void applySettingChanges()
     + abstract void isApplyPermissionGranterIfAny()
     + abstract void askApplyPermissionIfAny((boolean))
+    # abstract void isPermissionGranted()
+    + boolean isChangesApplied()
 }
 
-abstract class SmartSetting<CriteriaData> {
+class SmartSetting {
     - boolean enabled
     - boolean isChangesApplied
-    - CriteriaData criteriaData
     - ConjunctionLogic logic
-    # Set<ContextListener> listeners
-    # Set<SettingChanger> settingChangers
+    - Set<ContextListener> listeners
+    - Set<SettingChanger> settingChangers
     - void applySettingChanges()
-    # abstract void isCriteriaMatching(CriteriaData criteriaData, Set<ContextData> contextData, (boolean))
+    - void isCriteriaMatching(CriteriaData criteriaData, Set<ContextData> contextData, (boolean))
     + boolean isEnabled()
     + start()
     + stop()

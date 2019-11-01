@@ -19,8 +19,4 @@ abstract class SettingChanger<T>(val serializableActionData: SerializableData<ou
     fun isChangesApplied(): Boolean {
         return isChangesApplied
     }
-
-    fun getSerializableData(): SerializableData<out T> {
-        return serializableActionData
-    }
 }

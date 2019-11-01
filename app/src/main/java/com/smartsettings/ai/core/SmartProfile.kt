@@ -6,19 +6,19 @@ import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 object SmartProfile {
 
-    private val smartSettings = HashSet<SmartSetting<out Any>>()
+    private val smartSettings = HashSet<SmartSetting>()
 
-    private val smartSettingsLiveData: MutableLiveData<Set<SmartSetting<out Any>>> = MutableLiveData(
+    private val smartSettingsLiveData: MutableLiveData<Set<SmartSetting>> = MutableLiveData(
         smartSettings
     )
 
-    private val smartSettingsListLiveData: MutableLiveData<Set<SmartSetting<out Any>>> = MutableLiveData(
+    private val smartSettingsListLiveData: MutableLiveData<Set<SmartSetting>> = MutableLiveData(
         smartSettings
     )
 
     private var isLoaded = false
 
-    private val smartSettingChangeCallback: ((SmartSetting<out Any>) -> Unit) = {
+    private val smartSettingChangeCallback: ((SmartSetting) -> Unit) = {
         smartSettings.add(it)
         smartSettingsLiveData.postValue(smartSettings)
     }
@@ -44,17 +44,17 @@ object SmartProfile {
         }
     }
 
-    fun getSmartSettingLiveData(): LiveData<Set<SmartSetting<out Any>>> {
+    fun getSmartSettingLiveData(): LiveData<Set<SmartSetting>> {
         return smartSettingsLiveData
     }
 
-    fun getSmartSettingListLiveData(): LiveData<Set<SmartSetting<out Any>>> {
+    fun getSmartSettingListLiveData(): LiveData<Set<SmartSetting>> {
         return smartSettingsListLiveData
     }
 
     fun addSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any>
+        smartSetting: SmartSetting
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.addSmartSetting(smartSetting)
@@ -63,7 +63,7 @@ object SmartProfile {
 
     fun updateSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any>
+        smartSetting: SmartSetting
     ) {
         checkAndAdd(smartSetting)
         smartSettingRepository.updateSmartSetting(smartSetting)
@@ -72,7 +72,7 @@ object SmartProfile {
 
     fun deleteSmartSetting(
         smartSettingRepository: SmartSettingRepository,
-        smartSetting: SmartSetting<out Any>
+        smartSetting: SmartSetting
     ) {
         smartSettings.remove(smartSetting)
         smartSettingRepository.deleteSmartSetting(smartSetting)
@@ -80,7 +80,7 @@ object SmartProfile {
     }
 
     private fun checkAndAdd(
-        smartSetting: SmartSetting<out Any>
+        smartSetting: SmartSetting
     ) {
         if (!smartSettings.contains(smartSetting)) {
             smartSetting.setChangesCallback(smartSettingChangeCallback)

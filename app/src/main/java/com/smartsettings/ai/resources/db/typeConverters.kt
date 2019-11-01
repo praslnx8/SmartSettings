@@ -18,3 +18,18 @@ class SettingChangerConverter {
         return Gson().toJson(settingChangerDBModels)
     }
 }
+
+class ContextListenerConverter {
+
+    @TypeConverter
+    fun fromString(value: String): List<ContextListenerDBModel> {
+        val listType = object : TypeToken<ArrayList<ContextListenerDBModel>>() {}.type
+
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromArrayList(contextListenerDBModels: List<ContextListenerDBModel>): String {
+        return Gson().toJson(contextListenerDBModels)
+    }
+}

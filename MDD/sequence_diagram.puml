@@ -1,8 +1,12 @@
 @startuml
 
+SmartSetting -> ContextListener : Ask Permissions
+ContextListener -> SmartSetting : Permission Granted
+SmartSetting -> SettingChanger : Ask Permissions
+SettingChanger -> SmartSetting : Permission Granted
 SmartSetting -> ContextListener : Listen to Context Change
-ContextListener --> SmartSetting : Context Data
-SmartSetting -> SmartSetting : If Criteria Matches
+ContextListener --> ContextListener : If Criteria Matches
+ContextListener -> SmartSetting : Criteria Matched
 SmartSetting -> SettingChanger : Apply Changes
 
 @enduml

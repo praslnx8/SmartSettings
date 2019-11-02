@@ -1,6 +1,9 @@
 package com.smartsettings.ai.core.smartSettingCreator
 
 import com.smartsettings.ai.SmartApp
+import com.smartsettings.ai.core.contextListeners.ContextListenerType
+import com.smartsettings.ai.core.settingChangers.SettingChangerType
+import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.resources.cloud.ApiService
 import com.smartsettings.ai.resources.cloud.SmartSettingSchemaCloudData
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
@@ -27,9 +30,29 @@ class SmartSettingSchemaRepo {
     fun getSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         syncSchemaFromCloud {
             loadSchemaFromDB {
-                schemasCallback(it)
+                if (it.isEmpty()) {
+                    schemasCallback(getDefaultSettings())
+                } else {
+                    schemasCallback(it)
+                }
             }
         }
+    }
+
+    private fun getDefaultSettings(): List<SmartSettingSchemaDBModel> {
+        val smartSettingSchemaDBModels = ArrayList<SmartSettingSchemaDBModel>()
+        smartSettingSchemaDBModels.add(
+            SmartSettingSchemaDBModel(
+                1,
+                "Mute volume at location",
+                null,
+                listOf(SettingChangerType.VOLUME_MUTE_CHANGER.value),
+                listOf(ContextListenerType.LOCATION_LISTENER.value),
+                SmartSetting.AND
+            )
+        )
+
+        return smartSettingSchemaDBModels
     }
 
     private fun loadSchemaFromDB(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {

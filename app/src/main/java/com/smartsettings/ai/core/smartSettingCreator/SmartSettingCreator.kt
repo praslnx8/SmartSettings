@@ -46,7 +46,7 @@ class SmartSettingCreator {
             parseSettingChangersSchema(settingChangerSchemas, smartSettingCreatorCallback) { settingChangers ->
                 smartSettingCreatorCallback.getName { name ->
                     val smartSetting = SmartSetting(
-                        name,
+                        name ?: smartSettingSchemaDBModel.title,
                         contextListeners,
                         settingChangers,
                         smartSettingSchemaDBModel.conjunctionLogic
@@ -68,7 +68,9 @@ class SmartSettingCreator {
 
         val settingChangerTypes = ArrayList<SettingChangerType>()
         for (settingChangerSchema in settingChangerSchemas) {
-            settingChangerTypes.add(SettingChangerType.valueOf(settingChangerSchema))
+            SettingChangerType.fromValue(settingChangerSchema)?.let {
+                settingChangerTypes.add(it)
+            }
         }
 
         smartSettingCreatorCallback.getSettingChangerActionData(settingChangerTypes) {
@@ -76,6 +78,8 @@ class SmartSettingCreator {
             for ((settingChangerType, actionData) in it) {
                 if (settingChangerType == SettingChangerType.VOLUME_CHANGER) {
                     settingChangers.add(VolumeSettingChanger(actionData as VolumeActionData))
+                } else if (settingChangerType == SettingChangerType.VOLUME_MUTE_CHANGER) {
+                    settingChangers.add(VolumeSettingChanger.MuteSettingChanger())
                 }
             }
 
@@ -90,7 +94,9 @@ class SmartSettingCreator {
     ) {
         val contextListenerTypes = ArrayList<ContextListenerType>()
         for (contextListenerSchema in contextListenerSchemas) {
-            contextListenerTypes.add(ContextListenerType.valueOf(contextListenerSchema))
+            ContextListenerType.fromValue(contextListenerSchema)?.let {
+                contextListenerTypes.add(it)
+            }
         }
 
         smartSettingCreatorCallback.getContextListenerCriteriaData(contextListenerTypes) {
@@ -122,7 +128,7 @@ interface SmartSettingCreatorCallback {
         actionDataCallback: (Map<SettingChangerType, Any>) -> Unit
     )
 
-    fun getName(nameCallback: (String) -> Unit)
+    fun getName(nameCallback: (String?) -> Unit)
 
     fun onSmartSettingsCreated(smartSetting: SmartSetting)
 }

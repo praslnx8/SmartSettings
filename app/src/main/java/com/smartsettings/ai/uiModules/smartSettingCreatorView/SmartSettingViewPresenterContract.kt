@@ -12,7 +12,7 @@ interface SmartSettingCreatorView {
 
     fun showUnableToFetchInfo()
 
-    fun askName(nameCallback: (String) -> Unit)
+    fun askName(nameCallback: (String?) -> Unit)
 
     fun askCriteriaData(contextListenerType: ContextListenerType, criteriaDataCallback: (Any) -> Unit)
 

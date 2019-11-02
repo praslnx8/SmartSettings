@@ -77,7 +77,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
                     }
                 }
 
-                override fun getName(nameCallback: (String) -> Unit) {
+                override fun getName(nameCallback: (String?) -> Unit) {
                     smartSettingCreatorViewReference.get()?.askName {
                         nameCallback(it)
                     }

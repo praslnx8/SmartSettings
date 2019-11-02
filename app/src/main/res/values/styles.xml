@@ -38,5 +38,11 @@
     </style>
     <!--TEXT-->
 
+    <!--Button-->
+    <style name="Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <!--Button-->
 
 </resources>

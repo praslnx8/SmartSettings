@@ -6,4 +6,6 @@
     <string name="delete_setting">Delete Setting</string>
     <string name="select">select</string>
     <string name="unable_to_fetch_information">Unable to fetch information</string>
+    <string name="map_circle">Map circle</string>
+    <string name="set_location">Set Location</string>
 </resources>

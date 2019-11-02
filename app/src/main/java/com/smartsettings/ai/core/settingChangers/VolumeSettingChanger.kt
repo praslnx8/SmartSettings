@@ -6,7 +6,7 @@ import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import javax.inject.Inject
 
-class VolumeSettingChanger(volumeActionData: VolumeActionData) :
+open class VolumeSettingChanger(volumeActionData: VolumeActionData) :
     SettingChanger<VolumeActionData>(SerializableData(volumeActionData)) {
 
     @Inject
@@ -33,4 +33,6 @@ class VolumeSettingChanger(volumeActionData: VolumeActionData) :
 
         return true
     }
+
+    class MuteSettingChanger : VolumeSettingChanger(VolumeActionData(0))
 }

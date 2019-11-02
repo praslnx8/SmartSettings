@@ -30,6 +30,7 @@
         </activity>
 
         <activity android:name=".uiModules.smartSettingCreatorView.SmartSettingCreatorActivity"/>
+        <activity android:name=".uiModules.smartSettingCreatorView.criteriaDataUI.LocationCriteriaDataActivity"/>
 
         <service android:name=".runner.MainForeGroundService"/>
 

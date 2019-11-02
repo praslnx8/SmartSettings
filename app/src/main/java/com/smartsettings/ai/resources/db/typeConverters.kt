@@ -33,3 +33,17 @@ class ContextListenerConverter {
         return Gson().toJson(contextListenerDBModels)
     }
 }
+
+class ListConverter {
+    @TypeConverter
+    fun fromString(value: String): List<String> {
+        val listType = object : TypeToken<ArrayList<String>>() {}.type
+
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromArrayList(contextListenerDBModels: List<String>): String {
+        return Gson().toJson(contextListenerDBModels)
+    }
+}

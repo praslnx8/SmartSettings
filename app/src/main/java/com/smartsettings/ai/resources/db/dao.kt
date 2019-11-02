@@ -20,3 +20,13 @@ interface SmartSettingDao {
     @Delete
     fun deleteSmartSetting(smartSettingDBModel: SmartSettingDBModel)
 }
+
+@Dao
+interface SmartSettingSchemaDao {
+
+    @Query("SELECT * from smart_setting_schema")
+    fun getSmartSettingSchemas(): List<SmartSettingSchemaDBModel>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertSmartSetting(smartSettingSchemaDBModels: List<SmartSettingSchemaDBModel>)
+}

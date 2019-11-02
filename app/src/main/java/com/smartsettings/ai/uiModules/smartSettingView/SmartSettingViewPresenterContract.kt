@@ -1,7 +1,7 @@
 package com.smartsettings.ai.uiModules.smartSettingView
 
 import androidx.lifecycle.LifecycleOwner
-import com.smartsettings.ai.uiModules.uiModels.SmartSettingViewData
+import java.lang.ref.WeakReference
 
 interface SmartSettingView {
 
@@ -12,7 +12,7 @@ interface SmartSettingView {
 
 interface SmartSettingViewPresenter {
 
-    fun setHomeView(smartSettingView: SmartSettingView)
+    fun setHomeView(smartSettingViewReference: WeakReference<SmartSettingView>)
 
     fun getSmartSettings(lifecycleOwner: LifecycleOwner)
 

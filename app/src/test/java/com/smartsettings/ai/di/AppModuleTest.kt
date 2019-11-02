@@ -1,4 +1,4 @@
-package com.smartsettings.ai.dagger
+package com.smartsettings.ai.di
 
 import android.content.Context
 import android.media.AudioManager

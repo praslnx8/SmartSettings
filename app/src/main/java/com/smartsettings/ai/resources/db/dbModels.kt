@@ -29,3 +29,19 @@ data class ContextListenerDBModel(
     var serializedCriteriaData: String
 )
 
+@Entity(tableName = "smart_setting_schema")
+data class SmartSettingSchemaDBModel(
+
+    @PrimaryKey(autoGenerate = true) var id: Int? = null,
+
+    @ColumnInfo(name = "title") var title: String,
+
+    @ColumnInfo(name = "description") var description: String?,
+
+    @ColumnInfo(name = "setting_changer_schemas") var settingChangerSchemas: List<String>,
+
+    @ColumnInfo(name = "context_listener_schemas") var contextListenerSchemas: List<String>,
+
+    @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String
+)
+

@@ -1,4 +1,4 @@
-package com.smartsettings.ai.uiModules.uiModels
+package com.smartsettings.ai.uiModules.smartSettingView
 
 import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
@@ -20,7 +20,12 @@ data class SmartSettingViewData(
             val smartSettingViewDataList = ArrayList<SmartSettingViewData>()
 
             for ((key, smartSetting) in smartSettings.withIndex()) {
-                smartSettingViewDataList.add(getSmartSetting(key, smartSetting))
+                smartSettingViewDataList.add(
+                    getSmartSetting(
+                        key,
+                        smartSetting
+                    )
+                )
             }
 
             return smartSettingViewDataList
@@ -35,8 +40,12 @@ data class SmartSettingViewData(
                 smartSetting.isChangesApplied(),
                 smartSetting.isListeningPermissionGranted(),
                 smartSetting.conjunctionLogic,
-                SettingChangerViewData.getSettingChangerViewData(smartSetting.settingChangers.toList()),
-                ContextListenerViewData.getContextListenerViewData(smartSetting.contextListeners.toList())
+                SettingChangerViewData.getSettingChangerViewData(
+                    smartSetting.settingChangers.toList()
+                ),
+                ContextListenerViewData.getContextListenerViewData(
+                    smartSetting.contextListeners.toList()
+                )
             )
         }
     }

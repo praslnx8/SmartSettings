@@ -7,7 +7,7 @@ import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.smartSettings.SmartSetting
-import com.smartsettings.ai.uiModules.uiModels.SmartSettingViewData
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
@@ -17,7 +17,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
 
     private val smartSettingLiveData = SmartProfile.getSmartSettingLiveData()
 
-    private lateinit var smartSettingView: SmartSettingView
+    private lateinit var smartSettingViewReference: WeakReference<SmartSettingView>
 
     private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting>()
 
@@ -25,8 +25,8 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
         SmartApp.appComponent.inject(this)
     }
 
-    override fun setHomeView(smartSettingView: SmartSettingView) {
-        this.smartSettingView = smartSettingView
+    override fun setHomeView(smartSettingViewReference: WeakReference<SmartSettingView>) {
+        this.smartSettingViewReference = smartSettingViewReference
     }
 
     override fun getSmartSettings(lifecycleOwner: LifecycleOwner) {
@@ -39,9 +39,9 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
             }
 
             if (smartSettingViewDataList.isNotEmpty()) {
-                smartSettingView.showSmartSettings(smartSettingViewDataList)
+                smartSettingViewReference.get()?.showSmartSettings(smartSettingViewDataList)
             } else {
-                smartSettingView.showEmptyView()
+                smartSettingViewReference.get()?.showEmptyView()
             }
         })
     }

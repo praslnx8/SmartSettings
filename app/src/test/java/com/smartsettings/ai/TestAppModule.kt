@@ -5,7 +5,7 @@ import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
-import com.smartsettings.ai.dagger.AppModule
+import com.smartsettings.ai.di.AppModule
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import org.mockito.Mockito.mock
 

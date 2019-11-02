@@ -89,7 +89,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    def room_version = "2.2.0"
+    def room_version = "2.2.1"
     //annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:1.1.1"
@@ -97,6 +97,11 @@ dependencies {
     def play_service_version = "17.0.0"
     implementation "com.google.android.gms:play-services-location:$play_service_version"
     implementation "com.google.android.gms:play-services-maps:$play_service_version"
+
+    def retrofit_version = "2.6.2"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.anko:anko-commons:0.10.4"

@@ -11,9 +11,6 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsettings.ai.R
-import com.smartsettings.ai.uiModules.uiModels.ContextListenerViewData
-import com.smartsettings.ai.uiModules.uiModels.SettingChangerViewData
-import com.smartsettings.ai.uiModules.uiModels.SmartSettingViewData
 
 class SmartSettingRecyclerViewAdapter(
     private val onChangesCallback: (SmartSettingViewData) -> Unit,

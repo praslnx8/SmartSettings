@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.smartsettings.ai.ext.inTransaction
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.SmartSettingCreatorActivity
 import com.smartsettings.ai.uiModules.smartSettingView.SmartSettingViewFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fab.setOnClickListener {
-            //TODO
+            SmartSettingCreatorActivity.open(this)
         }
 
         supportFragmentManager.inTransaction {

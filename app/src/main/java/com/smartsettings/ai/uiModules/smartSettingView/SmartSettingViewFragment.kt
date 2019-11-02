@@ -9,26 +9,27 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.runner.MainForeGroundService
-import com.smartsettings.ai.uiModules.uiModels.SmartSettingViewData
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import java.lang.ref.WeakReference
 
 class SmartSettingViewFragment : Fragment(), SmartSettingView {
 
-    private var smartSettingViewPresenter: SmartSettingViewPresenter? = null
+    private val smartSettingViewPresenter: SmartSettingViewPresenter by lazy {
+        ViewModelProviders.of(this).get(SmartSettingViewModel::class.java)
+    }
 
     private var adapter = SmartSettingRecyclerViewAdapter({
-        smartSettingViewPresenter?.updateSmartSetting(it)
+        smartSettingViewPresenter.updateSmartSetting(it)
     }, {
-        smartSettingViewPresenter?.deleteSmartSetting(it)
+        smartSettingViewPresenter.deleteSmartSetting(it)
     })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        smartSettingViewPresenter = ViewModelProviders.of(this).get(SmartSettingViewModel::class.java)
-        smartSettingViewPresenter?.setHomeView(this)
-        smartSettingViewPresenter?.getSmartSettings(this)
+        smartSettingViewPresenter.setHomeView(WeakReference(this))
+        smartSettingViewPresenter.getSmartSettings(this)
 
 
         context?.let {

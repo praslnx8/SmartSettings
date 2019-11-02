@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".uiModules.smartSettingCreatorView.SmartSettingCreatorActivity"/>
+
         <service android:name=".runner.MainForeGroundService"/>
 
 

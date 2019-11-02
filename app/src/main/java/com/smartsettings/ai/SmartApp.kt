@@ -2,9 +2,9 @@ package com.smartsettings.ai
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
-import com.smartsettings.ai.dagger.AppComponent
-import com.smartsettings.ai.dagger.AppModule
-import com.smartsettings.ai.dagger.DaggerAppComponent
+import com.smartsettings.ai.di.AppComponent
+import com.smartsettings.ai.di.AppModule
+import com.smartsettings.ai.di.DaggerAppComponent
 
 class SmartApp : Application() {
 

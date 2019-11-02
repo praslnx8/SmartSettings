@@ -5,4 +5,5 @@
     <string name="empty_settings_message">No Settings added.\nAdd settings by tapping the + Button</string>
     <string name="delete_setting">Delete Setting</string>
     <string name="select">select</string>
+    <string name="unable_to_fetch_information">Unable to fetch information</string>
 </resources>

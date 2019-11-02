@@ -61,34 +61,6 @@ SmartProfile o-- SmartSetting : Has Set of >
 SmartProfile *-- SmartSettingRepository : Load SmartSetting from db >
 }
 
-package CREATE {
-
-class SmartSettingProvider {
-    - List<SmartSettingTemplate> smartSettingTemplates;
-    + SmartSetting getSmartSetting()
-}
-
-SmartSettingProvider o-- SmartSetting : Creates >
-
-class SettingChangersProvider {
-    - List<SettingChangerTemplate> settingChangerTemplates;
-    + Set<SettingChanger> getSettingChangers()
-}
-
-SettingChangersProvider o-- SettingChanger : Creates >
-
-class SmartSettingBuilder {
-    - SmartSettingProvider smartSettingProvider
-    - SettingChangersProvider settingChangersProvider
-    + SmartSetting buildSmartSetting()
-}
-
-SmartSettingBuilder *-- SmartSettingProvider
-SmartSettingBuilder *-- SettingChangersProvider
-SmartSettingBuilder o-- SmartSetting : Builds >
-
-}
-
 package RUNNER {
 
 class MainService <<(S,red) Singleton>> {
@@ -107,6 +79,16 @@ package VIEW {
     }
 
     SmartSettingView o-- SmartProfile : Load SmartSettings >
+}
+
+package CREATE {
+
+    class SmartSettingCreator {
+    }
+
+    SmartSettingCreator o-- SmartSetting : Creates
+    SmartSettingCreator o-- SettingChanger : Creates
+    SmartSettingCreator o-- ContextListener : Creates
 }
 
 @enduml

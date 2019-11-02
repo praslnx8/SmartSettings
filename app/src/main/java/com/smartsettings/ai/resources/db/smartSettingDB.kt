@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [SmartSettingDBModel::class], version = 1)
-@TypeConverters(SettingChangerConverter::class, ContextListenerConverter::class)
+@Database(entities = [SmartSettingDBModel::class, SmartSettingSchemaDBModel::class], version = 1)
+@TypeConverters(SettingChangerConverter::class, ContextListenerConverter::class, ListConverter::class)
 abstract class SmartSettingDatabase : RoomDatabase() {
 
     abstract fun getSmartSettingDao(): SmartSettingDao
+
+    abstract fun getSmartSettingSchemaDao(): SmartSettingSchemaDao
 
     companion object {
         @Volatile

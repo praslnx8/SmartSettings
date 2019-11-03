@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.runner.MainForeGroundService
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.SmartSettingCreatorActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.lang.ref.WeakReference
@@ -32,11 +33,17 @@ class SmartSettingViewFragment : Fragment(), SmartSettingView {
         smartSettingViewPresenter.getSmartSettings(this)
 
 
-        context?.let {
-            MainForeGroundService.startService(it)
-            view.recyclerView.layoutManager = LinearLayoutManager(it)
+        context?.let { context ->
+            MainForeGroundService.startService(context)
+            view.recyclerView.layoutManager = LinearLayoutManager(context)
             view.recyclerView.adapter = adapter
+
+
+            view.fab.setOnClickListener {
+                SmartSettingCreatorActivity.open(context)
+            }
         }
+
         return view
     }
 

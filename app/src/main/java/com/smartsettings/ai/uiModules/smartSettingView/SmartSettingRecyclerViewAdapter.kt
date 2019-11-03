@@ -53,8 +53,12 @@ class SmartSettingViewHolder(
     private val nameText: TextView = view.findViewById(R.id.nameText)
     private val switchView: Switch = view.findViewById(R.id.switchView)
     private val statusIcon: ImageView = view.findViewById(R.id.statusIcon)
+    private var onBind = false
 
     fun setData(smartSettingViewData: SmartSettingViewData) {
+
+        onBind = true
+
         nameText.text = smartSettingViewData.name
         switchView.isChecked = smartSettingViewData.isEnabled
 
@@ -62,18 +66,22 @@ class SmartSettingViewHolder(
         if (smartSettingViewData.isEnabled) {
             if (smartSettingViewData.isChangesApplied) {
                 smartSettingLayout.background =
-                    ActivityCompat.getDrawable(view.context, R.drawable.border_success_green)
+                    ActivityCompat.getDrawable(view.context, R.color.successGreen)
             } else {
-                smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_enabled)
+                smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.enabled)
             }
         } else {
-            smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.drawable.border_disabled)
+            smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.disabled)
         }
 
         switchView.setOnCheckedChangeListener { _, isChecked ->
-            smartSettingViewData.isEnabled = isChecked
-            onChangesCallback(smartSettingViewData)
+            if (!onBind) {
+                smartSettingViewData.isEnabled = isChecked
+                onChangesCallback(smartSettingViewData)
+            }
         }
+
+        onBind = false
     }
 }
 
@@ -125,7 +133,7 @@ class SmartSettingDiffCallback(
             val oldSettingChanger = oldSettingChangers[i]
             val newSettingChanger = newSettingChangers[i]
 
-            if ((oldSettingChanger.serializedData != newSettingChanger.serializedData)) {
+            if ((oldSettingChanger.serializedActionData != newSettingChanger.serializedActionData)) {
                 return false
             }
         }
@@ -146,7 +154,7 @@ class SmartSettingDiffCallback(
             val oldSettingChanger = oldContextListeners[i]
             val newSettingChanger = newContextListeners[i]
 
-            if ((oldSettingChanger.serializedData != newSettingChanger.serializedData)) {
+            if ((oldSettingChanger.serializedCriteriaData != newSettingChanger.serializedCriteriaData)) {
                 return false
             }
         }

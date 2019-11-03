@@ -52,7 +52,7 @@ data class SmartSettingViewData(
 }
 
 data class SettingChangerViewData(
-    val serializedData: String,
+    val serializedActionData: String,
     val isChangesApplied: Boolean,
     val isPermissionGranted: Boolean
 ) {
@@ -77,7 +77,7 @@ data class SettingChangerViewData(
 }
 
 data class ContextListenerViewData(
-    val serializedData: String,
+    val serializedCriteriaData: String,
     val isCriteriaMatches: Boolean,
     val isPermissionGranted: Boolean
 ) {

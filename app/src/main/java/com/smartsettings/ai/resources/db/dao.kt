@@ -12,7 +12,7 @@ interface SmartSettingDao {
     fun getSmartSettingByName(name: String): SmartSettingDBModel?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSmartSetting(smartSettingDBModel: SmartSettingDBModel)
+    fun insertSmartSetting(smartSettingDBModel: SmartSettingDBModel): Long
 
     @Update
     fun updateSmartSetting(smartSettingDBModel: SmartSettingDBModel)

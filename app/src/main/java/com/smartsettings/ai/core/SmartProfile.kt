@@ -56,35 +56,32 @@ object SmartProfile {
         smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
-        checkAndAdd(smartSetting)
-        smartSettingRepository.addSmartSetting(smartSetting)
-        updateLiveData()
+        smartSettingRepository.addSmartSetting(smartSetting) {
+            smartSetting.id = it
+            smartSetting.setChangesCallback(smartSettingChangeCallback)
+            smartSettings.add(smartSetting)
+            updateLiveData()
+        }
     }
 
     fun updateSmartSetting(
         smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
-        checkAndAdd(smartSetting)
-        smartSettingRepository.updateSmartSetting(smartSetting)
-        updateLiveData()
+        smartSettingRepository.updateSmartSetting(smartSetting) {
+            smartSetting.setChangesCallback(smartSettingChangeCallback)
+            smartSettings.add(smartSetting)
+            updateLiveData()
+        }
     }
 
     fun deleteSmartSetting(
         smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
-        smartSettings.remove(smartSetting)
-        smartSettingRepository.deleteSmartSetting(smartSetting)
-        updateLiveData()
-    }
-
-    private fun checkAndAdd(
-        smartSetting: SmartSetting
-    ) {
-        if (!smartSettings.contains(smartSetting)) {
-            smartSetting.setChangesCallback(smartSettingChangeCallback)
-            smartSettings.add(smartSetting)
+        smartSettingRepository.deleteSmartSetting(smartSetting) {
+            smartSettings.remove(smartSetting)
+            updateLiveData()
         }
     }
 }

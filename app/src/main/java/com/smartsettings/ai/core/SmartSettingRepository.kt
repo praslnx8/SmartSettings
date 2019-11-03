@@ -48,7 +48,15 @@ class SmartSettingRepository {
                 val contextListeners = createContextListenersFromDbModels(smartSettingDbData.contextListeners)
                 val conjunctionLogic = smartSettingDbData.conjunctionLogic
 
-                smartSettings.add(SmartSetting(name, contextListeners, settingChangers, conjunctionLogic))
+                smartSettings.add(
+                    SmartSetting(
+                        smartSettingDbData.id,
+                        name,
+                        contextListeners,
+                        settingChangers,
+                        conjunctionLogic
+                    )
+                )
             }
 
             uiThread {
@@ -86,8 +94,7 @@ class SmartSettingRepository {
         return contextListeners
     }
 
-    fun addSmartSetting(smartSetting: SmartSetting) {
-
+    fun addSmartSetting(smartSetting: SmartSetting, addSmartSettingCallback: (Long) -> Unit) {
 
         val smartSettingDBModel = SmartSettingDBModel(
             null,
@@ -98,7 +105,10 @@ class SmartSettingRepository {
         )
 
         doAsync {
-            smartSettingDao.insertSmartSetting(smartSettingDBModel)
+            val id = smartSettingDao.insertSmartSetting(smartSettingDBModel)
+            uiThread {
+                addSmartSettingCallback(id)
+            }
         }
     }
 
@@ -146,7 +156,7 @@ class SmartSettingRepository {
         return settingChangerDbModels
     }
 
-    fun updateSmartSetting(smartSetting: SmartSetting) {
+    fun updateSmartSetting(smartSetting: SmartSetting, updateCallback: () -> Unit) {
 
         val smartSettingDBModelToUpdate = SmartSettingDBModel(
             null,
@@ -163,10 +173,14 @@ class SmartSettingRepository {
                 smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
                 smartSettingDao.updateSmartSetting(smartSettingDBModelToUpdate)
             }
+
+            uiThread {
+                updateCallback()
+            }
         }
     }
 
-    fun deleteSmartSetting(smartSetting: SmartSetting) {
+    fun deleteSmartSetting(smartSetting: SmartSetting, deleteCallback: () -> Unit) {
 
         val smartSettingDBModelToUpdate = SmartSettingDBModel(
             null,
@@ -182,6 +196,10 @@ class SmartSettingRepository {
             if (smartSettingDbModelFromDb != null) {
                 smartSettingDBModelToUpdate.id = smartSettingDbModelFromDb.id
                 smartSettingDao.deleteSmartSetting(smartSettingDBModelToUpdate)
+            }
+
+            uiThread {
+                deleteCallback()
             }
         }
 

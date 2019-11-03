@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsettings.ai.R
+import com.smartsettings.ai.utils.InputDialogUtils
 
 class SmartSettingRecyclerViewAdapter(
     private val onChangesCallback: (SmartSettingViewData) -> Unit,
@@ -81,6 +82,17 @@ class SmartSettingViewHolder(
             }
         }
 
+        smartSettingLayout.setOnLongClickListener {
+            InputDialogUtils.askConfirmation(view.context, "Delete setting", "Delete the setting!") { isPositive, _ ->
+                if (isPositive) {
+                    onDeleteCallback(smartSettingViewData)
+                }
+                true
+            }.show()
+
+            true
+        }
+
         onBind = false
     }
 }
@@ -91,7 +103,7 @@ class SmartSettingDiffCallback(
 ) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return true
+        return viewList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun getOldListSize(): Int {
@@ -106,7 +118,7 @@ class SmartSettingDiffCallback(
         val oldItem = viewList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
-        if ((oldItem.key != newItem.key) || (oldItem.isEnabled != newItem.isEnabled) || (oldItem.isRunning != newItem.isRunning) ||
+        if ((oldItem.id != newItem.id) || (oldItem.isEnabled != newItem.isEnabled) || (oldItem.isRunning != newItem.isRunning) ||
             (oldItem.isChangesApplied != newItem.isChangesApplied) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
             (oldItem.name != newItem.name) || (!isSameSettingChangers(
                 oldItem.settingChangers,

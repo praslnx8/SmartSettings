@@ -19,7 +19,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
 
     private lateinit var smartSettingViewReference: WeakReference<SmartSettingView>
 
-    private val smartSettingViewDataMap = mutableMapOf<Int, SmartSetting>()
+    private val smartSettingList = mutableListOf<SmartSetting>()
 
     init {
         SmartApp.appComponent.inject(this)
@@ -33,9 +33,12 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
         SmartProfile.load(smartSettingRepository)
         smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting>> { smartSettings ->
 
-            val smartSettingViewDataList = smartSettings.withIndex().map { it ->
-                smartSettingViewDataMap[it.index] = it.value
-                SmartSettingViewData.getSmartSetting(it.index, it.value)
+            smartSettingList.clear()
+            smartSettingList.addAll(smartSettings)
+
+            val smartSettingViewDataList = mutableListOf<SmartSettingViewData>()
+            for (smartSetting in smartSettings) {
+                smartSettingViewDataList.add(SmartSettingViewData.getSmartSetting(smartSetting))
             }
 
             if (smartSettingViewDataList.isNotEmpty()) {
@@ -47,16 +50,21 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
     }
 
     override fun updateSmartSetting(smartSettingViewData: SmartSettingViewData) {
-        smartSettingViewDataMap[smartSettingViewData.key]?.let {
-            it.setEnabled(smartSettingViewData.isEnabled)
-            SmartProfile.updateSmartSetting(smartSettingRepository, it)
+        for (smartSetting in smartSettingList) {
+            if (smartSetting.id == smartSettingViewData.id) {
+                smartSetting.setEnabled(smartSettingViewData.isEnabled)
+                SmartProfile.updateSmartSetting(smartSettingRepository, smartSetting)
+                return
+            }
         }
     }
 
     override fun deleteSmartSetting(smartSettingViewData: SmartSettingViewData) {
-        smartSettingViewDataMap[smartSettingViewData.key]?.let {
-            SmartProfile.deleteSmartSetting(smartSettingRepository, it)
+        for (smartSetting in smartSettingList) {
+            if (smartSetting.id == smartSettingViewData.id) {
+                SmartProfile.deleteSmartSetting(smartSettingRepository, smartSetting)
+                return
+            }
         }
-
     }
 }

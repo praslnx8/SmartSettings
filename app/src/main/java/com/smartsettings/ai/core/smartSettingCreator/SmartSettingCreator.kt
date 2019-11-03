@@ -46,6 +46,7 @@ class SmartSettingCreator {
             parseSettingChangersSchema(settingChangerSchemas, smartSettingCreatorCallback) { settingChangers ->
                 smartSettingCreatorCallback.getName { name ->
                     val smartSetting = SmartSetting(
+                        null,
                         name ?: smartSettingSchemaDBModel.title,
                         contextListeners,
                         settingChangers,

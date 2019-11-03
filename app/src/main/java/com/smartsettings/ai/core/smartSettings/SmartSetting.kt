@@ -5,6 +5,7 @@ import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
 
 class SmartSetting(
+    var id: Long?,
     val name: String,
     val contextListeners: Set<ContextListener<out Any>>,
     val settingChangers: Set<SettingChanger<out Any>>,
@@ -161,5 +162,17 @@ class SmartSetting(
             }
             settingChangesCallback?.invoke(this)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is SmartSetting) {
+            return id == other.id
+        }
+
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return (id ?: 0).hashCode()
     }
 }

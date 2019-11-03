@@ -29,7 +29,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".uiModules.smartSettingCreatorView.SmartSettingCreatorActivity"/>
+        <activity
+                android:name=".uiModules.smartSettingCreatorView.SmartSettingCreatorActivity"
+                android:theme="@style/AppTheme.NoActionBar"
+                android:label="Choose Smart Setting"/>
         <activity android:name=".uiModules.smartSettingCreatorView.criteriaDataUI.LocationCriteriaDataActivity"/>
 
         <service android:name=".runner.MainForeGroundService"/>

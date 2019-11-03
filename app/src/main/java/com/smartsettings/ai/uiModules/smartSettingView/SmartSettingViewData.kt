@@ -5,7 +5,7 @@ import com.smartsettings.ai.core.settingChangers.SettingChanger
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 
 data class SmartSettingViewData(
-    val key: Int,
+    val id: Long,
     var isEnabled: Boolean,
     val name: String,
     val isRunning: Boolean,
@@ -16,24 +16,10 @@ data class SmartSettingViewData(
     val contextListeners: List<ContextListenerViewData>
 ) {
     companion object {
-        fun getSmartSetting(smartSettings: List<SmartSetting>): List<SmartSettingViewData> {
-            val smartSettingViewDataList = ArrayList<SmartSettingViewData>()
 
-            for ((key, smartSetting) in smartSettings.withIndex()) {
-                smartSettingViewDataList.add(
-                    getSmartSetting(
-                        key,
-                        smartSetting
-                    )
-                )
-            }
-
-            return smartSettingViewDataList
-        }
-
-        fun getSmartSetting(key: Int, smartSetting: SmartSetting): SmartSettingViewData {
+        fun getSmartSetting(smartSetting: SmartSetting): SmartSettingViewData {
             return SmartSettingViewData(
-                key,
+                smartSetting.id ?: 0L,
                 smartSetting.isEnabled(),
                 smartSetting.name,
                 smartSetting.isRunning(),

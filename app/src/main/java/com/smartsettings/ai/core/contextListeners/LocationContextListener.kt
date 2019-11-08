@@ -89,7 +89,7 @@ class LocationContextListener(locationData: LocationData) :
     }
 
     @RequiresPermission(value = Manifest.permission.ACCESS_FINE_LOCATION)
-    fun startLocationUpdates() {
+    private fun startLocationUpdates() {
 
         val locationRequest = LocationRequest()
         locationRequest.fastestInterval = 10000 / 2

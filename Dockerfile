@@ -1,3 +1,8 @@
+FROM gradle:latest as builder
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle :restApi:build
+
 FROM openjdk:8-jre-alpine
 
 ENV APPLICATION_USER ktor

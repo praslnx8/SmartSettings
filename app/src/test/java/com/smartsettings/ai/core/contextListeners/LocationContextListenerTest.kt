@@ -1,11 +1,13 @@
 package com.smartsettings.ai.core.contextListeners
 
+import android.content.Context
 import android.os.Looper
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
-import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.TestAppModule
+import com.smartsettings.ai.TestAppInjector
 import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.di.DependencyProvider
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,11 +18,19 @@ import org.mockito.Mockito.mock
 
 class LocationContextListenerTest {
 
-    private val testAppModule = TestAppModule()
+    val mockFusedLocationProviderClient = mock(FusedLocationProviderClient::class.java)
 
     @Before
     fun setup() {
-        SmartApp.setDaggerComponentForTesting(testAppModule)
+        DependencyProvider.setInjector(object : TestAppInjector() {
+            override fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
+                return mockFusedLocationProviderClient
+            }
+
+            override fun provideContext(): Context {
+                return mock(Context::class.java)
+            }
+        })
     }
 
     @Test
@@ -41,7 +51,8 @@ class LocationContextListenerTest {
         locationRequest.interval = 10000
         locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
 
-        Mockito.verify(testAppModule.fusedLocationProviderClient)
+
+        Mockito.verify(mockFusedLocationProviderClient)
             .requestLocationUpdates(eq(locationRequest), any(LocationCallback::class.java), eq(Looper.getMainLooper()))
     }
 }

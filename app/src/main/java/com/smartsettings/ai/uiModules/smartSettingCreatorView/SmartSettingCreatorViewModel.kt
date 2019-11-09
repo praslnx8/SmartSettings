@@ -1,28 +1,22 @@
 package com.smartsettings.ai.uiModules.smartSettingCreatorView
 
 import androidx.lifecycle.ViewModel
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreator
 import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreatorCallback
 import com.smartsettings.ai.core.smartSettings.SmartSetting
+import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
 import java.lang.ref.WeakReference
-import javax.inject.Inject
 
 class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
-    @Inject
-    lateinit var smartSettingCreator: SmartSettingCreator
+    val smartSettingCreator: SmartSettingCreator = DependencyProvider.smartSettingCreator
 
     private lateinit var smartSettingCreatorViewReference: WeakReference<SmartSettingCreatorView>
 
     private val smartSettingSchemaDbModelMap: MutableMap<Int?, SmartSettingSchemaDBModel> = HashMap()
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
 
     override fun getSmartSettingSchemas() {
         smartSettingCreatorViewReference.get()?.showLoading()

@@ -13,28 +13,22 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.contextData.LocationContext
 import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.utils.LocationUtils
 import com.smartsettings.permissionhelper.PermissionManager
-import javax.inject.Inject
+
 
 class LocationContextListener(locationData: LocationData) :
     ContextListener<LocationData>(SerializableData(locationData)) {
 
-    @Inject
-    lateinit var context: Context
+    val context: Context = DependencyProvider.getContext
 
     private var locationContext: LocationContext? = null
 
-    @Inject
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
+    val fusedLocationProviderClient: FusedLocationProviderClient = DependencyProvider.fusedLocationProviderClient
 
     @SuppressLint("MissingPermission")
     override fun startListeningToContextChanges() {

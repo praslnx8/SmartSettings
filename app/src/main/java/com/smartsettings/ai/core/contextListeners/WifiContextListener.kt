@@ -7,25 +7,18 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.util.Log
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.contextData.WifiContext
-import javax.inject.Inject
+import com.smartsettings.ai.di.DependencyProvider
 
 
 class WifiContextListener(SSID: String) : ContextListener<String>(SerializableData(SSID)) {
 
-
-    @Inject
-    lateinit var context: Context
+    val context: Context = DependencyProvider.getContext
 
     private var contextChangeCallback: (() -> Unit)? = null
 
     private var wifiContext: WifiContext? = null
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {

@@ -1,9 +1,9 @@
 package com.smartsettings.ai.core.smartSettingCreator
 
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.smartSettings.SmartSetting
+import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.cloud.ApiService
 import com.smartsettings.ai.resources.cloud.SmartSettingSchemaCloudData
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
@@ -13,19 +13,12 @@ import org.jetbrains.anko.uiThread
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
 
 class SmartSettingSchemaRepo {
 
-    @Inject
-    lateinit var smartSettingSchemaDao: SmartSettingSchemaDao
+    val smartSettingSchemaDao: SmartSettingSchemaDao = DependencyProvider.smartSettingSchemaDao
 
-    @Inject
-    lateinit var apiService: ApiService
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
+    val apiService: ApiService = DependencyProvider.apiService
 
     fun getSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         syncSchemaFromCloud {

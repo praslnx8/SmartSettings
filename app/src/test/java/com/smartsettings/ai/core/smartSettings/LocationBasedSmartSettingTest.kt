@@ -1,11 +1,12 @@
 package com.smartsettings.ai.core.smartSettings
 
 import android.content.Context
+import android.media.AudioManager
 import com.nhaarman.mockitokotlin2.any
-import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.TestAppModule
+import com.smartsettings.ai.TestAppInjector
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
+import com.smartsettings.ai.di.DependencyProvider
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,17 +22,26 @@ class LocationBasedSmartSettingTest {
     @get:Rule
     var mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    private val testAppModule = TestAppModule()
+    val context = mock(Context::class.java)
+    val audioManager = mock(AudioManager::class.java)
 
     @Before
     fun setUp() {
 
+        DependencyProvider.setInjector(object : TestAppInjector() {
+            override fun provideContext(): Context {
+                return context
+            }
+
+            override fun provideAudioManager(): AudioManager {
+                return audioManager
+            }
+        })
+
         MockitoAnnotations.initMocks(this)
 
-        SmartApp.setDaggerComponentForTesting(testAppModule)
-
-        Mockito.`when`(testAppModule.provideContext().getSystemService(Context.AUDIO_SERVICE))
-            .thenReturn(testAppModule.audioManager)
+        Mockito.`when`(context.getSystemService(Context.AUDIO_SERVICE))
+            .thenReturn(audioManager)
 
     }
 

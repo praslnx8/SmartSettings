@@ -2,7 +2,6 @@ package com.smartsettings.ai.core
 
 import android.content.Context
 import com.google.gson.Gson
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
@@ -13,26 +12,20 @@ import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.db.ContextListenerDBModel
 import com.smartsettings.ai.resources.db.SettingChangerDBModel
 import com.smartsettings.ai.resources.db.SmartSettingDBModel
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import javax.inject.Inject
 
 
 class SmartSettingRepository {
 
-    @Inject
-    lateinit var smartSettingDao: SmartSettingDao
+    val smartSettingDao: SmartSettingDao = DependencyProvider.smartSettingDao
 
-    @Inject
-    lateinit var context: Context
-
-    init {
-        SmartApp.appComponent.inject(this)
-    }
+    val context: Context = DependencyProvider.getContext
 
     fun getSmartSettings(smartSettingsCallBack: (List<SmartSetting>) -> Unit) {
 

@@ -3,9 +3,9 @@ package com.smartsettings.ai.core.settingChangers
 import android.content.Context
 import android.media.AudioManager
 import com.nhaarman.mockitokotlin2.times
-import com.smartsettings.ai.SmartApp
-import com.smartsettings.ai.TestAppModule
+import com.smartsettings.ai.TestAppInjector
 import com.smartsettings.ai.data.actionData.VolumeActionData
+import com.smartsettings.ai.di.DependencyProvider
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -16,21 +16,30 @@ import org.mockito.junit.MockitoRule
 
 class VolumeSettingChangerTest {
 
-
     @get:Rule
     var mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    private val testAppModule = TestAppModule()
+    val context = Mockito.mock(Context::class.java)
+    val audioManager = Mockito.mock(AudioManager::class.java)
+
 
     @Before
     fun setUp() {
 
+        DependencyProvider.setInjector(object : TestAppInjector() {
+            override fun provideContext(): Context {
+                return context
+            }
+
+            override fun provideAudioManager(): AudioManager {
+                return audioManager
+            }
+        })
+
         MockitoAnnotations.initMocks(this)
 
-        SmartApp.setDaggerComponentForTesting(testAppModule)
-
-        Mockito.`when`(testAppModule.provideContext().getSystemService(Context.AUDIO_SERVICE))
-            .thenReturn(testAppModule.audioManager)
+        Mockito.`when`(context.getSystemService(Context.AUDIO_SERVICE))
+            .thenReturn(audioManager)
 
     }
 
@@ -41,10 +50,10 @@ class VolumeSettingChangerTest {
 
         volumeSettingChanger.applyChanges()
 
-        Mockito.verify(testAppModule.audioManager, times(1))
+        Mockito.verify(audioManager, times(1))
             .setStreamVolume(
                 AudioManager.STREAM_RING,
-                testAppModule.audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
+                audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
                 10
             )
     }

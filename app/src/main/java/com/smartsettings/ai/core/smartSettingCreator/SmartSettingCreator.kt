@@ -1,6 +1,5 @@
 package com.smartsettings.ai.core.smartSettingCreator
 
-import com.smartsettings.ai.SmartApp
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.contextListeners.ContextListener
@@ -13,20 +12,14 @@ import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
-import javax.inject.Inject
 
 class SmartSettingCreator {
 
-    init {
-        SmartApp.appComponent.inject(this)
-    }
+    val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
 
-    @Inject
-    lateinit var smartSettingSchemaRepo: SmartSettingSchemaRepo
-
-    @Inject
-    lateinit var smartSettingRepository: SmartSettingRepository
+    val smartSettingRepository: SmartSettingRepository = DependencyProvider.smartSettingRepository
 
     fun getSmartSettingSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         smartSettingSchemaRepo.getSchemas {

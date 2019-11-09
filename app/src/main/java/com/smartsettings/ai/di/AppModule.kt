@@ -11,62 +11,124 @@ import com.smartsettings.ai.resources.cloud.ApiServiceProvider
 import com.smartsettings.ai.resources.db.SmartSettingDao
 import com.smartsettings.ai.resources.db.SmartSettingDatabase
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDao
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
 
-/**
- * Exclude test case for this module.
- */
-@Module
-open class AppModule(private val app: Context) {
+object DependencyProvider {
 
-    @Provides
-    @Singleton
-    fun provideContext(): Context = app
+    private lateinit var abstractDependencyInjector: AbstractDependencyInjector
 
-    @Provides
-    @Singleton
-    open fun provideAudioManager(): AudioManager = app.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-    @Provides
-    @Singleton
-    open fun provideSmartSettingDao(): SmartSettingDao {
-        return SmartSettingDatabase.getDb(app).getSmartSettingDao()
+    fun setInjector(abstractDependencyInjector: AbstractDependencyInjector) {
+        this.abstractDependencyInjector = abstractDependencyInjector
     }
 
-    @Provides
-    @Singleton
-    open fun provideSmartSettingSchemaDao(): SmartSettingSchemaDao {
-        return SmartSettingDatabase.getDb(app).getSmartSettingSchemaDao()
+    val getContext : Context get() = abstractDependencyInjector.provideContext()
+
+    val audioManager : AudioManager get() = abstractDependencyInjector.provideAudioManager()
+
+    val smartSettingRepository : SmartSettingRepository get() = abstractDependencyInjector.provideSmartSettingRepository()
+
+    val fusedLocationProviderClient : FusedLocationProviderClient get() = abstractDependencyInjector.provideFusedLocationProviderClient()
+
+    val apiService : ApiService get() = abstractDependencyInjector.provideApiService()
+
+    val smartSettingSchemaRepo : SmartSettingSchemaRepo get() = abstractDependencyInjector.provideSmartSettingSchemaRepo()
+
+    val smartSettingCreator : SmartSettingCreator get() = abstractDependencyInjector.provideSmartSettingCreator()
+
+    val smartSettingDao : SmartSettingDao get() = abstractDependencyInjector.provideSmartSettingDao()
+
+    val smartSettingSchemaDao : SmartSettingSchemaDao get() = abstractDependencyInjector.provideSmartSettingSchemaDao()
+}
+
+abstract class AbstractDependencyInjector {
+
+    abstract fun provideContext() : Context
+
+    abstract fun provideAudioManager() : AudioManager
+
+    abstract fun provideSmartSettingRepository() : SmartSettingRepository
+
+    abstract fun provideFusedLocationProviderClient() : FusedLocationProviderClient
+
+    abstract fun provideApiService() : ApiService
+
+    abstract fun provideSmartSettingSchemaRepo() : SmartSettingSchemaRepo
+
+    abstract fun provideSmartSettingCreator() : SmartSettingCreator
+
+    abstract fun provideSmartSettingDao() : SmartSettingDao
+
+    abstract fun provideSmartSettingSchemaDao() : SmartSettingSchemaDao
+}
+
+class DependencyInjector(val appContext: Context) : AbstractDependencyInjector() {
+
+    private val context : Context by lazy {
+        appContext
     }
 
-    @Provides
-    @Singleton
-    open fun provideSmartSettingsRepo(): SmartSettingRepository {
-        return SmartSettingRepository()
+    private val audioManager : AudioManager by lazy {
+        appContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
-    @Provides
-    open fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
-        return FusedLocationProviderClient(app)
+    private val smartSettingDao : SmartSettingDao by lazy {
+        SmartSettingDatabase.getDb(appContext).getSmartSettingDao()
     }
 
-    @Provides
-    @Singleton
-    open fun provideApiService(): ApiService {
-        return ApiServiceProvider.apiService
+    private val smartSettingSchemaDao : SmartSettingSchemaDao by lazy {
+        SmartSettingDatabase.getDb(appContext).getSmartSettingSchemaDao()
     }
 
-    @Provides
-    @Singleton
-    open fun provideSmartSettingSchemaRepo(): SmartSettingSchemaRepo {
-        return SmartSettingSchemaRepo()
+    private val smartSettingRepository : SmartSettingRepository by lazy {
+        SmartSettingRepository()
     }
 
-    @Provides
-    @Singleton
-    open fun provideSmartSettingCreator(): SmartSettingCreator {
-        return SmartSettingCreator()
+    private val fusedLocationProviderClient : FusedLocationProviderClient get() = FusedLocationProviderClient(appContext)
+
+    private val apiService : ApiService by lazy {
+        ApiServiceProvider.apiService
+    }
+
+    private val smartSettingSchemaRepo : SmartSettingSchemaRepo by lazy {
+        SmartSettingSchemaRepo()
+    }
+
+    private val smartSettingCreator : SmartSettingCreator by lazy {
+        SmartSettingCreator()
+    }
+
+    override fun provideContext(): Context {
+        return context
+    }
+
+    override fun provideAudioManager(): AudioManager {
+        return audioManager
+    }
+
+    override fun provideSmartSettingRepository(): SmartSettingRepository {
+        return smartSettingRepository
+    }
+
+    override fun provideFusedLocationProviderClient(): FusedLocationProviderClient {
+        return fusedLocationProviderClient
+    }
+
+    override fun provideApiService(): ApiService {
+        return apiService
+    }
+
+    override fun provideSmartSettingSchemaRepo(): SmartSettingSchemaRepo {
+        return smartSettingSchemaRepo
+    }
+
+    override fun provideSmartSettingCreator(): SmartSettingCreator {
+        return smartSettingCreator
+    }
+
+    override fun provideSmartSettingDao(): SmartSettingDao {
+        return smartSettingDao
+    }
+
+    override fun provideSmartSettingSchemaDao(): SmartSettingSchemaDao {
+        return smartSettingSchemaDao
     }
 }

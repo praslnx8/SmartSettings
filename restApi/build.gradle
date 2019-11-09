@@ -44,11 +44,13 @@ repositories {
 
 jar {
     archivesBaseName = 'restApi-backend'
+    archiveClassifier.set(null)
 }
 
 shadowJar {
     archivesBaseName = 'restApi-backend'
     version = null
+    archiveClassifier.set(null)
 }
 
 dependencies {

@@ -1,7 +1,7 @@
 version: '3'
 services:
   restApi:
-    image: restapi:latest
+    image: prasilabs/smartsettings:latest
     container_name: restApi-container
     expose:
       - 8080

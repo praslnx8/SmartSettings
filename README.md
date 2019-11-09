@@ -33,5 +33,8 @@ To Run Rest API Server from command line
 
 To Create Rest API Server with Docker
 ./gradlew build
-docker build -t smartsettings-restapi .
+docker build -t prasilabs/smartsettings .
 docker run -m512M --cpus 2 -it -p 5000:5000 --rm my-application
+
+docker tag prasilabs/smartsettings:latest prasilabs/smartsettings:latest 
+docker push prasilabs/smartsettings:latest 

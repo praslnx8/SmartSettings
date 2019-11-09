@@ -1,6 +1,3 @@
-group 'Example'
-version '1.0-SNAPSHOT'
-
 apply plugin: 'kotlin'
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'application'
@@ -43,6 +40,10 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url "https://dl.bintray.com/kotlin/ktor" }
+}
+
+jar {
+    archivesBaseName = 'restApi-backend'
 }
 
 shadowJar {

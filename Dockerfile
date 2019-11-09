@@ -13,7 +13,7 @@ RUN chown -R $APPLICATION_USER /restApiApp
 
 USER $APPLICATION_USER
 
-COPY restApi/build/libs/restApi-backend-all.jar /restApiApp/restApi.jar
+COPY restApi/build/libs/restApi-backend.jar /restApiApp/restApi.jar
 WORKDIR /restApiApp
 
 

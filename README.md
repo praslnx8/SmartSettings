@@ -1,5 +1,5 @@
 # SmartSettings 
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/prasilabs/smartsettings)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/prasilabs/smartsettings)  ![GitHub issues](https://img.shields.io/github/issues/praslnx8/smartsettings) ![GitHub](https://img.shields.io/github/license/praslnx8/smartsettings)   ![GitHub last commit](https://img.shields.io/github/last-commit/praslnx8/smartsettings)
 
 We are following Model Driven Development here.
 

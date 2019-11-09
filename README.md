@@ -1,4 +1,5 @@
-# SmartSettings
+# SmartSettings 
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/prasilabs/smartsettings)
 
 We are following Model Driven Development here.
 

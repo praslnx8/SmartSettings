@@ -1,0 +1,22 @@
+version: '3'
+services:
+  restApi:
+    image: restapi:latest
+    container_name: restApi-container
+    expose:
+      - 8080
+    restart: always
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    container_name: mongo-container
+    environment:
+      - MONGO-INITDB-DATABASE=smartsettingsdb
+      - MONGO-INITDB-ROOT-USERNAME=smartsettinguser
+      - MONGO-INITDB-ROOT-PASSWORD=S3crET!
+    volumes:
+      - ./mongo-volume:/data/db
+    ports:
+      - '27017-27019:27017-27019'

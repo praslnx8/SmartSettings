@@ -28,7 +28,10 @@ We use liveData to listen for data changes on model side. We use presenter becau
 This project also uses REST API for few features such as FindMyDevice, Change PIN remotely etc. For this the REST API we are using Ktor.
 
 
-To Create Rest API Server Docker
+To Run Rest API Server from command line
+./gradlew restApi:run 
+
+To Create Rest API Server with Docker
 ./gradlew build
 docker build -t smartsettings-restapi .
 docker run -m512M --cpus 2 -it -p 5000:5000 --rm my-application

@@ -18,4 +18,6 @@ data class SmartSettingSchema(
 
     @SerializedName("conjunctionLogic")
     var conjunctionLogic: String
-)
+) {
+    constructor() : this("",null, listOf<String>(), listOf<String>(), "")
+}

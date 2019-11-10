@@ -20,7 +20,7 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import resources.db.MongoDb
+import modules.schema.SmartSettingSchemaRepo
 import response.SmartSettingSchema
 
 
@@ -37,7 +37,7 @@ fun Application.main() {
             call.respondText("Smart Setting API Working! Success.", ContentType.Text.Plain)
         }
         get("/schema") {
-            val smartSettingSchemas = MongoDb().getSmartSettingSchemas()
+            val smartSettingSchemas = SmartSettingSchemaRepo().getSmartSettingSchemas()
             if(smartSettingSchemas.isNotEmpty()) {
                 call.respond(smartSettingSchemas)
             } else {
@@ -46,9 +46,7 @@ fun Application.main() {
         }
         post("/schema") {
             val smartSettingSchema = call.receive<SmartSettingSchema>()
-
-            MongoDb().insertSmartSettingSchema(smartSettingSchema)
-
+            SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
             call.respond(HttpStatusCode.OK)
         }
     }

@@ -10,6 +10,8 @@ services:
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - MONGODB_USERNAME=smartuser
+      - MONGODB_PASSWORD=smarts3cr3t
     links:
       - mongodb:mongodb
     restart: always

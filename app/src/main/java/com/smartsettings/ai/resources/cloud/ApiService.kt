@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("v1/schemas")
+    @GET("schema")
     fun getSchemas(): Call<List<SmartSettingSchemaCloudData>>
 }

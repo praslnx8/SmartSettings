@@ -21,8 +21,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnit4"
 
-        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
-        buildConfigField "String", "API_URL", (project.findProperty("API_URL") ?: "")
+
+        Properties properties = new Properties()
+        def propertiesFile = project.rootProject.file('app.properties')
+        if (propertiesFile.exists()) {
+            properties.load(propertiesFile.newDataInputStream())
+        }
+        resValue "string", "google_maps_key", properties.getProperty("GOOGLE_MAPS_API_KEY","")
+        buildConfigField "String", "REST_API_URL", properties.getProperty("REST_API_URL","")
     }
     buildTypes {
         debug {
@@ -84,7 +90,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     def room_version = "2.2.1"
-    //annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 

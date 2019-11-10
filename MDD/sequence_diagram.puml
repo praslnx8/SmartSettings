@@ -8,5 +8,6 @@ SmartSetting -> ContextListener : Listen to Context Change
 ContextListener --> ContextListener : If Criteria Matches
 ContextListener -> SmartSetting : Criteria Matched
 SmartSetting -> SettingChanger : Apply Changes
+SmartSetting -> AndroidSetting : Apply
 
 @enduml

@@ -16,9 +16,9 @@ import retrofit2.Response
 
 class SmartSettingSchemaRepo {
 
-    val smartSettingSchemaDao: SmartSettingSchemaDao = DependencyProvider.smartSettingSchemaDao
+    private val smartSettingSchemaDao: SmartSettingSchemaDao = DependencyProvider.smartSettingSchemaDao
 
-    val apiService: ApiService = DependencyProvider.apiService
+    private val apiService: ApiService = DependencyProvider.apiService
 
     fun getSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         syncSchemaFromCloud {

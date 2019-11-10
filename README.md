@@ -27,6 +27,7 @@ we are going with MVP + Cool feature of View Model and Live Data. :)
 We use liveData to listen for data changes on model side. We use presenter because, here the view should be as dumb as possible and presenter should have the business logic of user flow.
 
 This project also uses REST API for few features such as FindMyDevice, Change PIN remotely etc. For this the REST API we are using Ktor.
+REST API Document: https://documenter.getpostman.com/view/132932/SW18waXa?version=latest
 
 
 To Run Rest API Server from command line

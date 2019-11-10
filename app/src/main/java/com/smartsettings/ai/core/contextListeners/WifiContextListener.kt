@@ -14,7 +14,7 @@ import com.smartsettings.ai.di.DependencyProvider
 
 class WifiContextListener(SSID: String) : ContextListener<String>(SerializableData(SSID)) {
 
-    val context: Context = DependencyProvider.getContext
+    private val context: Context = DependencyProvider.getContext
 
     private var contextChangeCallback: (() -> Unit)? = null
 

@@ -28,7 +28,7 @@ class LocationContextListener(locationData: LocationData) :
 
     private var locationContext: LocationContext? = null
 
-    val fusedLocationProviderClient: FusedLocationProviderClient = DependencyProvider.fusedLocationProviderClient
+    private val fusedLocationProviderClient: FusedLocationProviderClient = DependencyProvider.fusedLocationProviderClient
 
     @SuppressLint("MissingPermission")
     override fun startListeningToContextChanges() {

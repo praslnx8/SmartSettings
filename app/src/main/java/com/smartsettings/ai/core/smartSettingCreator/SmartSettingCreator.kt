@@ -1,7 +1,6 @@
 package com.smartsettings.ai.core.smartSettingCreator
 
 import com.smartsettings.ai.core.SmartProfile
-import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
@@ -17,9 +16,7 @@ import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
 
 class SmartSettingCreator {
 
-    val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
-
-    val smartSettingRepository: SmartSettingRepository = DependencyProvider.smartSettingRepository
+    private val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
 
     fun getSmartSettingSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         smartSettingSchemaRepo.getSchemas {
@@ -45,8 +42,8 @@ class SmartSettingCreator {
                         settingChangers,
                         smartSettingSchemaDBModel.conjunctionLogic
                     )
-
-                    SmartProfile.addSmartSetting(smartSettingRepository, smartSetting)
+                    smartSetting.isShowNotificationOnTrigger = true
+                    SmartProfile.addSmartSetting(smartSetting)
                     smartSettingCreatorCallback.onSmartSettingsCreated(smartSetting)
                 }
             }

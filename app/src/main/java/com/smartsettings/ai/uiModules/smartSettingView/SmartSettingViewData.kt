@@ -11,6 +11,7 @@ data class SmartSettingViewData(
     val isRunning: Boolean,
     val isChangesApplied: Boolean,
     val isPermissionGranted: Boolean,
+    val isShowNotificationOnTrigger : Boolean,
     val conjunctionLogic: String,
     val settingChangers: List<SettingChangerViewData>,
     val contextListeners: List<ContextListenerViewData>
@@ -25,6 +26,7 @@ data class SmartSettingViewData(
                 smartSetting.isRunning(),
                 smartSetting.isChangesApplied(),
                 smartSetting.isListeningPermissionGranted(),
+                smartSetting.isShowNotificationOnTrigger,
                 smartSetting.conjunctionLogic,
                 SettingChangerViewData.getSettingChangerViewData(
                     smartSetting.settingChangers.toList()

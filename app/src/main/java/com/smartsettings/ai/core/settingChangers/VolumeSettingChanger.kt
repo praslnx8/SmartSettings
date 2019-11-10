@@ -8,7 +8,7 @@ import com.smartsettings.ai.di.DependencyProvider
 open class VolumeSettingChanger(volumeActionData: VolumeActionData) :
     SettingChanger<VolumeActionData>(SerializableData(volumeActionData)) {
 
-    val audioManager: AudioManager = DependencyProvider.audioManager
+    private val audioManager: AudioManager = DependencyProvider.audioManager
 
     override fun askSettingChangePermissionIfAny(permissionGrantCallback: (Boolean) -> Unit) {
         permissionGrantCallback(true)

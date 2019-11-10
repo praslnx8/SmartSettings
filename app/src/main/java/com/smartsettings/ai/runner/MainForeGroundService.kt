@@ -1,20 +1,12 @@
 package com.smartsettings.ai.runner
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
-import com.smartsettings.ai.MainActivity
-import com.smartsettings.ai.R
+import com.smartsettings.ai.utils.AndroidNotificationUtil
 
 
 class MainForeGroundService : LifecycleService() {
-
-    private val CHANNEL_ID = "ForegroundServiceChannel"
 
     companion object {
         fun startService(context: Context) {
@@ -51,35 +43,10 @@ class MainForeGroundService : LifecycleService() {
 
     private fun showNotification() {
 
-        createNotificationChannel()
+        val title = "Foreground Service"
+        val text = "Running"
+        val channelId = "ForegroundServiceChannel"
 
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
-        )
-
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Foreground Service")
-            .setContentText("Running")
-            .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentIntent(pendingIntent)
-            .setSound(null)
-            .build()
-
-        startForeground(1, notification)
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                CHANNEL_ID,
-                "Foreground Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-
-            val manager = getSystemService(NotificationManager::class.java)
-            manager?.createNotificationChannel(serviceChannel)
-        }
+        startForeground(1, AndroidNotificationUtil.getNotification(this, title, text, channelId))
     }
 }

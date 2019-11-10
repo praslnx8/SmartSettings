@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference
 
 class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
-    val smartSettingCreator: SmartSettingCreator = DependencyProvider.smartSettingCreator
+    private val smartSettingCreator: SmartSettingCreator = DependencyProvider.smartSettingCreator
 
     private lateinit var smartSettingCreatorViewReference: WeakReference<SmartSettingCreatorView>
 

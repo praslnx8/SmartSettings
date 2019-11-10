@@ -40,7 +40,7 @@ object InputDialogUtils {
         return ask(context, title, null, positiveBtnText, null, hintText, callBack)
     }
 
-    fun ask(
+    private fun ask(
         context: Context,
         title: String?,
         message: String?,
@@ -81,27 +81,38 @@ object InputDialogUtils {
                 valueArrayList.add(editText.text.toString())
             }
 
-            if (callBack(true, valueArrayList.toTypedArray())) {
-                dialog?.dismiss()
-            }
+            sendCallback(true, valueArrayList.toTypedArray(), callBack, dialog)
         }
 
         negativeBtnText?.let {
 
             dialogBuilder.setCancelable(false)
             dialogBuilder.setNegativeButton(negativeBtnText) { _, _ ->
-                if (callBack(false, arrayOf())) {
-                    dialog?.dismiss()
-                }
+                sendCallback(false, arrayOf(), callBack, dialog)
             }
         }
 
         dialogBuilder.setOnCancelListener {
-            callBack(false, arrayOf())
+            sendCallback(false, arrayOf(), callBack, dialog)
         }
 
         dialog = dialogBuilder.create()
 
         return dialog
+    }
+
+    private fun sendCallback(
+        isPositive: Boolean,
+        values : Array<String>,
+        callBack: (isPositive: Boolean, value: Array<String>) -> Boolean,
+        dialog: Dialog?
+    ) {
+        try {
+            if (callBack(isPositive, values)) {
+                dialog?.dismiss()
+            }
+        } catch (e: Exception) {
+            dialog?.dismiss()
+        }
     }
 }

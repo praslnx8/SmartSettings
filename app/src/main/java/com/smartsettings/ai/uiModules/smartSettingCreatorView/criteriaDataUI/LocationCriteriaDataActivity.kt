@@ -33,6 +33,8 @@ class LocationCriteriaDataActivity : AppCompatActivity() {
 
         mapView.getMapAsync {
             googleMap = it
+            googleMap?.uiSettings?.isCompassEnabled = true
+            googleMap?.uiSettings?.isMyLocationButtonEnabled = true
         }
 
         confirmButton.setOnClickListener {

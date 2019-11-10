@@ -3,6 +3,8 @@ package com.smartsettings.ai.core.smartSettings
 import androidx.annotation.StringDef
 import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
+import com.smartsettings.ai.di.DependencyProvider
+import com.smartsettings.ai.utils.AndroidNotificationUtil
 
 class SmartSetting(
     var id: Long?,
@@ -27,6 +29,8 @@ class SmartSetting(
     private var isEnabled = false
 
     private var isChangesApplied = false
+
+    var isShowNotificationOnTrigger = false
 
     private var settingChangesCallback: ((SmartSetting) -> Unit)? = null
 
@@ -75,6 +79,9 @@ class SmartSetting(
     private fun onContextChange() {
 
         val isNewChangesApplied = if (isCriteriaMatches()) {
+            if(isShowNotificationOnTrigger) {
+                showNotification()
+            }
             settingChangers.forEach {
                 it.applyChanges()
             }
@@ -87,6 +94,14 @@ class SmartSetting(
             isChangesApplied = isNewChangesApplied
             settingChangesCallback?.invoke(this)
         }
+    }
+
+    private fun showNotification() {
+        val notificationTitle = "Setting applied"
+        val notificationText = name
+        val channelId = "setting_trigger_notification"
+
+        AndroidNotificationUtil.showNotification(DependencyProvider.getContext, notificationTitle, notificationText, channelId)
     }
 
     private fun isCriteriaMatches(): Boolean {

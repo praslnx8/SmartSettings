@@ -36,6 +36,15 @@ compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 kotlin { experimental { coroutines "enable" } }
 
+//Not needed now
+//task generateJks(type: JavaExec, dependsOn: 'classes') {
+//    classpath = sourceSets.main.runtimeClasspath
+//    main = 'server.CertificateGenerator'
+//}
+//
+//getTasksByName("run", false).first().dependsOn('generateJks')
+//getTasksByName("build", false).first().dependsOn('generateJks')
+
 repositories {
     mavenCentral()
     jcenter()
@@ -56,6 +65,7 @@ shadowJar {
 dependencies {
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "io.ktor:ktor-network-tls:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "org.mongodb:mongodb-driver:3.6.3"
     testImplementation group: 'junit', name: 'junit', version: '4.12'

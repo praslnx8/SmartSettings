@@ -5,18 +5,39 @@ services:
     container_name: restApi-container
     expose:
       - 8080
+    ports:
+      - '8080:8080'
+    environment:
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=smartuser
+      - MONGODB_PASSWORD=smarts3cr3t
+    links:
+      - mongodb:mongodb
     restart: always
     depends_on:
-      - mongodb
+      - mongousercreator
 
   mongodb:
     image: mongo
     container_name: mongo-container
-    environment:
-      - MONGO-INITDB-DATABASE=smartsettingsdb
-      - MONGO-INITDB-ROOT-USERNAME=smartsettinguser
-      - MONGO-INITDB-ROOT-PASSWORD=S3crET!
+    expose:
+      - 27017
+    networks:
+      - default
     volumes:
-      - ./mongo-volume:/data/db
+      - data-volume:/data/db
     ports:
-      - '27017-27019:27017-27019'
+      - '27017:27017'
+
+  mongousercreator:
+    image: mongo
+    container_name: mongo-user-creator
+    links:
+      - mongodb:mongodb
+    command: mongo --host mongodb --eval  "db.getSiblingDB('smartsettings').createUser({user:'smartuser', pwd:'smarts3cr3t', roles:[{role:'readWrite',db:'smartsettings'}]});"
+    depends_on:
+      - mongodb
+
+volumes:
+  data-volume:

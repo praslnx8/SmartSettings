@@ -1,14 +1,13 @@
 package com.smartsettings.ai.resources.cloud
 
+import com.smartsettings.ai.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiServiceProvider {
 
-    private const val API_BASE_URL = "http:localhost:8000/"
-
     private val retrofit: Retrofit by lazy {
-        Retrofit.Builder().baseUrl(API_BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
+        Retrofit.Builder().baseUrl(BuildConfig.API_URL).addConverterFactory(GsonConverterFactory.create()).build()
     }
 
     val apiService: ApiService by lazy {

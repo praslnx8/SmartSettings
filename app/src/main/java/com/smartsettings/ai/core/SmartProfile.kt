@@ -3,10 +3,13 @@ package com.smartsettings.ai.core
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.smartsettings.ai.core.smartSettings.SmartSetting
+import com.smartsettings.ai.di.DependencyProvider
 
 object SmartProfile {
 
     private val smartSettings = HashSet<SmartSetting>()
+
+    private val smartSettingRepository : SmartSettingRepository = DependencyProvider.smartSettingRepository
 
     private val smartSettingsLiveData: MutableLiveData<Set<SmartSetting>> = MutableLiveData(
         smartSettings
@@ -28,7 +31,7 @@ object SmartProfile {
         smartSettingsListLiveData.value = smartSettings
     }
 
-    fun load(smartSettingRepository: SmartSettingRepository) {
+    fun load() {
 
         if (isLoaded) {
             updateLiveData()
@@ -53,7 +56,6 @@ object SmartProfile {
     }
 
     fun addSmartSetting(
-        smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
         smartSettingRepository.addSmartSetting(smartSetting) {
@@ -65,7 +67,6 @@ object SmartProfile {
     }
 
     fun updateSmartSetting(
-        smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
         smartSettingRepository.updateSmartSetting(smartSetting) {
@@ -76,7 +77,6 @@ object SmartProfile {
     }
 
     fun deleteSmartSetting(
-        smartSettingRepository: SmartSettingRepository,
         smartSetting: SmartSetting
     ) {
         smartSettingRepository.deleteSmartSetting(smartSetting) {

@@ -1,6 +1,5 @@
 package com.smartsettings.ai.core
 
-import android.content.Context
 import com.google.gson.Gson
 import com.smartsettings.ai.core.contextListeners.ContextListener
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
@@ -23,9 +22,7 @@ import org.jetbrains.anko.uiThread
 
 class SmartSettingRepository {
 
-    val smartSettingDao: SmartSettingDao = DependencyProvider.smartSettingDao
-
-    val context: Context = DependencyProvider.getContext
+    private val smartSettingDao: SmartSettingDao = DependencyProvider.smartSettingDao
 
     fun getSmartSettings(smartSettingsCallBack: (List<SmartSetting>) -> Unit) {
 
@@ -94,7 +91,8 @@ class SmartSettingRepository {
             smartSetting.name,
             convertToSettingChangerDBList(smartSetting.settingChangers),
             convertToContextListenerDBList(smartSetting.contextListeners),
-            smartSetting.conjunctionLogic
+            smartSetting.conjunctionLogic,
+            smartSetting.isShowNotificationOnTrigger
         )
 
         doAsync {
@@ -156,7 +154,8 @@ class SmartSettingRepository {
             smartSetting.name,
             convertToSettingChangerDBList(smartSetting.settingChangers),
             convertToContextListenerDBList(smartSetting.contextListeners),
-            smartSetting.conjunctionLogic
+            smartSetting.conjunctionLogic,
+            smartSetting.isShowNotificationOnTrigger
         )
 
         doAsync {
@@ -180,7 +179,8 @@ class SmartSettingRepository {
             smartSetting.name,
             convertToSettingChangerDBList(smartSetting.settingChangers),
             convertToContextListenerDBList(smartSetting.contextListeners),
-            smartSetting.conjunctionLogic
+            smartSetting.conjunctionLogic,
+            smartSetting.isShowNotificationOnTrigger
         )
 
         doAsync {

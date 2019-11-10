@@ -15,8 +15,9 @@ data class SmartSettingDBModel(
 
     @ColumnInfo(name = "context_listeners") var contextListeners: List<ContextListenerDBModel>,
 
-    @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String
+    @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String,
 
+    @ColumnInfo(name = "showNotificationOnTrigger") var showNotificationOnTrigger : Boolean
 )
 
 data class SettingChangerDBModel(

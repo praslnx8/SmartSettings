@@ -17,9 +17,9 @@ import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
 
 class SmartSettingCreator {
 
-    val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
+    private val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
 
-    val smartSettingRepository: SmartSettingRepository = DependencyProvider.smartSettingRepository
+    private val smartSettingRepository: SmartSettingRepository = DependencyProvider.smartSettingRepository
 
     fun getSmartSettingSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
         smartSettingSchemaRepo.getSchemas {
@@ -45,7 +45,7 @@ class SmartSettingCreator {
                         settingChangers,
                         smartSettingSchemaDBModel.conjunctionLogic
                     )
-
+                    smartSetting.isShowNotificationOnTrigger = true
                     SmartProfile.addSmartSetting(smartSettingRepository, smartSetting)
                     smartSettingCreatorCallback.onSmartSettingsCreated(smartSetting)
                 }

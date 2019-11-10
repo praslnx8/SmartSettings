@@ -4,14 +4,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.smartsettings.ai.core.SmartProfile
-import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.smartSettings.SmartSetting
-import com.smartsettings.ai.di.DependencyProvider
 import java.lang.ref.WeakReference
 
 class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
-
-    val smartSettingRepository: SmartSettingRepository = DependencyProvider.smartSettingRepository
 
     private val smartSettingLiveData = SmartProfile.getSmartSettingLiveData()
 
@@ -24,7 +20,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
     }
 
     override fun getSmartSettings(lifecycleOwner: LifecycleOwner) {
-        SmartProfile.load(smartSettingRepository)
+        SmartProfile.load()
         smartSettingLiveData.observe(lifecycleOwner, Observer<Set<SmartSetting>> { smartSettings ->
 
             smartSettingList.clear()
@@ -47,7 +43,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
         for (smartSetting in smartSettingList) {
             if (smartSetting.id == smartSettingViewData.id) {
                 smartSetting.setEnabled(smartSettingViewData.isEnabled)
-                SmartProfile.updateSmartSetting(smartSettingRepository, smartSetting)
+                SmartProfile.updateSmartSetting(smartSetting)
                 return
             }
         }
@@ -56,7 +52,7 @@ class SmartSettingViewModel : ViewModel(), SmartSettingViewPresenter {
     override fun deleteSmartSetting(smartSettingViewData: SmartSettingViewData) {
         for (smartSetting in smartSettingList) {
             if (smartSetting.id == smartSettingViewData.id) {
-                SmartProfile.deleteSmartSetting(smartSettingRepository, smartSetting)
+                SmartProfile.deleteSmartSetting(smartSetting)
                 return
             }
         }

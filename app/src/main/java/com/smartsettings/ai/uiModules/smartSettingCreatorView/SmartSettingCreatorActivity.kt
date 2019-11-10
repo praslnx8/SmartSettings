@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.settingChangers.SettingChangerType
+import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.uiModules.smartSettingCreatorView.criteriaDataUI.LocationCriteriaDataActivity
+import com.smartsettings.ai.utils.InputDialogUtils
 import kotlinx.android.synthetic.main.activity_smart_setting_creator.*
 import java.lang.ref.WeakReference
 
@@ -71,15 +73,20 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
         this.criteriaDataCallback = criteriaDataCallback
         if (contextListenerType == ContextListenerType.LOCATION_LISTENER) {
             LocationCriteriaDataActivity.open(this, reqForLocData)
-        } else if (contextListenerType == ContextListenerType.WIFI_LISTENER) {
-
-        }
+        } 
     }
 
     override fun askActionData(settingChangerType: SettingChangerType, actionDataCallback: (Any) -> Unit) {
         this.actionDataCallback = actionDataCallback
         if (settingChangerType == SettingChangerType.VOLUME_CHANGER) {
-
+            InputDialogUtils.askWithMessage(this, "Enter volume to be set",
+                "OK", arrayOf("Enter phone volume")) { isPositive, values ->
+                if(isPositive) {
+                    val volume = values[0].toInt()
+                    actionDataCallback(VolumeActionData(volumeToBeSet = volume))
+                }
+                true
+            }
         } else if (settingChangerType == SettingChangerType.VOLUME_MUTE_CHANGER) {
             actionDataCallback("")
         }

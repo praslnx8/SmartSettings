@@ -30,10 +30,8 @@ data class ContextListenerDBModel(
     var serializedCriteriaData: String
 )
 
-@Entity(tableName = "smart_setting_schema")
+@Entity(tableName = "smart_setting_schema", primaryKeys = ["title"])
 data class SmartSettingSchemaDBModel(
-
-    @PrimaryKey(autoGenerate = true) var id: Int? = null,
 
     @ColumnInfo(name = "title") var title: String,
 

@@ -112,6 +112,7 @@ object InputDialogUtils {
                 dialog?.dismiss()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             dialog?.dismiss()
         }
     }

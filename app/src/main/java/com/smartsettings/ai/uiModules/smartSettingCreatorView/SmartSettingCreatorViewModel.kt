@@ -16,7 +16,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
     private lateinit var smartSettingCreatorViewReference: WeakReference<SmartSettingCreatorView>
 
-    private val smartSettingSchemaDbModelMap: MutableMap<Int?, SmartSettingSchemaDBModel> = HashMap()
+    private val smartSettingSchemaDbModelMap: MutableMap<String?, SmartSettingSchemaDBModel> = HashMap()
 
     override fun getSmartSettingSchemas() {
         smartSettingCreatorViewReference.get()?.showLoading()
@@ -25,11 +25,10 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
                 val smartSettingSchemaViewDataList = ArrayList<SmartSettingSchemaViewData>()
                 smartSettingSchemaDbModelMap.clear()
                 for (smartSettingSchemaDbModel in it) {
-                    smartSettingSchemaDbModelMap[smartSettingSchemaDbModel.id] = smartSettingSchemaDbModel
+                    smartSettingSchemaDbModelMap[smartSettingSchemaDbModel.title] = smartSettingSchemaDbModel
 
                     smartSettingSchemaViewDataList.add(
                         SmartSettingSchemaViewData(
-                            smartSettingSchemaDbModel.id ?: 0,
                             smartSettingSchemaDbModel.title,
                             smartSettingSchemaDbModel.description,
                             smartSettingSchemaDbModel.settingChangerSchemas,
@@ -46,7 +45,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
     }
 
     override fun parseSmartSettingSchema(smartSettingSchemaViewData: SmartSettingSchemaViewData) {
-        val smartSettingSchemaDBModel = smartSettingSchemaDbModelMap[smartSettingSchemaViewData.id]
+        val smartSettingSchemaDBModel = smartSettingSchemaDbModelMap[smartSettingSchemaViewData.name]
         smartSettingSchemaDBModel?.let {
             smartSettingCreator.parseSmartSettingSchema(it, object : SmartSettingCreatorCallback {
                 override fun getContextListenerCriteriaData(

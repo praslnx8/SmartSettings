@@ -5,9 +5,12 @@ services:
     container_name: restApi-container
     expose:
       - 8080
+      - 8443
+      - 80
+      - 443
     ports:
-      - '8080:80'
-      - '8443:443'
+      - '80:8080'
+      - '443:8443'
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017

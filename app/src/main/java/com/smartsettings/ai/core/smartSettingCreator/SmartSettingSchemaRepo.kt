@@ -36,7 +36,6 @@ class SmartSettingSchemaRepo {
         val smartSettingSchemaDBModels = ArrayList<SmartSettingSchemaDBModel>()
         smartSettingSchemaDBModels.add(
             SmartSettingSchemaDBModel(
-                1,
                 "Mute volume at location",
                 null,
                 listOf(SettingChangerType.VOLUME_MUTE_CHANGER.value),
@@ -84,7 +83,6 @@ class SmartSettingSchemaRepo {
                 for (smartSettingSchemaCloudData in response.body() ?: ArrayList()) {
                     smartSettingSchemaDbModels.add(
                         SmartSettingSchemaDBModel(
-                            null,
                             smartSettingSchemaCloudData.title,
                             smartSettingSchemaCloudData.description,
                             smartSettingSchemaCloudData.settingChangerSchemas,

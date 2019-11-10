@@ -66,7 +66,13 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     }
 
     override fun askName(nameCallback: (String?) -> Unit) {
-        nameCallback(null)
+        InputDialogUtils.ask(this, "Enter Name", "OK", arrayOf("Name")) { isPositive, values ->
+            if(isPositive) {
+                val name = values[0]
+                nameCallback(name)
+            }
+            true
+        }.show()
     }
 
     override fun askCriteriaData(contextListenerType: ContextListenerType, criteriaDataCallback: (Any) -> Unit) {
@@ -86,7 +92,7 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
                     actionDataCallback(VolumeActionData(volumeToBeSet = volume))
                 }
                 true
-            }
+            }.show()
         } else if (settingChangerType == SettingChangerType.VOLUME_MUTE_CHANGER) {
             actionDataCallback("")
         }

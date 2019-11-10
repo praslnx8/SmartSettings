@@ -6,7 +6,8 @@ services:
     expose:
       - 8080
     ports:
-      - '8080:8080'
+      - '8080:80'
+      - '8443:443'
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
@@ -17,6 +18,8 @@ services:
     restart: always
     depends_on:
       - mongousercreator
+    volumes:
+      - ./ssl/:/etc/ssl/
 
   mongodb:
     image: mongo

@@ -29,4 +29,7 @@ interface SmartSettingSchemaDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSmartSetting(smartSettingSchemaDBModels: List<SmartSettingSchemaDBModel>)
+
+    @Delete
+    fun deleteAll()
 }

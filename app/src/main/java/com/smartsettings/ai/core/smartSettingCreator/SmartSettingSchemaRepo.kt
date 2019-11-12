@@ -16,18 +16,29 @@ import retrofit2.Response
 
 class SmartSettingSchemaRepo {
 
-    private val smartSettingSchemaDao: SmartSettingSchemaDao = DependencyProvider.smartSettingSchemaDao
+    private val smartSettingSchemaDao: SmartSettingSchemaDao =
+        DependencyProvider.smartSettingSchemaDao
 
     private val apiService: ApiService = DependencyProvider.apiService
 
+    /**
+     * Get schemas from db.
+     * If first time or the db is empty. It will sync from cloud and return.
+     */
     fun getSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
-        syncSchemaFromCloud {
-            loadSchemaFromDB {
-                if (it.isEmpty()) {
-                    schemasCallback(getDefaultSettings())
-                } else {
-                    schemasCallback(it)
+        loadSchemaFromDB {
+            if (it.isEmpty()) {
+                syncSchemaFromCloud(false) {
+                    loadSchemaFromDB { updatedList ->
+                        if (updatedList.isEmpty()) {
+                            schemasCallback(getDefaultSettings())
+                        } else {
+                            schemasCallback(updatedList)
+                        }
+                    }
                 }
+            } else {
+                schemasCallback(it)
             }
         }
     }
@@ -57,9 +68,16 @@ class SmartSettingSchemaRepo {
         }
     }
 
-    private fun persistSchema(smartSettingSchemas: List<SmartSettingSchemaDBModel>, completeCallback: () -> Unit) {
+    private fun persistSchema(
+        isDeleteOld: Boolean,
+        smartSettingSchemas: List<SmartSettingSchemaDBModel>,
+        completeCallback: () -> Unit
+    ) {
 
         doAsync {
+            if(isDeleteOld) {
+                smartSettingSchemaDao.deleteAll()
+            }
             smartSettingSchemaDao.insertSmartSetting(smartSettingSchemas)
 
             uiThread {
@@ -68,7 +86,7 @@ class SmartSettingSchemaRepo {
         }
     }
 
-    private fun syncSchemaFromCloud(completeCallback: () -> Unit) {
+    private fun syncSchemaFromCloud(isDeleteOld : Boolean, completeCallback: () -> Unit) {
         apiService.getSchemas().enqueue(object : Callback<List<SmartSettingSchemaCloudData>> {
             override fun onFailure(call: Call<List<SmartSettingSchemaCloudData>>, t: Throwable) {
                 completeCallback()
@@ -92,10 +110,16 @@ class SmartSettingSchemaRepo {
                     )
                 }
 
-                persistSchema(smartSettingSchemaDbModels) {
-                    completeCallback()
+                if(smartSettingSchemaDbModels.isNotEmpty()) {
+                    persistSchema(isDeleteOld, smartSettingSchemaDbModels) {
+                        completeCallback()
+                    }
                 }
             }
         })
+    }
+
+    fun syncSchemaCompletely() {
+        syncSchemaFromCloud(true){}
     }
 }

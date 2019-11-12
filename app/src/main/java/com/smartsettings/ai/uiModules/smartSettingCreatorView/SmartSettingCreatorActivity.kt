@@ -4,15 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
+import com.smartsettings.ai.ext.inTransaction
 import com.smartsettings.ai.uiModules.smartSettingCreatorView.criteriaDataUI.LocationCriteriaDataActivity
 import com.smartsettings.ai.utils.InputDialogUtils
 import kotlinx.android.synthetic.main.activity_smart_setting_creator.*
@@ -24,6 +23,9 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
     private var criteriaDataCallback: ((Any) -> Unit)? = null
     private var actionDataCallback: ((Any) -> Unit)? = null
+
+    private val smartSettingCreatorListFragment = SmartSettingCreatorListFragment()
+    private val smartSettingSchemaDetailFragment = SmartSettingSchemaDetailFragment()
 
     companion object {
         fun open(context: Context) {
@@ -41,28 +43,30 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
         setContentView(R.layout.activity_smart_setting_creator)
         smartSettingCreatorPresenter.setView(WeakReference(this))
         smartSettingCreatorPresenter.getSmartSettingSchemas()
+
+        supportFragmentManager.inTransaction {
+            add(container.id, smartSettingCreatorListFragment)
+        }
     }
 
     override fun showSmartSettingSchemas(smartSettingSchemas: List<SmartSettingSchemaViewData>) {
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = SmartSettingCreatorRecyclerViewAdapter(smartSettingSchemas) {
-            smartSettingCreatorPresenter.parseSmartSettingSchema(it)
+        smartSettingCreatorListFragment.showSmartSettingSchemas(smartSettingSchemas) { item, isActivate ->
+            if(isActivate) {
+                smartSettingCreatorPresenter.parseSmartSettingSchema(item)
+            } else {
+                supportFragmentManager.inTransaction {
+                    add(container.id, smartSettingSchemaDetailFragment)
+                }
+            }
         }
-        recyclerView.visibility = View.VISIBLE
-        emptyLayout.visibility = View.GONE
-        progressBar.visibility = View.GONE
     }
 
     override fun showLoading() {
-        recyclerView.visibility = View.GONE
-        emptyLayout.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
+        smartSettingCreatorListFragment.showLoading()
     }
 
     override fun showUnableToFetchInfo() {
-        recyclerView.visibility = View.GONE
-        emptyLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        smartSettingCreatorListFragment.showUnableToFetchInfo()
     }
 
     override fun askName(nameCallback: (String?) -> Unit) {

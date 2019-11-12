@@ -28,7 +28,7 @@ class SmartSetting(
 
     private var isEnabled = false
 
-    private var isChangesApplied = false
+    private var changesAppliedTime = 0L
 
     var isShowNotificationOnTrigger = false
 
@@ -47,7 +47,11 @@ class SmartSetting(
     }
 
     fun isChangesApplied(): Boolean {
-        return isChangesApplied
+        return changesAppliedTime > 0L
+    }
+
+    fun getChangesAppliedTime() : Long {
+        return changesAppliedTime
     }
 
     fun setChangesCallback(settingChangesCallback: ((SmartSetting) -> Unit)) {
@@ -90,8 +94,12 @@ class SmartSetting(
             false
         }
 
-        if (isChangesApplied != isNewChangesApplied) {
-            isChangesApplied = isNewChangesApplied
+        if (isChangesApplied() != isNewChangesApplied) {
+            changesAppliedTime = if(isNewChangesApplied) {
+                System.currentTimeMillis()
+            } else {
+                0L
+            }
             settingChangesCallback?.invoke(this)
         }
     }
@@ -122,9 +130,9 @@ class SmartSetting(
 
     private fun askPermissions(permissionCallback: (Boolean) -> Unit) {
 
-        askContextListenerPermission(true, contextListeners.iterator()) { isListeningPermissionGranted ->
+        askContextListenerPermission(contextListeners.iterator()) { isListeningPermissionGranted ->
             if (isListeningPermissionGranted) {
-                askSettingChangePermission(true, settingChangers.iterator()) { isSettingChangePermissionGranted ->
+                askSettingChangePermission(settingChangers.iterator()) { isSettingChangePermissionGranted ->
                     permissionCallback(isSettingChangePermissionGranted)
                 }
             } else {
@@ -134,38 +142,36 @@ class SmartSetting(
     }
 
     private fun askSettingChangePermission(
-        previousVal: Boolean,
         iterator: Iterator<SettingChanger<out Any>>,
         callBack: (Boolean) -> Unit
     ) {
         if (iterator.hasNext()) {
             iterator.next().askSettingChangePermissionIfAny {
                 if (it) {
-                    askSettingChangePermission(true, iterator, callBack)
+                    askSettingChangePermission(iterator, callBack)
                 } else {
                     callBack(false)
                 }
             }
         } else {
-            callBack(previousVal)
+            callBack(true)
         }
     }
 
     private fun askContextListenerPermission(
-        previousVal: Boolean,
         iterator: Iterator<ContextListener<out Any>>,
         callBack: (Boolean) -> Unit
     ) {
         if (iterator.hasNext()) {
             iterator.next().askListeningPermissionIfAny {
                 if (it) {
-                    askContextListenerPermission(true, iterator, callBack)
+                    askContextListenerPermission(iterator, callBack)
                 } else {
                     callBack(false)
                 }
             }
         } else {
-            callBack(previousVal)
+            callBack(true)
         }
     }
 

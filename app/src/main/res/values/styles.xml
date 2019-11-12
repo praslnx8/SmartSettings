@@ -36,6 +36,9 @@
         <item name="android:titleCondensed">true</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="TextCard" parent="Text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     <!--TEXT-->
 
     <!--Button-->

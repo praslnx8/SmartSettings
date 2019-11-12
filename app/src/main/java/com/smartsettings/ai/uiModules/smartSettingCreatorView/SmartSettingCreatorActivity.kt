@@ -24,8 +24,7 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     private var criteriaDataCallback: ((Any) -> Unit)? = null
     private var actionDataCallback: ((Any) -> Unit)? = null
 
-    private val smartSettingCreatorListFragment = SmartSettingCreatorListFragment()
-    private val smartSettingSchemaDetailFragment = SmartSettingSchemaDetailFragment()
+    private lateinit var smartSettingCreatorListFragment: SmartSettingCreatorListFragment
 
     companion object {
         fun open(context: Context) {
@@ -41,9 +40,10 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_smart_setting_creator)
-        smartSettingCreatorPresenter.setView(WeakReference(this))
-        smartSettingCreatorPresenter.getSmartSettingSchemas()
-
+        smartSettingCreatorListFragment = SmartSettingCreatorListFragment {
+            smartSettingCreatorPresenter.setView(WeakReference(this))
+            smartSettingCreatorPresenter.getSmartSettingSchemas()
+        }
         supportFragmentManager.inTransaction {
             add(container.id, smartSettingCreatorListFragment)
         }
@@ -55,7 +55,10 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
                 smartSettingCreatorPresenter.parseSmartSettingSchema(item)
             } else {
                 supportFragmentManager.inTransaction {
-                    add(container.id, smartSettingSchemaDetailFragment)
+                    add(container.id, SmartSettingSchemaDetailFragment(item) {
+                        smartSettingCreatorPresenter.parseSmartSettingSchema(item)
+                    })
+                    addToBackStack("detail")
                 }
             }
         }
@@ -114,6 +117,12 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
                 criteriaDataCallback?.invoke(LocationData(lat, lon, radius))
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if(!supportFragmentManager.popBackStackImmediate()) {
+            super.onBackPressed()
         }
     }
 

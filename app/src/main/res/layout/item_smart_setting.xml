@@ -35,12 +35,14 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
-                <ImageView
-                        android:id="@+id/statusIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                <TextView
+                        android:id="@+id/statusText"
+                        style="@style/TextCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_check_white_24dp"/>
+                        tools:text="Changes applied: 2hrs ago"
+                        android:drawableEnd="@drawable/ic_check_white_24dp"/>
 
                 <Switch
                         android:id="@+id/switchView"

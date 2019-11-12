@@ -1,9 +1,9 @@
 package com.smartsettings.ai.uiModules.smartSettingView
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -53,7 +53,7 @@ class SmartSettingViewHolder(
     private val smartSettingLayout: CardView = view.findViewById(R.id.smartSettingLayout)
     private val nameText: TextView = view.findViewById(R.id.nameText)
     private val switchView: Switch = view.findViewById(R.id.switchView)
-    private val statusIcon: ImageView = view.findViewById(R.id.statusIcon)
+    private val statusText: TextView = view.findViewById(R.id.statusText)
     private var onBind = false
 
     fun setData(smartSettingViewData: SmartSettingViewData) {
@@ -65,14 +65,19 @@ class SmartSettingViewHolder(
 
 
         if (smartSettingViewData.isEnabled) {
-            if (smartSettingViewData.isChangesApplied) {
+            if (smartSettingViewData.lastAppliedTime > 0L) {
                 smartSettingLayout.background =
                     ActivityCompat.getDrawable(view.context, R.color.successGreen)
+                statusText.visibility = View.VISIBLE
+                statusText.text = "Changes Applied : " + DateUtils.getRelativeTimeSpanString(smartSettingViewData.lastAppliedTime)
             } else {
                 smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.enabled)
+                statusText.visibility = View.VISIBLE
+                statusText.text = "Waiting for criteria to match"
             }
         } else {
             smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.disabled)
+            statusText.visibility = View.INVISIBLE
         }
 
         switchView.setOnCheckedChangeListener { _, isChecked ->
@@ -119,7 +124,7 @@ class SmartSettingDiffCallback(
         val newItem = newList[newItemPosition]
 
         if ((oldItem.id != newItem.id) || (oldItem.isEnabled != newItem.isEnabled) || (oldItem.isRunning != newItem.isRunning) ||
-            (oldItem.isChangesApplied != newItem.isChangesApplied) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
+            (oldItem.lastAppliedTime != newItem.lastAppliedTime) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
             (oldItem.name != newItem.name) || (!isSameSettingChangers(
                 oldItem.settingChangers,
                 newItem.settingChangers

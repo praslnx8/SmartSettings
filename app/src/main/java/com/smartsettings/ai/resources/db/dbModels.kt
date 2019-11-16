@@ -3,6 +3,9 @@ package com.smartsettings.ai.resources.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import core.ContextListenerType
+import core.SettingChangerType
 
 @Entity(tableName = "smart_settings")
 data class SmartSettingDBModel(
@@ -21,12 +24,20 @@ data class SmartSettingDBModel(
 )
 
 data class SettingChangerDBModel(
-    var type: String,
+
+    @SerializedName("type")
+    var type: SettingChangerType,
+
+    @SerializedName("serializedActionData")
     var serializedActionData: String
 )
 
 data class ContextListenerDBModel(
-    var type: String,
+
+    @SerializedName("type")
+    var type: ContextListenerType,
+
+    @SerializedName("serializedCriteriaData")
     var serializedCriteriaData: String
 )
 
@@ -37,10 +48,30 @@ data class SmartSettingSchemaDBModel(
 
     @ColumnInfo(name = "description") var description: String?,
 
-    @ColumnInfo(name = "setting_changer_schemas") var settingChangerSchemas: List<String>,
+    @ColumnInfo(name = "setting_changer_schemas") var settingChangerSchemas: List<SettingChangerSchemaDBModel>,
 
-    @ColumnInfo(name = "context_listener_schemas") var contextListenerSchemas: List<String>,
+    @ColumnInfo(name = "context_listener_schemas") var contextListenerSchemas: List<ContextListenerSchemaDBModel>,
 
     @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String
 )
+
+
+data class SettingChangerSchemaDBModel(
+    @SerializedName("type")
+    val type : SettingChangerType,
+
+    @SerializedName("input")
+    val input: String?
+)
+
+
+data class ContextListenerSchemaDBModel (
+    @SerializedName("type")
+    val type : ContextListenerType,
+
+    @SerializedName("input")
+    val input: String?
+)
+
+
 

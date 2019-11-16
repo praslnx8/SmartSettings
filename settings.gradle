@@ -1,1 +1,1 @@
-include ':app', ':permissionhelper', ':restApi'
+include ':app', ':permissionhelper', ':restApi', ':contract'

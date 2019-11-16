@@ -1,4 +1,4 @@
-package com.smartsettings.ai.core.contextListeners
+package core
 
 enum class ContextListenerType(val value: String) {
     LOCATION_LISTENER("location_listener"),

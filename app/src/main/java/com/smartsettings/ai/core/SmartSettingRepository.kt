@@ -2,11 +2,9 @@ package com.smartsettings.ai.core
 
 import com.google.gson.Gson
 import com.smartsettings.ai.core.contextListeners.ContextListener
-import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
 import com.smartsettings.ai.core.contextListeners.WifiContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
-import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
@@ -16,6 +14,8 @@ import com.smartsettings.ai.resources.db.ContextListenerDBModel
 import com.smartsettings.ai.resources.db.SettingChangerDBModel
 import com.smartsettings.ai.resources.db.SmartSettingDBModel
 import com.smartsettings.ai.resources.db.SmartSettingDao
+import core.ContextListenerType
+import core.SettingChangerType
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -59,7 +59,7 @@ class SmartSettingRepository {
         val settingChangers = mutableSetOf<SettingChanger<out Any>>()
 
         settingChangerDbModels.forEach {
-            if (it.type == SettingChangerType.VOLUME_CHANGER.value) {
+            if (it.type == SettingChangerType.VOLUME_CHANGER) {
                 val volumeActionData = Gson().fromJson(it.serializedActionData, VolumeActionData::class.java)
                 settingChangers.add(VolumeSettingChanger(volumeActionData))
             }
@@ -72,10 +72,10 @@ class SmartSettingRepository {
         val contextListeners = mutableSetOf<ContextListener<out Any>>()
 
         contextListenersDbModels.forEach {
-            if (it.type == ContextListenerType.LOCATION_LISTENER.value) {
+            if (it.type == ContextListenerType.LOCATION_LISTENER) {
                 val locationCriteriaData = Gson().fromJson(it.serializedCriteriaData, LocationData::class.java)
                 contextListeners.add(LocationContextListener(locationCriteriaData))
-            } else if (it.type == ContextListenerType.WIFI_LISTENER.value) {
+            } else if (it.type == ContextListenerType.WIFI_LISTENER) {
                 val wifiCriteriaData = it.serializedCriteriaData
                 contextListeners.add(WifiContextListener(wifiCriteriaData))
             }
@@ -109,7 +109,7 @@ class SmartSettingRepository {
         settingChangers.forEach {
 
             val settingChangerType = if (it is VolumeSettingChanger) {
-                SettingChangerType.VOLUME_CHANGER.value
+                SettingChangerType.VOLUME_CHANGER
             } else {
                 throw IllegalArgumentException("Type not added as functinality")
             }
@@ -131,7 +131,7 @@ class SmartSettingRepository {
         contextListeners.forEach {
 
             val contextListenerType = if (it is LocationContextListener) {
-                ContextListenerType.LOCATION_LISTENER.value
+                ContextListenerType.LOCATION_LISTENER
             } else {
                 throw IllegalArgumentException("Type not added as functinality")
             }

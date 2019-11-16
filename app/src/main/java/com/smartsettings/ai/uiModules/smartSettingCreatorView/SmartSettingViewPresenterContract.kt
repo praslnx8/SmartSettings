@@ -1,7 +1,7 @@
 package com.smartsettings.ai.uiModules.smartSettingCreatorView
 
-import com.smartsettings.ai.core.contextListeners.ContextListenerType
-import com.smartsettings.ai.core.settingChangers.SettingChangerType
+import core.ContextListenerType
+import core.SettingChangerType
 import java.lang.ref.WeakReference
 
 interface SmartSettingCreatorView {
@@ -14,9 +14,9 @@ interface SmartSettingCreatorView {
 
     fun askName(nameCallback: (String?) -> Unit)
 
-    fun askCriteriaData(contextListenerType: ContextListenerType, criteriaDataCallback: (Any) -> Unit)
+    fun askCriteriaData(contextListenerType: Pair<ContextListenerType,String?>, criteriaDataCallback: (Any) -> Unit)
 
-    fun askActionData(settingChangerType: SettingChangerType, actionDataCallback: (Any) -> Unit)
+    fun askActionData(settingChangerType: Pair<SettingChangerType,String?>, actionDataCallback: (Any) -> Unit)
 
     fun close()
 }

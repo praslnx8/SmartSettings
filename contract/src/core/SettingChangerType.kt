@@ -1,9 +1,8 @@
-package com.smartsettings.ai.core.settingChangers
+package core
 
 
 enum class SettingChangerType(val value: String) {
-    VOLUME_CHANGER("volume_changer"),
-    VOLUME_MUTE_CHANGER("volume_mute_changer");
+    VOLUME_CHANGER("volume_changer");
 
     override fun toString(): String {
         return value

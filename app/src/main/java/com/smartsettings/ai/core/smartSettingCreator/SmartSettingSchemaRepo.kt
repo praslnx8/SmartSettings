@@ -1,13 +1,17 @@
 package com.smartsettings.ai.core.smartSettingCreator
 
-import com.smartsettings.ai.core.contextListeners.ContextListenerType
-import com.smartsettings.ai.core.settingChangers.SettingChangerType
+import cloud.ContextListenerCloudData
+import cloud.SettingChangerCloudData
+import cloud.SmartSettingSchemaCloudData
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.cloud.ApiService
-import com.smartsettings.ai.resources.cloud.SmartSettingSchemaCloudData
+import com.smartsettings.ai.resources.db.ContextListenerSchemaDBModel
+import com.smartsettings.ai.resources.db.SettingChangerSchemaDBModel
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDao
+import core.ContextListenerType
+import core.SettingChangerType
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import retrofit2.Call
@@ -49,8 +53,8 @@ class SmartSettingSchemaRepo {
             SmartSettingSchemaDBModel(
                 "Mute volume at location",
                 null,
-                listOf(SettingChangerType.VOLUME_MUTE_CHANGER.value),
-                listOf(ContextListenerType.LOCATION_LISTENER.value),
+                listOf(SettingChangerSchemaDBModel(SettingChangerType.VOLUME_CHANGER, null)),
+                listOf(ContextListenerSchemaDBModel(ContextListenerType.LOCATION_LISTENER, null)),
                 SmartSetting.AND
             )
         )
@@ -103,8 +107,8 @@ class SmartSettingSchemaRepo {
                         SmartSettingSchemaDBModel(
                             smartSettingSchemaCloudData.title,
                             smartSettingSchemaCloudData.description,
-                            smartSettingSchemaCloudData.settingChangerSchemas,
-                            smartSettingSchemaCloudData.contextListenerSchemas,
+                            convertSettingChangerSchemaToDBModel(smartSettingSchemaCloudData.settingChangerSchemas),
+                            convertContextListenerSchemaToDBModel(smartSettingSchemaCloudData.contextListenerSchemas),
                             smartSettingSchemaCloudData.conjunctionLogic
                         )
                     )
@@ -117,6 +121,14 @@ class SmartSettingSchemaRepo {
                 }
             }
         })
+    }
+
+    private fun convertSettingChangerSchemaToDBModel(settingChangerSchemas: List<SettingChangerCloudData>): List<SettingChangerSchemaDBModel> {
+        return settingChangerSchemas.asSequence().map { data -> SettingChangerSchemaDBModel(data.type, data.input) }.toList()
+    }
+
+    private fun convertContextListenerSchemaToDBModel(contextListenerSchemas: List<ContextListenerCloudData>): List<ContextListenerSchemaDBModel> {
+        return contextListenerSchemas.asSequence().map { data -> ContextListenerSchemaDBModel(data.type, data.input) }.toList()
     }
 
     fun syncSchemaCompletely() {

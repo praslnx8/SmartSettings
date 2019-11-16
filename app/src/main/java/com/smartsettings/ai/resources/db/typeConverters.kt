@@ -47,3 +47,33 @@ class ListConverter {
         return Gson().toJson(contextListenerDBModels)
     }
 }
+
+class ContextListenerSchemasConverter {
+
+    @TypeConverter
+    fun fromString(value: String): List<ContextListenerSchemaDBModel> {
+        val listType = object : TypeToken<ArrayList<ContextListenerSchemaDBModel>>() {}.type
+
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromArrayList(contextListenerSchemasDBModels: List<ContextListenerSchemaDBModel>): String {
+        return Gson().toJson(contextListenerSchemasDBModels)
+    }
+}
+
+class SettingChangerSchemasConverter {
+
+    @TypeConverter
+    fun fromString(value: String): List<SettingChangerSchemaDBModel> {
+        val listType = object : TypeToken<ArrayList<SettingChangerSchemaDBModel>>() {}.type
+
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromArrayList(settingChangerSchemasDBModels: List<SettingChangerSchemaDBModel>): String {
+        return Gson().toJson(settingChangerSchemasDBModels)
+    }
+}

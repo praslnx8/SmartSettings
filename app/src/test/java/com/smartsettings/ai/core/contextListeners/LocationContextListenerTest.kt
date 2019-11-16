@@ -42,9 +42,7 @@ class LocationContextListenerTest {
     @Test
     fun start_listening_to_context_should_call_fused_location_provider() {
         val locationData = mock(LocationData::class.java)
-        LocationContextListener(locationData).startListeningToContextChanges {
-
-        }
+        LocationContextListener(locationData).startListeningToContextChanges ({},{})
 
         val locationRequest = LocationRequest()
         locationRequest.fastestInterval = 10000 / 2

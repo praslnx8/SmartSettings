@@ -13,8 +13,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.smartsettings.ai.core.contextListeners.contextData.LocationContext
 import com.smartsettings.ai.core.serializables.SerializableData
-import com.smartsettings.ai.data.contextData.LocationContext
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.utils.LocationUtils
@@ -75,7 +75,6 @@ class LocationContextListener(locationData: LocationData) :
             super.onLocationResult(p0)
             Log.d("XDFCE", "location callback received")
             if (p0 != null && p0.lastLocation != null) {
-                Log.d("XDFCE", "location callback valid")
                 locationContext = LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)
                 onContextChange()
             }

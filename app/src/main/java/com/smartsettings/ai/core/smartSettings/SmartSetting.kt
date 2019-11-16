@@ -50,7 +50,7 @@ class SmartSetting(
         return changesAppliedTime > 0L
     }
 
-    fun getChangesAppliedTime() : Long {
+    fun getChangesAppliedTime(): Long {
         return changesAppliedTime
     }
 
@@ -58,8 +58,8 @@ class SmartSetting(
         this.settingChangesCallback = settingChangesCallback
     }
 
-    fun isListeningPermissionGranted(): Boolean
-            = contextListeners.any { it.isListeningPermissionGranted() }
+    fun isListeningPermissionGranted(): Boolean =
+        contextListeners.any { it.isListeningPermissionGranted() }
 
     fun start() {
         if (isEnabled && !isRunning) {
@@ -67,9 +67,11 @@ class SmartSetting(
                 if (isPermissionGranted) {
                     isRunning = true
                     contextListeners.forEach {
-                        it.startListeningToContextChanges {
+                        it.startListeningToContextChanges({
+                            onContextChangeOfCriteria()
+                        }, {
                             onContextChange()
-                        }
+                        })
                     }
                     settingChangesCallback?.invoke(this)
                 } else {
@@ -81,26 +83,24 @@ class SmartSetting(
     }
 
     private fun onContextChange() {
-
-        val isNewChangesApplied = if (isCriteriaMatches()) {
-            if(isShowNotificationOnTrigger) {
-                showNotification()
-            }
-            settingChangers.forEach {
-                it.applyChanges()
-            }
-            true
-        } else {
-            false
+        if (!isCriteriaMatches()) {
+            changesAppliedTime = 0L
         }
+    }
 
-        if (isChangesApplied() != isNewChangesApplied) {
-            changesAppliedTime = if(isNewChangesApplied) {
-                System.currentTimeMillis()
-            } else {
-                0L
+    private fun onContextChangeOfCriteria() {
+
+        if (!isChangesApplied()) {
+            if (isCriteriaMatches()) {
+                if (isShowNotificationOnTrigger) {
+                    showNotification()
+                }
+                settingChangers.forEach {
+                    it.applyChanges()
+                }
+
+                settingChangesCallback?.invoke(this)
             }
-            settingChangesCallback?.invoke(this)
         }
     }
 
@@ -109,7 +109,12 @@ class SmartSetting(
         val notificationText = name
         val channelId = "setting_trigger_notification"
 
-        AndroidNotificationUtil.showNotification(DependencyProvider.getContext, notificationTitle, notificationText, channelId)
+        AndroidNotificationUtil.showNotification(
+            DependencyProvider.getContext,
+            notificationTitle,
+            notificationText,
+            channelId
+        )
     }
 
     private fun isCriteriaMatches(): Boolean {

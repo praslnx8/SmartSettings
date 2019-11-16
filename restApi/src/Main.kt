@@ -5,6 +5,7 @@
  * @version 1.0
  */
 
+import cloud.SmartSettingSchemaCloudData
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -27,7 +28,6 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import modules.schema.SmartSettingSchemaRepo
-import response.SmartSettingSchema
 
 fun main(args : Array<String>) {
     embeddedServer(
@@ -73,7 +73,7 @@ fun Application.main() {
         authenticate("adminAuth") {
 
             post("/schema") {
-                val smartSettingSchema = call.receive<SmartSettingSchema>()
+                val smartSettingSchema = call.receive<SmartSettingSchemaCloudData>()
                 SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
                 call.respond(HttpStatusCode.OK)
             }

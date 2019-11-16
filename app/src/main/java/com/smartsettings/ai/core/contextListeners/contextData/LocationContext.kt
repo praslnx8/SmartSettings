@@ -1,4 +1,4 @@
-package com.smartsettings.ai.data.contextData
+package com.smartsettings.ai.core.contextListeners.contextData
 
 data class LocationContext(
     val lat: Double,

@@ -5,7 +5,8 @@ import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreator
-import com.smartsettings.ai.core.smartSettingCreator.SmartSettingSchemaRepo
+import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaProvider
+import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaRepo
 import com.smartsettings.ai.resources.cloud.ApiService
 import com.smartsettings.ai.resources.cloud.ApiServiceProvider
 import com.smartsettings.ai.resources.db.SmartSettingDao
@@ -31,6 +32,8 @@ object DependencyProvider {
     val apiService : ApiService get() = abstractDependencyInjector.provideApiService()
 
     val smartSettingSchemaRepo : SmartSettingSchemaRepo get() = abstractDependencyInjector.provideSmartSettingSchemaRepo()
+
+    val smartsettingSchemaProvider : SmartSettingSchemaProvider get() = abstractDependencyInjector.provideSmartSettingSchemaProvider()
 
     val smartSettingCreator : SmartSettingCreator get() = abstractDependencyInjector.provideSmartSettingCreator()
 
@@ -58,6 +61,8 @@ abstract class AbstractDependencyInjector {
     abstract fun provideSmartSettingDao() : SmartSettingDao
 
     abstract fun provideSmartSettingSchemaDao() : SmartSettingSchemaDao
+
+    abstract fun provideSmartSettingSchemaProvider() : SmartSettingSchemaProvider
 }
 
 class DependencyInjector(val appContext: Context) : AbstractDependencyInjector() {
@@ -130,5 +135,9 @@ class DependencyInjector(val appContext: Context) : AbstractDependencyInjector()
 
     override fun provideSmartSettingSchemaDao(): SmartSettingSchemaDao {
         return smartSettingSchemaDao
+    }
+
+    override fun provideSmartSettingSchemaProvider(): SmartSettingSchemaProvider {
+        return SmartSettingSchemaProvider
     }
 }

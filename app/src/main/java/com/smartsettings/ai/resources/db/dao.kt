@@ -32,4 +32,7 @@ interface SmartSettingSchemaDao {
 
     @Query("DELETE from smart_setting_schema")
     fun deleteAll()
+
+    @Query("SELECT * from smart_setting_schema WHERE id = :id")
+    fun getSmartSettingSchemaById(id : String) : SmartSettingSchemaDBModel?
 }

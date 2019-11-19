@@ -5,13 +5,14 @@
  * @version 1.0
  */
 
+import auth.BackendUser
 import cloud.SmartSettingSchemaCloudData
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
 import io.ktor.auth.basic
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
@@ -46,7 +47,9 @@ fun Application.main() {
             realm = "Admin authentication"
             validate { credentials ->
                 if(credentials.name == "admin" && credentials.password == "admin!!!") {
-                    UserIdPrincipal("admin")
+                    BackendUser.AdminUser("admin")
+                } else if(credentials.name == "guest"){
+                    BackendUser.Guest(listOf())
                 } else {
                     null
                 }
@@ -72,10 +75,16 @@ fun Application.main() {
         }
         authenticate("adminAuth") {
 
+
             post("/schema") {
-                val smartSettingSchema = call.receive<SmartSettingSchemaCloudData>()
-                SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
-                call.respond(HttpStatusCode.OK)
+                val backendUser = call.authentication.principal<BackendUser>()
+                if(backendUser is BackendUser.AdminUser){
+                    val smartSettingSchema = call.receive<SmartSettingSchemaCloudData>()
+                    SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
+                    call.respond(HttpStatusCode.OK)
+                } else {
+                    call.respond(status = HttpStatusCode.Unauthorized, message = "")
+                }
             }
         }
     }

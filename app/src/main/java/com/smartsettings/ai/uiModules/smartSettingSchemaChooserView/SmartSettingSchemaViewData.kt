@@ -1,4 +1,4 @@
-package com.smartsettings.ai.uiModules.smartSettingCreatorView
+package com.smartsettings.ai.uiModules.smartSettingSchemaChooserView
 
 import core.ContextListenerType
 import core.SettingChangerType

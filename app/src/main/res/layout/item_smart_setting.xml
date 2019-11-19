@@ -1,59 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
             android:id="@+id/smartSettingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_padding"
-            app:cardBackgroundColor="@color/successGreen">
+            app:cardCornerRadius="8dp">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/card_padding"
                 android:orientation="vertical">
 
-            <TextView
-                    android:id="@+id/nameText"
-                    style="@style/TextCardTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:gravity="center"
-                    tools:text="When reached at location mute volume"/>
-
-            <RelativeLayout
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/card_padding">
 
                 <TextView
-                        android:id="@+id/statusText"
-                        style="@style/TextCard"
+                        android:id="@+id/nameText"
+                        style="@style/TextCardTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="When reached at location mute volume" />
+
+                <ImageView
+                        android:id="@+id/moreButton"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/ic_more_vert_grey_24dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/appliedLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/successGreen"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    tools:visibility="gone">
+
+                <TextView
+                        android:id="@+id/appliedText"
+                        style="@style/Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        tools:text="Changes applied: 2hrs ago"
-                        android:drawableEnd="@drawable/ic_check_white_24dp"/>
+                        android:textColor="@android:color/white"
+                        tools:text="Applies 2hrs ago" />
 
-                <Switch
-                        android:id="@+id/switchView"
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/runningLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/disabled"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    tools:visibility="gone">
+
+                <TextView
+                        style="@style/Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:textColor="@android:color/white"
+                        android:text="Running"
+                        tools:text="Running" />
 
-            </RelativeLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                    android:id="@+id/enableButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center"
+                        android:padding="4dp">
+
+                    <TextView
+                            style="@style/Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            tools:text="Enable" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 

@@ -5,132 +5,78 @@ import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreator
 import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreatorCallback
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.di.DependencyProvider
-import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
-import core.ContextListenerType
-import core.SettingChangerType
-import java.lang.ref.WeakReference
+import com.smartsettings.ai.resources.db.ContextListenerSchemaDBModel
+import com.smartsettings.ai.resources.db.SettingChangerSchemaDBModel
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.inputView.SmartSettingInputView
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.ContextListenerSchemaViewData
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SettingChangerSchemaViewData
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SmartSettingSchemaViewData
 
 class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
 
-    private val smartSettingCreator: SmartSettingCreator = DependencyProvider.smartSettingCreator
+    private lateinit var smartSettingShemaViewData: SmartSettingSchemaViewData
 
-    private lateinit var smartSettingCreatorViewReference: WeakReference<SmartSettingCreatorView>
+    private lateinit var smartSettingCreatorView: SmartSettingCreatorView
 
-    private val smartSettingSchemaDbModelMap: MutableMap<String?, SmartSettingSchemaDBModel> =
-        HashMap()
+    private val smartSettingCreator : SmartSettingCreator = DependencyProvider.smartSettingCreator
 
-    override fun getSmartSettingSchemas() {
-        smartSettingCreatorViewReference.get()?.showLoading()
-        smartSettingCreator.getSmartSettingSchemas {
-            if (it.isNotEmpty()) {
-                val smartSettingSchemaViewDataList = ArrayList<SmartSettingSchemaViewData>()
-                smartSettingSchemaDbModelMap.clear()
-                for (smartSettingSchemaDbModel in it) {
-                    smartSettingSchemaDbModelMap[smartSettingSchemaDbModel.title] =
-                        smartSettingSchemaDbModel
+    private val contextListenerInputViews =
+        mutableMapOf<ContextListenerSchemaViewData, SmartSettingInputView<out Any>>()
+    private val settingChangerInputViews =
+        mutableMapOf<SettingChangerSchemaViewData, SmartSettingInputView<out Any>>()
 
-                    smartSettingSchemaViewDataList.add(
-                        SmartSettingSchemaViewData(
-                            smartSettingSchemaDbModel.title,
-                            smartSettingSchemaDbModel.description,
-                            smartSettingSchemaDbModel.settingChangerSchemas.asSequence().map { data ->
-                                SettingChangerSchemaViewData(
-                                    data.type,
-                                    data.input
-                                )
-                            }.toList(),
-                            smartSettingSchemaDbModel.contextListenerSchemas.asSequence().map { data ->
-                                ContextListenerSchemaViewData(
-                                    data.type,
-                                    data.input
-                                )
-                            }.toList(),
-                            smartSettingSchemaDbModel.conjunctionLogic
-                        )
-                    )
-                }
-                smartSettingCreatorViewReference.get()
-                    ?.showSmartSettingSchemas(smartSettingSchemaViewDataList)
-            } else {
-                smartSettingCreatorViewReference.get()?.showUnableToFetchInfo()
+    override fun setView(smartSettingCreatorView: SmartSettingCreatorView) {
+        this.smartSettingCreatorView = smartSettingCreatorView
+    }
+
+    override fun setSchema(smartSettingShemaViewData: SmartSettingSchemaViewData) {
+        this.smartSettingShemaViewData = smartSettingShemaViewData
+        smartSettingCreatorView.setSmartSettingData(
+            smartSettingShemaViewData.name,
+            smartSettingShemaViewData.description
+        )
+
+        for(contextListenerSchemaViewData in smartSettingShemaViewData.contextListenerSchemas) {
+            contextListenerInputViews[contextListenerSchemaViewData] = smartSettingCreatorView.addInputView(contextListenerSchemaViewData)
+        }
+
+        for(settingChangerSchemaViewData in smartSettingShemaViewData.settingChangerSchemas) {
+            settingChangerInputViews[settingChangerSchemaViewData] = smartSettingCreatorView.addInputView(settingChangerSchemaViewData)
+        }
+
+    }
+
+    override fun parseSchema() {
+        val title = smartSettingCreatorView.getSmartSettingTitle()
+
+
+        smartSettingCreator.parseSmartSettingSchemaAndCreate(smartSettingShemaViewData.name, object : SmartSettingCreatorCallback {
+
+            override fun getContextListenerCriteriaData(
+                contextListenerTypes: List<Pair<ContextListenerSchemaDBModel, String?>>,
+                criteriaDataCallback: (Map<ContextListenerSchemaDBModel, Any>) -> Unit
+            ) {
+                //TODO
             }
-        }
-    }
 
-    override fun parseSmartSettingSchema(smartSettingSchemaViewData: SmartSettingSchemaViewData) {
-        val smartSettingSchemaDBModel =
-            smartSettingSchemaDbModelMap[smartSettingSchemaViewData.name]
-        smartSettingSchemaDBModel?.let {
-            smartSettingCreator.parseSmartSettingSchema(it, object : SmartSettingCreatorCallback {
-                override fun getContextListenerCriteriaData(
-                    contextListenerTypes: List<Pair<ContextListenerType, String?>>,
-                    criteriaDataCallback: (Map<ContextListenerType, Any>) -> Unit
-                ) {
-                    val map: MutableMap<ContextListenerType, Any> = mutableMapOf()
-
-                    askViewToGetCriteriaData(map, contextListenerTypes.listIterator()) {
-                        criteriaDataCallback(map)
-                    }
-                }
-
-                override fun getSettingChangerActionData(
-                    settingChangerTypes: List<Pair<SettingChangerType, String?>>,
-                    actionDataCallback: (Map<SettingChangerType, Any>) -> Unit
-                ) {
-                    val map: MutableMap<SettingChangerType, Any> = mutableMapOf()
-
-                    askViewToGetActionData(map, settingChangerTypes.listIterator()) {
-                        actionDataCallback(map)
-                    }
-                }
-
-                override fun getName(nameCallback: (String?) -> Unit) {
-                    smartSettingCreatorViewReference.get()?.askName {
-                        nameCallback(it)
-                    }
-                }
-
-                override fun onSmartSettingsCreated(smartSetting: SmartSetting) {
-                    smartSettingCreatorViewReference.get()?.close()
-                }
-            })
-        }
-    }
-
-    private fun askViewToGetCriteriaData(
-        map: MutableMap<ContextListenerType, Any>,
-        iterator: Iterator<Pair<ContextListenerType, String?>>,
-        completeCallback: () -> Unit
-    ) {
-        if (iterator.hasNext()) {
-            val contextListenerType = iterator.next()
-            smartSettingCreatorViewReference.get()?.askCriteriaData(contextListenerType) {
-                map[contextListenerType.first] = it
-                askViewToGetCriteriaData(map, iterator, completeCallback)
+            override fun getSettingChangerActionData(
+                settingChangerTypes: List<Pair<SettingChangerSchemaDBModel, String?>>,
+                actionDataCallback: (Map<SettingChangerSchemaDBModel, Any>) -> Unit
+            ) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        } else {
-            completeCallback()
-        }
-    }
 
-    private fun askViewToGetActionData(
-        map: MutableMap<SettingChangerType, Any>,
-        iterator: Iterator<Pair<SettingChangerType, String?>>,
-        completeCallback: () -> Unit
-    ) {
-        if (iterator.hasNext()) {
-            val contextListenerType = iterator.next()
-            smartSettingCreatorViewReference.get()?.askActionData(contextListenerType) {
-                map[contextListenerType.first] = it
-                askViewToGetActionData(map, iterator, completeCallback)
+            override fun getName(nameCallback: (String?) -> Unit) {
+                nameCallback(title)
             }
-        } else {
-            completeCallback()
-        }
-    }
 
-    override fun setView(smartSettingCreatorViewReference: WeakReference<SmartSettingCreatorView>) {
-        this.smartSettingCreatorViewReference = smartSettingCreatorViewReference
-    }
+            override fun onSmartSettingsCreated(smartSetting: SmartSetting) {
 
+            }
+
+            override fun failure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+    }
 }

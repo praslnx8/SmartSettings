@@ -1,56 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
             android:id="@+id/smartSettingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_padding"
-            app:cardBackgroundColor="@color/successGreen">
+            app:cardCornerRadius="8dp">
+
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/card_padding"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/card_padding">
 
             <TextView
                     android:id="@+id/nameText"
                     style="@style/TextCardTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:gravity="center"
-                    tools:text="Control Volume at Location"/>
+                    android:layout_weight="1"
+                    tools:text="When reached at location mute volume" />
 
-            <TextView
-                    android:id="@+id/descText"
-                    style="@style/Text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:maxLines="2"
-                    android:layout_marginTop="4dp"
-                    android:ellipsize="end"
-                    tools:text="Change your phone volume at specific location like work place, Home etc."/>
-
-            <Button
-                    android:id="@+id/activateButton"
-                    style="@style/ButtonRoundedAccent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_margin="@dimen/card_padding"
-                    android:layout_gravity="center"
-                    android:text="Activate"/>
 
         </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 

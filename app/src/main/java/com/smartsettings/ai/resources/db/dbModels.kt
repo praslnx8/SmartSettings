@@ -41,18 +41,20 @@ data class ContextListenerDBModel(
     var serializedCriteriaData: String
 )
 
-@Entity(tableName = "smart_setting_schema", primaryKeys = ["title"])
+@Entity(tableName = "smart_setting_schema", primaryKeys = ["id"])
 data class SmartSettingSchemaDBModel(
 
-    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "id") val id : String,
 
-    @ColumnInfo(name = "description") var description: String?,
+    @ColumnInfo(name = "title") val title: String,
 
-    @ColumnInfo(name = "setting_changer_schemas") var settingChangerSchemas: List<SettingChangerSchemaDBModel>,
+    @ColumnInfo(name = "description") val description: String?,
 
-    @ColumnInfo(name = "context_listener_schemas") var contextListenerSchemas: List<ContextListenerSchemaDBModel>,
+    @ColumnInfo(name = "setting_changer_schemas") val settingChangerSchemas: List<SettingChangerSchemaDBModel>,
 
-    @ColumnInfo(name = "conjunction_logic") var conjunctionLogic: String
+    @ColumnInfo(name = "context_listener_schemas") val contextListenerSchemas: List<ContextListenerSchemaDBModel>,
+
+    @ColumnInfo(name = "conjunction_logic") val conjunctionLogic: String
 )
 
 

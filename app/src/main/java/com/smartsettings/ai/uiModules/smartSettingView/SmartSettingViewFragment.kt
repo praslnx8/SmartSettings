@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.runner.MainForeGroundService
-import com.smartsettings.ai.uiModules.smartSettingCreatorView.SmartSettingCreatorActivity
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SmartSettingSchemaListActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.lang.ref.WeakReference
@@ -40,7 +40,7 @@ class SmartSettingViewFragment : Fragment(), SmartSettingView {
 
 
             view.fab.setOnClickListener {
-                SmartSettingCreatorActivity.open(context)
+                SmartSettingSchemaListActivity.open(context)
             }
         }
 

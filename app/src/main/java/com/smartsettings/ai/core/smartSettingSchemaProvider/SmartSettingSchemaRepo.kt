@@ -1,4 +1,4 @@
-package com.smartsettings.ai.core.smartSettingCreator
+package com.smartsettings.ai.core.smartSettingSchemaProvider
 
 import cloud.ContextListenerCloudData
 import cloud.SettingChangerCloudData
@@ -51,6 +51,7 @@ class SmartSettingSchemaRepo {
         val smartSettingSchemaDBModels = ArrayList<SmartSettingSchemaDBModel>()
         smartSettingSchemaDBModels.add(
             SmartSettingSchemaDBModel(
+                "",
                 "Mute volume at location",
                 null,
                 listOf(SettingChangerSchemaDBModel(SettingChangerType.VOLUME_CHANGER, null)),
@@ -79,7 +80,7 @@ class SmartSettingSchemaRepo {
     ) {
 
         doAsync {
-            if(isDeleteOld) {
+            if (isDeleteOld) {
                 smartSettingSchemaDao.deleteAll()
             }
             smartSettingSchemaDao.insertSmartSetting(smartSettingSchemas)
@@ -90,7 +91,7 @@ class SmartSettingSchemaRepo {
         }
     }
 
-    private fun syncSchemaFromCloud(isDeleteOld : Boolean, completeCallback: () -> Unit) {
+    private fun syncSchemaFromCloud(isDeleteOld: Boolean, completeCallback: () -> Unit) {
         apiService.getSchemas().enqueue(object : Callback<List<SmartSettingSchemaCloudData>> {
             override fun onFailure(call: Call<List<SmartSettingSchemaCloudData>>, t: Throwable) {
                 completeCallback()
@@ -105,6 +106,7 @@ class SmartSettingSchemaRepo {
                 for (smartSettingSchemaCloudData in response.body() ?: ArrayList()) {
                     smartSettingSchemaDbModels.add(
                         SmartSettingSchemaDBModel(
+                            smartSettingSchemaCloudData.id ?: "",
                             smartSettingSchemaCloudData.title,
                             smartSettingSchemaCloudData.description,
                             convertSettingChangerSchemaToDBModel(smartSettingSchemaCloudData.settingChangerSchemas),
@@ -114,7 +116,7 @@ class SmartSettingSchemaRepo {
                     )
                 }
 
-                if(smartSettingSchemaDbModels.isNotEmpty()) {
+                if (smartSettingSchemaDbModels.isNotEmpty()) {
                     persistSchema(isDeleteOld, smartSettingSchemaDbModels) {
                         completeCallback()
                     }
@@ -124,14 +126,26 @@ class SmartSettingSchemaRepo {
     }
 
     private fun convertSettingChangerSchemaToDBModel(settingChangerSchemas: List<SettingChangerCloudData>): List<SettingChangerSchemaDBModel> {
-        return settingChangerSchemas.asSequence().map { data -> SettingChangerSchemaDBModel(data.type, data.input) }.toList()
+        return settingChangerSchemas.asSequence()
+            .map { data -> SettingChangerSchemaDBModel(data.type, data.input) }.toList()
     }
 
     private fun convertContextListenerSchemaToDBModel(contextListenerSchemas: List<ContextListenerCloudData>): List<ContextListenerSchemaDBModel> {
-        return contextListenerSchemas.asSequence().map { data -> ContextListenerSchemaDBModel(data.type, data.input) }.toList()
+        return contextListenerSchemas.asSequence()
+            .map { data -> ContextListenerSchemaDBModel(data.type, data.input) }.toList()
     }
 
     fun syncSchemaCompletely() {
-        syncSchemaFromCloud(true){}
+        syncSchemaFromCloud(true) {}
+    }
+
+    fun getSchemaById(schemaId: String, schemaCallback: (SmartSettingSchemaDBModel?) -> Unit) {
+        doAsync {
+            val smartSettingSchemaDBModel = smartSettingSchemaDao.getSmartSettingSchemaById(schemaId)
+
+            uiThread {
+                schemaCallback(smartSettingSchemaDBModel)
+            }
+        }
     }
 }

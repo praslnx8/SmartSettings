@@ -14,6 +14,10 @@ interface SmartSettingCreatorView {
     fun getSmartSettingTitle() : String
 
     fun setSmartSettingData(title : String, description : String?)
+
+    fun showErrorAndClose()
+
+    fun showSuccessAndClose()
 }
 
 interface SmartSettingCreatorPresenter {

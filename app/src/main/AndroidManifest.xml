@@ -39,7 +39,7 @@
                 android:label="Choose Smart Setting"
                 android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".uiModules.smartSettingCreatorView.SmartSettingSchemaCreatorActivity"
+                android:name=".uiModules.smartSettingCreatorView.SmartSettingCreatorActivity"
                 android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".runner.MainForeGroundService" />

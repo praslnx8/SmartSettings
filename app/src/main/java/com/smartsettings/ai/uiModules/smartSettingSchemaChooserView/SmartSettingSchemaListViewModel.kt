@@ -28,6 +28,7 @@ class SmartSettingSchemaListViewModel : ViewModel(),
 
                     smartSettingSchemaViewDataList.add(
                         SmartSettingSchemaViewData(
+                            smartSettingSchemaDbModel.id,
                             smartSettingSchemaDbModel.title,
                             smartSettingSchemaDbModel.description,
                             smartSettingSchemaDbModel.settingChangerSchemas.asSequence().map { data ->

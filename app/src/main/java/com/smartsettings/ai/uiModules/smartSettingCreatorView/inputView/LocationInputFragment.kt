@@ -11,7 +11,7 @@ import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.utils.LocationUtils
 import kotlinx.android.synthetic.main.fragment_location_input.*
 
-class LocationInputFragment : Fragment(), SmartSettingInputView<LocationData> {
+class LocationInputFragment(val locationData: LocationData?) : Fragment(), SmartSettingInputView<LocationData> {
 
     private var googleMap: GoogleMap? = null
 
@@ -43,6 +43,10 @@ class LocationInputFragment : Fragment(), SmartSettingInputView<LocationData> {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync {
             googleMap = it
+            it.uiSettings.isMapToolbarEnabled = true
+            it.uiSettings.isScrollGesturesEnabled = true
+            it.uiSettings.isZoomControlsEnabled = true
+            it.uiSettings.isZoomGesturesEnabled = true
         }
     }
 

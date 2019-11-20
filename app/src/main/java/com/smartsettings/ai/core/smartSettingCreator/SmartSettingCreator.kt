@@ -6,11 +6,10 @@ import com.smartsettings.ai.core.contextListeners.LocationContextListener
 import com.smartsettings.ai.core.contextListeners.WifiContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
-import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaRepo
+import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaProvider
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
-import com.smartsettings.ai.di.DependencyProvider
 import com.smartsettings.ai.resources.db.ContextListenerSchemaDBModel
 import com.smartsettings.ai.resources.db.SettingChangerSchemaDBModel
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
@@ -19,15 +18,12 @@ import core.SettingChangerType
 
 class SmartSettingCreator {
 
-    private val smartSettingSchemaRepo: SmartSettingSchemaRepo =
-        DependencyProvider.smartSettingSchemaRepo
-
     fun parseSmartSettingSchemaAndCreate(
         schemaId: String,
         smartSettingCreatorCallback: SmartSettingCreatorCallback
     ) {
-        smartSettingSchemaRepo.getSchemaById(schemaId) {
-            if (it != null) {
+        SmartSettingSchemaProvider.getSmartSettingSchema(schemaId) {
+            if(it != null) {
                 parseSmartSettingSchemaAndCreate(it, smartSettingCreatorCallback)
             } else {
                 smartSettingCreatorCallback.failure()

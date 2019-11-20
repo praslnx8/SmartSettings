@@ -98,6 +98,7 @@ class SmartSetting(
                 settingChangers.forEach {
                     it.applyChanges()
                 }
+                changesAppliedTime = System.currentTimeMillis()
 
                 settingChangesCallback?.invoke(this)
             }

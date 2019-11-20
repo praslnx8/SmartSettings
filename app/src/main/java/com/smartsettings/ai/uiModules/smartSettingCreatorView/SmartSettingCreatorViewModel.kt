@@ -49,34 +49,67 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
     override fun parseSchema() {
         val title = smartSettingCreatorView.getSmartSettingTitle()
 
+        if(isValidInputs()) {
+            smartSettingCreator.parseSmartSettingSchemaAndCreate(smartSettingShemaViewData.id, object : SmartSettingCreatorCallback {
 
-        smartSettingCreator.parseSmartSettingSchemaAndCreate(smartSettingShemaViewData.name, object : SmartSettingCreatorCallback {
+                override fun getContextListenerCriteriaData(
+                    contextListenerTypes: List<Pair<ContextListenerSchemaDBModel, String?>>,
+                    criteriaDataCallback: (Map<ContextListenerSchemaDBModel, Any>) -> Unit
+                ) {
+                    val contextListenerInputMap = mutableMapOf<ContextListenerSchemaDBModel, Any>()
+                    for(contextListenerPair in contextListenerTypes) {
+                        val smartSettingInputView = contextListenerInputViews[ContextListenerSchemaViewData(contextListenerPair.first.type, contextListenerPair.first.input)]
+                        smartSettingInputView?.let {
+                            contextListenerInputMap[contextListenerPair.first] = it.getInput()
+                        }
+                    }
 
-            override fun getContextListenerCriteriaData(
-                contextListenerTypes: List<Pair<ContextListenerSchemaDBModel, String?>>,
-                criteriaDataCallback: (Map<ContextListenerSchemaDBModel, Any>) -> Unit
-            ) {
-                //TODO
+                    criteriaDataCallback(contextListenerInputMap)
+                }
+
+                override fun getSettingChangerActionData(
+                    settingChangerTypes: List<Pair<SettingChangerSchemaDBModel, String?>>,
+                    actionDataCallback: (Map<SettingChangerSchemaDBModel, Any>) -> Unit
+                ) {
+                    val settingChangerInputMap = mutableMapOf<SettingChangerSchemaDBModel, Any>()
+                    for(settingChangerPair in settingChangerTypes) {
+                        val smartSettingInputView = settingChangerInputViews[SettingChangerSchemaViewData(settingChangerPair.first.type, settingChangerPair.first.input)]
+                        smartSettingInputView?.let {
+                            settingChangerInputMap[settingChangerPair.first] = it.getInput()
+                        }
+                    }
+
+                    actionDataCallback(settingChangerInputMap)
+                }
+
+                override fun getName(nameCallback: (String?) -> Unit) {
+                    nameCallback(title)
+                }
+
+                override fun onSmartSettingsCreated(smartSetting: SmartSetting) {
+                    smartSettingCreatorView.showSuccessAndClose()
+                }
+
+                override fun failure() {
+                    smartSettingCreatorView.showErrorAndClose()
+                }
+            })
+        }
+    }
+
+    private fun isValidInputs(): Boolean {
+        for(settingChangerInputView in settingChangerInputViews) {
+            if(!settingChangerInputView.value.validate()) {
+                return false
             }
+        }
 
-            override fun getSettingChangerActionData(
-                settingChangerTypes: List<Pair<SettingChangerSchemaDBModel, String?>>,
-                actionDataCallback: (Map<SettingChangerSchemaDBModel, Any>) -> Unit
-            ) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for(contextListenerInputView in contextListenerInputViews) {
+            if(!contextListenerInputView.value.validate()) {
+                return false
             }
+        }
 
-            override fun getName(nameCallback: (String?) -> Unit) {
-                nameCallback(title)
-            }
-
-            override fun onSmartSettingsCreated(smartSetting: SmartSetting) {
-
-            }
-
-            override fun failure() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+        return true
     }
 }

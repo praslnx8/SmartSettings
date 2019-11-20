@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsettings.ai.R
@@ -72,17 +71,13 @@ class SmartSettingViewHolder(
 
         if (smartSettingViewData.isEnabled) {
             if (smartSettingViewData.lastAppliedTime > 0L) {
-                smartSettingLayout.background =
-                    ActivityCompat.getDrawable(view.context, R.color.successGreen)
                 appliedLayout.visibility = View.VISIBLE
                 appliedText.text = "Changes Applied : " + DateUtils.getRelativeTimeSpanString(smartSettingViewData.lastAppliedTime)
             } else {
-                smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.enabled)
                 runningLayout.visibility = View.VISIBLE
             }
         } else {
-            smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.disabled)
-            enableButton.visibility = View.INVISIBLE
+            enableButton.visibility = View.VISIBLE
         }
 
         enableButton.setOnClickListener {
@@ -107,6 +102,7 @@ class SmartSettingViewHolder(
                 }
                 true
             }
+            popupMenu.show()
         }
 
         smartSettingLayout.setOnLongClickListener {

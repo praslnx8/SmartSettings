@@ -5,6 +5,8 @@ import core.SettingChangerType
 
 data class SmartSettingSchemaViewData(
 
+    val id:String,
+
     val name: String,
 
     val description: String?,

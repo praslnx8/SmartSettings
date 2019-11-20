@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.SmartSettingCreatorActivity
 import kotlinx.android.synthetic.main.activity_smart_setting_schema_list.*
 import java.lang.ref.WeakReference
 
@@ -30,13 +31,14 @@ class SmartSettingSchemaListActivity : AppCompatActivity(), SmartSettingSchemaVi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_smart_setting_schema_list)
         smartSettingSchemaPresenter.setView(WeakReference(this))
+        smartSettingSchemaPresenter.getSmartSettingSchemas()
     }
 
     override fun showSmartSettingSchemas(smartSettingSchemas: List<SmartSettingSchemaViewData>) {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter =
             SmartSettingCreatorRecyclerViewAdapter(smartSettingSchemas) { item ->
-                //TODO
+                SmartSettingCreatorActivity.open(this, item)
             }
         recyclerView.visibility = View.VISIBLE
         emptyLayout.visibility = View.GONE

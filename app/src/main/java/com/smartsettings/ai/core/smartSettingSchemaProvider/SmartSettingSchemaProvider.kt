@@ -17,4 +17,13 @@ object SmartSettingSchemaProvider {
     fun syncSmartSettingSchema() {
         smartSettingSchemaRepo.syncSchemaCompletely()
     }
+
+    fun getSmartSettingSchema(
+        schemaId: String,
+        schemaCallback: (SmartSettingSchemaDBModel?) -> Unit
+    ) {
+        smartSettingSchemaRepo.getSchemaById(schemaId) {
+            schemaCallback(it)
+        }
+    }
 }

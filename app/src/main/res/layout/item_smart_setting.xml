@@ -86,13 +86,12 @@
                     android:id="@+id/enableButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground">
+                    android:background="@color/colorPrimary">
 
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@color/colorPrimary"
                         android:gravity="center"
                         android:padding="4dp">
 
@@ -100,6 +99,7 @@
                             style="@style/Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Enable"
                             android:textColor="@android:color/white"
                             tools:text="Enable" />
 

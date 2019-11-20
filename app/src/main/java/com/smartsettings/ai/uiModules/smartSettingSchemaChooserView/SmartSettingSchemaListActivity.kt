@@ -1,9 +1,11 @@
 package com.smartsettings.ai.uiModules.smartSettingSchemaChooserView
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import java.lang.ref.WeakReference
 
 class SmartSettingSchemaListActivity : AppCompatActivity(), SmartSettingSchemaView {
 
+    private val reqForCreateSetting = 21
 
     companion object {
         fun open(context: Context) {
@@ -38,7 +41,7 @@ class SmartSettingSchemaListActivity : AppCompatActivity(), SmartSettingSchemaVi
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter =
             SmartSettingCreatorRecyclerViewAdapter(smartSettingSchemas) { item ->
-                SmartSettingCreatorActivity.open(this, item)
+                SmartSettingCreatorActivity.open(this, item, reqForCreateSetting)
             }
         recyclerView.visibility = View.VISIBLE
         emptyLayout.visibility = View.GONE
@@ -65,5 +68,16 @@ class SmartSettingSchemaListActivity : AppCompatActivity(), SmartSettingSchemaVi
 
     override fun close() {
         finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == reqForCreateSetting) {
+            if (resultCode == Activity.RESULT_OK) {
+                finish()
+            } else {
+                Toast.makeText(this, "Unable to create setting", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

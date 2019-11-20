@@ -1,8 +1,9 @@
 package com.smartsettings.ai.uiModules.smartSettingCreatorView
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
@@ -29,10 +30,10 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
         const val SCHEMA_DATA_STR = "schema_data"
 
-        fun open(context : Context, smartSettingSchemaViewData: SmartSettingSchemaViewData) {
-            val intent = Intent(context, SmartSettingCreatorActivity::class.java)
+        fun open(activity : Activity, smartSettingSchemaViewData: SmartSettingSchemaViewData, reqCode : Int) {
+            val intent = Intent(activity, SmartSettingCreatorActivity::class.java)
             intent.putExtra(SCHEMA_DATA_STR, Gson().toJson(smartSettingSchemaViewData))
-            context.startActivity(intent)
+            activity.startActivityForResult(intent, reqCode)
         }
     }
 
@@ -57,6 +58,11 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
         smartSettingSchemaViewData?.let {
             smartSettingCreatorPresenter.setSchema(it)
+        }
+
+        titleText.setOnClickListener {
+            titleEditText.visibility = View.VISIBLE
+            titleText.visibility = View.GONE
         }
     }
 
@@ -113,10 +119,12 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     }
 
     override fun showErrorAndClose() {
+        setResult(Activity.RESULT_CANCELED)
         finish()
     }
 
     override fun showSuccessAndClose() {
+        setResult(Activity.RESULT_OK)
         finish()
     }
 }

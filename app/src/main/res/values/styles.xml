@@ -26,14 +26,21 @@
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
+    <style name="TextCardInfo" parent="Text">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
     <style name="TextScreenHeading" parent="Text">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
     <style name="TextCardTitle" parent="Text">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:titleCondensed">true</item>
+    </style>
+    <style name="TextCard" parent="Text">
         <item name="android:textColor">@android:color/white</item>
     </style>
     <!--TEXT-->
@@ -43,6 +50,15 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="ButtonRoundedAccent" parent="Button">
+        <item name="android:background">@drawable/round_button_accent</item>
+        <item name="android:textColor">@android:color/white</item>
+
+    </style>
     <!--Button-->
 
+
+    <!--CardView-->
+
+    <!--CardView-->
 </resources>

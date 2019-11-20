@@ -1,15 +1,18 @@
 package com.smartsettings.ai.core.contextListeners
 
+import android.util.Log
 import com.smartsettings.ai.core.serializables.SerializableData
 
 abstract class ContextListener<T>(val serializableCriteriaData: SerializableData<out T>) {
 
     private lateinit var criteriaMatchedCallback: () -> Unit
+    private lateinit var contextChangeCallback: () -> Unit
 
     private var isCriteriaMatches = false
 
-    fun startListeningToContextChanges(criteriaMatchedCallback: () -> Unit) {
+    fun startListeningToContextChanges(criteriaMatchedCallback: () -> Unit, contextChangeCallback : () -> Unit) {
         this.criteriaMatchedCallback = criteriaMatchedCallback
+        this.contextChangeCallback = contextChangeCallback
         startListeningToContextChanges()
     }
 
@@ -23,11 +26,14 @@ abstract class ContextListener<T>(val serializableCriteriaData: SerializableData
      */
     protected fun onContextChange() {
         if (isCriteriaMatches(serializableCriteriaData.data)) {
+            Log.d("XDFCE", "criteria matches")
             isCriteriaMatches = true
             criteriaMatchedCallback()
         } else {
             isCriteriaMatches = false
         }
+
+        contextChangeCallback()
     }
 
     /**

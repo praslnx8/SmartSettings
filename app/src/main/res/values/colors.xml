@@ -5,6 +5,7 @@
     <color name="colorAccent">#03A9F4</color>
 
     <color name="divider">#BDBDBD</color>
+    <color name="page">#EBEBEB</color>
 
     <color name="successGreen">#8BC34A</color>
     <color name="failureRed">#F44336</color>

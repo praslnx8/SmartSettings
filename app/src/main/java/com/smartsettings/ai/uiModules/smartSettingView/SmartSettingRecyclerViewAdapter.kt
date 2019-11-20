@@ -1,13 +1,13 @@
 package com.smartsettings.ai.uiModules.smartSettingView
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Switch
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsettings.ai.R
@@ -52,8 +52,11 @@ class SmartSettingViewHolder(
 
     private val smartSettingLayout: CardView = view.findViewById(R.id.smartSettingLayout)
     private val nameText: TextView = view.findViewById(R.id.nameText)
-    private val switchView: Switch = view.findViewById(R.id.switchView)
-    private val statusIcon: ImageView = view.findViewById(R.id.statusIcon)
+    private val moreBtn: ImageView = view.findViewById(R.id.moreButton)
+    private val enableButton: ViewGroup = view.findViewById(R.id.enableButton)
+    private val runningLayout: ViewGroup = view.findViewById(R.id.runningLayout)
+    private val appliedLayout: ViewGroup = view.findViewById(R.id.appliedLayout)
+    private val appliedText: TextView = view.findViewById(R.id.appliedText)
     private var onBind = false
 
     fun setData(smartSettingViewData: SmartSettingViewData) {
@@ -61,25 +64,45 @@ class SmartSettingViewHolder(
         onBind = true
 
         nameText.text = smartSettingViewData.name
-        switchView.isChecked = smartSettingViewData.isEnabled
 
+        appliedLayout.visibility = View.GONE
+        enableButton.visibility = View.GONE
+        runningLayout.visibility = View.GONE
 
         if (smartSettingViewData.isEnabled) {
-            if (smartSettingViewData.isChangesApplied) {
-                smartSettingLayout.background =
-                    ActivityCompat.getDrawable(view.context, R.color.successGreen)
+            if (smartSettingViewData.lastAppliedTime > 0L) {
+                appliedLayout.visibility = View.VISIBLE
+                appliedText.text = "Changes Applied : " + DateUtils.getRelativeTimeSpanString(smartSettingViewData.lastAppliedTime)
             } else {
-                smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.enabled)
+                runningLayout.visibility = View.VISIBLE
             }
         } else {
-            smartSettingLayout.background = ActivityCompat.getDrawable(view.context, R.color.disabled)
+            enableButton.visibility = View.VISIBLE
         }
 
-        switchView.setOnCheckedChangeListener { _, isChecked ->
+        enableButton.setOnClickListener {
             if (!onBind) {
-                smartSettingViewData.isEnabled = isChecked
+                smartSettingViewData.isEnabled = true
                 onChangesCallback(smartSettingViewData)
             }
+        }
+
+        moreBtn.setOnClickListener {
+            val popupMenu = PopupMenu(moreBtn.context, moreBtn)
+            if(smartSettingViewData.isEnabled) {
+                popupMenu.menu.add(0,0,0,"Disable")
+            }
+            popupMenu.menu.add(1,1,1,"Delete")
+            popupMenu.setOnMenuItemClickListener {
+                if(it.groupId == 0) {
+                    smartSettingViewData.isEnabled = false
+                    onChangesCallback(smartSettingViewData)
+                } else {
+                    onDeleteCallback(smartSettingViewData)
+                }
+                true
+            }
+            popupMenu.show()
         }
 
         smartSettingLayout.setOnLongClickListener {
@@ -119,7 +142,7 @@ class SmartSettingDiffCallback(
         val newItem = newList[newItemPosition]
 
         if ((oldItem.id != newItem.id) || (oldItem.isEnabled != newItem.isEnabled) || (oldItem.isRunning != newItem.isRunning) ||
-            (oldItem.isChangesApplied != newItem.isChangesApplied) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
+            (oldItem.lastAppliedTime != newItem.lastAppliedTime) || (oldItem.conjunctionLogic != newItem.conjunctionLogic) ||
             (oldItem.name != newItem.name) || (!isSameSettingChangers(
                 oldItem.settingChangers,
                 newItem.settingChangers

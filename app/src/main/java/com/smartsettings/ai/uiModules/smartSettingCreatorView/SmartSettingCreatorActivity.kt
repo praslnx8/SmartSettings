@@ -1,119 +1,122 @@
 package com.smartsettings.ai.uiModules.smartSettingCreatorView
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.smartsettings.ai.R
-import com.smartsettings.ai.core.contextListeners.ContextListenerType
-import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
-import com.smartsettings.ai.uiModules.smartSettingCreatorView.criteriaDataUI.LocationCriteriaDataActivity
-import com.smartsettings.ai.utils.InputDialogUtils
+import com.smartsettings.ai.ext.inTransaction
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.inputView.LocationInputFragment
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.inputView.PhoneVolumeInputFragment
+import com.smartsettings.ai.uiModules.smartSettingCreatorView.inputView.SmartSettingInputView
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.ContextListenerSchemaViewData
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SettingChangerSchemaViewData
+import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SmartSettingSchemaViewData
+import core.ContextListenerType
+import core.SettingChangerType
 import kotlinx.android.synthetic.main.activity_smart_setting_creator.*
-import java.lang.ref.WeakReference
+
 
 class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView {
 
-    private val reqForLocData = 1
-
-    private var criteriaDataCallback: ((Any) -> Unit)? = null
-    private var actionDataCallback: ((Any) -> Unit)? = null
+    private var smartSettingSchemaViewData: SmartSettingSchemaViewData? = null
 
     companion object {
-        fun open(context: Context) {
+
+        const val SCHEMA_DATA_STR = "schema_data"
+
+        fun open(context : Context, smartSettingSchemaViewData: SmartSettingSchemaViewData) {
             val intent = Intent(context, SmartSettingCreatorActivity::class.java)
+            intent.putExtra(SCHEMA_DATA_STR, Gson().toJson(smartSettingSchemaViewData))
             context.startActivity(intent)
         }
     }
 
-    private val smartSettingCreatorPresenter: SmartSettingCreatorPresenter by lazy {
+    private val smartSettingCreatorPresenter: SmartSettingCreatorViewModel by lazy {
         ViewModelProviders.of(this).get(SmartSettingCreatorViewModel::class.java)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_smart_setting_creator)
-        smartSettingCreatorPresenter.setView(WeakReference(this))
-        smartSettingCreatorPresenter.getSmartSettingSchemas()
-    }
+        inputFragmentsLayout.removeAllViews()
 
-    override fun showSmartSettingSchemas(smartSettingSchemas: List<SmartSettingSchemaViewData>) {
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = SmartSettingCreatorRecyclerViewAdapter(smartSettingSchemas) {
-            smartSettingCreatorPresenter.parseSmartSettingSchema(it)
+        smartSettingCreatorPresenter.setView(this)
+
+        val schemaDataStr = intent.getStringExtra(SCHEMA_DATA_STR)
+        smartSettingSchemaViewData = Gson().fromJson(schemaDataStr, SmartSettingSchemaViewData::class.java)
+
+        activateButton.setOnClickListener {
+            smartSettingCreatorPresenter.parseSchema()
         }
-        recyclerView.visibility = View.VISIBLE
-        emptyLayout.visibility = View.GONE
-        progressBar.visibility = View.GONE
+
+        smartSettingSchemaViewData?.let {
+            smartSettingCreatorPresenter.setSchema(it)
+        }
     }
 
-    override fun showLoading() {
-        recyclerView.visibility = View.GONE
-        emptyLayout.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun showUnableToFetchInfo() {
-        recyclerView.visibility = View.GONE
-        emptyLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
-    }
-
-    override fun askName(nameCallback: (String?) -> Unit) {
-        InputDialogUtils.ask(this, "Enter Name", "OK", arrayOf("Name")) { isPositive, values ->
-            if(isPositive) {
-                val name = values[0]
-                nameCallback(name)
+    override fun addInputView(contextListenerSchemaViewData: ContextListenerSchemaViewData): SmartSettingInputView<out Any> {
+        return if (contextListenerSchemaViewData.type == ContextListenerType.LOCATION_LISTENER) {
+            val inputData = if (contextListenerSchemaViewData.input != null) {
+                Gson().fromJson(contextListenerSchemaViewData.input, LocationData::class.java)
+            } else {
+                null
             }
-            true
-        }.show()
-    }
-
-    override fun askCriteriaData(contextListenerType: ContextListenerType, criteriaDataCallback: (Any) -> Unit) {
-        this.criteriaDataCallback = criteriaDataCallback
-        if (contextListenerType == ContextListenerType.LOCATION_LISTENER) {
-            LocationCriteriaDataActivity.open(this, reqForLocData)
-        } 
-    }
-
-    override fun askActionData(settingChangerType: SettingChangerType, actionDataCallback: (Any) -> Unit) {
-        this.actionDataCallback = actionDataCallback
-        if (settingChangerType == SettingChangerType.VOLUME_CHANGER) {
-            InputDialogUtils.askWithMessage(this, "Enter volume to be set",
-                "OK", arrayOf("Enter phone volume")) { isPositive, values ->
-                if(isPositive) {
-                    val volume = values[0].toInt()
-                    actionDataCallback(VolumeActionData(volumeToBeSet = volume))
-                }
-                true
-            }.show()
-        } else if (settingChangerType == SettingChangerType.VOLUME_MUTE_CHANGER) {
-            actionDataCallback("")
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == reqForLocData) {
-                val lat = data?.getDoubleExtra(LocationCriteriaDataActivity.LAT_STR, 0.0) ?: 0.0
-                val lon = data?.getDoubleExtra(LocationCriteriaDataActivity.LON_STR, 0.0) ?: 0.0
-                val radius = data?.getIntExtra(LocationCriteriaDataActivity.RADIUS_STR, 0) ?: 0
-
-                criteriaDataCallback?.invoke(LocationData(lat, lon, radius))
+            val locationInputFragment = LocationInputFragment(inputData)
+            supportFragmentManager.inTransaction {
+                add(
+                    inputFragmentsLayout.id,
+                    locationInputFragment,
+                    contextListenerSchemaViewData.type.name
+                )
             }
+            locationInputFragment
+        } else {
+            throw IllegalArgumentException("Unsupported view")
         }
     }
 
-    override fun close() {
+    override fun addInputView(settingChangerSchemaViewData: SettingChangerSchemaViewData): SmartSettingInputView<out Any> {
+        return if (settingChangerSchemaViewData.type == SettingChangerType.VOLUME_CHANGER) {
+            val inputData = if (settingChangerSchemaViewData.input != null) {
+                Gson().fromJson(settingChangerSchemaViewData.input, VolumeActionData::class.java)
+            } else {
+                null
+            }
+            val phoneVolumeInputFragment = PhoneVolumeInputFragment(inputData)
+            supportFragmentManager.inTransaction {
+                add(
+                    inputFragmentsLayout.id,
+                    phoneVolumeInputFragment,
+                    settingChangerSchemaViewData.type.name
+                )
+            }
+            phoneVolumeInputFragment
+        } else {
+            throw IllegalArgumentException("Unsupported view")
+        }
+    }
+
+    override fun getSmartSettingTitle(): String {
+        return titleEditText.text.toString()
+    }
+
+    override fun setSmartSettingData(title: String, description: String?) {
+        titleText.text = title
+        titleEditText.setText(title)
+        descText.text = description?:""
+    }
+
+    override fun showErrorAndClose() {
+        finish()
+    }
+
+    override fun showSuccessAndClose() {
         finish()
     }
 }

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.smartsettings.ai.ext.inTransaction
 import com.smartsettings.ai.uiModules.smartSettingView.SmartSettingViewFragment
+import com.smartsettings.ai.utils.JobSchedulerUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.inTransaction {
             add(container.id, SmartSettingViewFragment())
         }
+
+        JobSchedulerUtil.scheduleSyncJob()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

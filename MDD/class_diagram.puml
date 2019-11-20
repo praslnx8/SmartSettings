@@ -83,9 +83,18 @@ package VIEW {
 
 package CREATE {
 
-    class SmartSettingCreator {
+    class SmartSettingSchema {
+        - List settingChangerTypesAndInputIfNeeded
+        - List contextListenerTypesAndInputIfNeeded
+        - String conjunctionLogic
     }
 
+    class SmartSettingCreator {
+        + List<SmartSettingSchema> getSmartSettingSchemas()
+        + SmartSetting createSmartSetting(SmartSettingSchema schema)
+    }
+
+    SmartSettingCreator *-- SmartSettingSchema: Has
     SmartSettingCreator o-- SmartSetting : Creates
     SmartSettingCreator o-- SettingChanger : Creates
     SmartSettingCreator o-- ContextListener : Creates

@@ -60,7 +60,7 @@ class LocationBasedSmartSettingTest {
             it.getArgument<((Boolean) -> Unit)>(0)(true)
         }
 
-        Mockito.`when`(contextListener.startListeningToContextChanges(any())).then {
+        Mockito.`when`(contextListener.startListeningToContextChanges(any(), any())).then {
             it.getArgument<(() -> Unit)>(0)()
         }
 

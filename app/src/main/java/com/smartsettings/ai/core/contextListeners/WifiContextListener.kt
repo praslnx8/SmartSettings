@@ -7,8 +7,8 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.smartsettings.ai.core.contextListeners.contextData.WifiContext
 import com.smartsettings.ai.core.serializables.SerializableData
-import com.smartsettings.ai.data.contextData.WifiContext
 import com.smartsettings.ai.di.DependencyProvider
 
 

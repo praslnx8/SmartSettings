@@ -1,4 +1,4 @@
-package com.smartsettings.ai.uiModules.smartSettingCreatorView
+package com.smartsettings.ai.uiModules.smartSettingSchemaChooserView
 
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +16,10 @@ class SmartSettingCreatorRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmartSettingCreatorViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_smart_setting_schema, parent, false)
-        return SmartSettingCreatorViewHolder(view, itemSelectedCallback)
+        return SmartSettingCreatorViewHolder(
+            view,
+            itemSelectedCallback
+        )
     }
 
     override fun getItemCount(): Int {

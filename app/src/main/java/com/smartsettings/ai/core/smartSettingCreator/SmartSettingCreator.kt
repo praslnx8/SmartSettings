@@ -2,29 +2,36 @@ package com.smartsettings.ai.core.smartSettingCreator
 
 import com.smartsettings.ai.core.SmartProfile
 import com.smartsettings.ai.core.contextListeners.ContextListener
-import com.smartsettings.ai.core.contextListeners.ContextListenerType
 import com.smartsettings.ai.core.contextListeners.LocationContextListener
 import com.smartsettings.ai.core.contextListeners.WifiContextListener
 import com.smartsettings.ai.core.settingChangers.SettingChanger
-import com.smartsettings.ai.core.settingChangers.SettingChangerType
 import com.smartsettings.ai.core.settingChangers.VolumeSettingChanger
+import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaProvider
 import com.smartsettings.ai.core.smartSettings.SmartSetting
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import com.smartsettings.ai.data.criteriaData.LocationData
-import com.smartsettings.ai.di.DependencyProvider
+import com.smartsettings.ai.resources.db.ContextListenerSchemaDBModel
+import com.smartsettings.ai.resources.db.SettingChangerSchemaDBModel
 import com.smartsettings.ai.resources.db.SmartSettingSchemaDBModel
+import core.ContextListenerType
+import core.SettingChangerType
 
 class SmartSettingCreator {
 
-    private val smartSettingSchemaRepo: SmartSettingSchemaRepo = DependencyProvider.smartSettingSchemaRepo
-
-    fun getSmartSettingSchemas(schemasCallback: (List<SmartSettingSchemaDBModel>) -> Unit) {
-        smartSettingSchemaRepo.getSchemas {
-            schemasCallback(it)
+    fun parseSmartSettingSchemaAndCreate(
+        schemaId: String,
+        smartSettingCreatorCallback: SmartSettingCreatorCallback
+    ) {
+        SmartSettingSchemaProvider.getSmartSettingSchema(schemaId) {
+            if(it != null) {
+                parseSmartSettingSchemaAndCreate(it, smartSettingCreatorCallback)
+            } else {
+                smartSettingCreatorCallback.failure()
+            }
         }
     }
 
-    fun parseSmartSettingSchema(
+    private fun parseSmartSettingSchemaAndCreate(
         smartSettingSchemaDBModel: SmartSettingSchemaDBModel,
         smartSettingCreatorCallback: SmartSettingCreatorCallback
     ) {
@@ -32,8 +39,14 @@ class SmartSettingCreator {
         val contextListenerSchemas = smartSettingSchemaDBModel.contextListenerSchemas
         val settingChangerSchemas = smartSettingSchemaDBModel.settingChangerSchemas
 
-        parseContextListenersSchema(contextListenerSchemas, smartSettingCreatorCallback) { contextListeners ->
-            parseSettingChangersSchema(settingChangerSchemas, smartSettingCreatorCallback) { settingChangers ->
+        parseContextListenersSchema(
+            contextListenerSchemas,
+            smartSettingCreatorCallback
+        ) { contextListeners ->
+            parseSettingChangersSchema(
+                settingChangerSchemas,
+                smartSettingCreatorCallback
+            ) { settingChangers ->
                 smartSettingCreatorCallback.getName { name ->
                     val smartSetting = SmartSetting(
                         null,
@@ -52,25 +65,26 @@ class SmartSettingCreator {
     }
 
     private fun parseSettingChangersSchema(
-        settingChangerSchemas: List<String>,
+        settingChangerSchemas: List<SettingChangerSchemaDBModel>,
         smartSettingCreatorCallback: SmartSettingCreatorCallback,
         settingChangerCallback: (Set<SettingChanger<out Any>>) -> Unit
     ) {
 
-        val settingChangerTypes = ArrayList<SettingChangerType>()
-        for (settingChangerSchema in settingChangerSchemas) {
-            SettingChangerType.fromValue(settingChangerSchema)?.let {
-                settingChangerTypes.add(it)
-            }
+        val settingChangerTypes = ArrayList<Pair<SettingChangerSchemaDBModel, String?>>()
+        for (settingChangerSchemaDBModel in settingChangerSchemas) {
+            settingChangerTypes.add(
+                Pair(
+                    settingChangerSchemaDBModel,
+                    settingChangerSchemaDBModel.input
+                )
+            )
         }
 
         smartSettingCreatorCallback.getSettingChangerActionData(settingChangerTypes) {
             val settingChangers = HashSet<SettingChanger<out Any>>()
             for ((settingChangerType, actionData) in it) {
-                if (settingChangerType == SettingChangerType.VOLUME_CHANGER) {
+                if (settingChangerType.type == SettingChangerType.VOLUME_CHANGER) {
                     settingChangers.add(VolumeSettingChanger(actionData as VolumeActionData))
-                } else if (settingChangerType == SettingChangerType.VOLUME_MUTE_CHANGER) {
-                    settingChangers.add(VolumeSettingChanger.MuteSettingChanger())
                 }
             }
 
@@ -79,25 +93,23 @@ class SmartSettingCreator {
     }
 
     private fun parseContextListenersSchema(
-        contextListenerSchemas: List<String>,
+        contextListenerSchemas: List<ContextListenerSchemaDBModel>,
         smartSettingCreatorCallback: SmartSettingCreatorCallback,
         contextListenerCallback: (Set<ContextListener<out Any>>) -> Unit
     ) {
-        val contextListenerTypes = ArrayList<ContextListenerType>()
+        val contextListenerTypes = ArrayList<Pair<ContextListenerSchemaDBModel, String?>>()
         for (contextListenerSchema in contextListenerSchemas) {
-            ContextListenerType.fromValue(contextListenerSchema)?.let {
-                contextListenerTypes.add(it)
-            }
+            contextListenerTypes.add(Pair(contextListenerSchema, contextListenerSchema.input))
         }
 
         smartSettingCreatorCallback.getContextListenerCriteriaData(contextListenerTypes) {
 
             val contextListeners = HashSet<ContextListener<out Any>>()
 
-            for ((contextListenerType, criteriaData) in it) {
-                if (contextListenerType == ContextListenerType.LOCATION_LISTENER) {
+            for ((contextListenerSchemaDbModel, criteriaData) in it) {
+                if (contextListenerSchemaDbModel.type == ContextListenerType.LOCATION_LISTENER) {
                     contextListeners.add(LocationContextListener(criteriaData as LocationData))
-                } else if (contextListenerType == ContextListenerType.WIFI_LISTENER) {
+                } else if (contextListenerSchemaDbModel.type == ContextListenerType.WIFI_LISTENER) {
                     contextListeners.add(WifiContextListener(criteriaData as String))
                 }
             }
@@ -110,16 +122,18 @@ class SmartSettingCreator {
 interface SmartSettingCreatorCallback {
 
     fun getContextListenerCriteriaData(
-        contextListenerTypes: List<ContextListenerType>,
-        criteriaDataCallback: (Map<ContextListenerType, Any>) -> Unit
+        contextListenerTypes: List<Pair<ContextListenerSchemaDBModel, String?>>,
+        criteriaDataCallback: (Map<ContextListenerSchemaDBModel, Any>) -> Unit
     )
 
     fun getSettingChangerActionData(
-        settingChangerTypes: List<SettingChangerType>,
-        actionDataCallback: (Map<SettingChangerType, Any>) -> Unit
+        settingChangerTypes: List<Pair<SettingChangerSchemaDBModel, String?>>,
+        actionDataCallback: (Map<SettingChangerSchemaDBModel, Any>) -> Unit
     )
 
     fun getName(nameCallback: (String?) -> Unit)
 
     fun onSmartSettingsCreated(smartSetting: SmartSetting)
+
+    fun failure()
 }

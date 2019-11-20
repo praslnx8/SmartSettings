@@ -29,4 +29,10 @@ interface SmartSettingSchemaDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSmartSetting(smartSettingSchemaDBModels: List<SmartSettingSchemaDBModel>)
+
+    @Query("DELETE from smart_setting_schema")
+    fun deleteAll()
+
+    @Query("SELECT * from smart_setting_schema WHERE id = :id")
+    fun getSmartSettingSchemaById(id : String) : SmartSettingSchemaDBModel?
 }

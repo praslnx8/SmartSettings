@@ -78,6 +78,7 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         for (contextListenerSchema in value?.contextListenerSchemas ?: listOf()) {
             writer?.writeStartDocument()
             writer?.writeString("type", contextListenerSchema.type.name)
+            writer?.writeString("desc", contextListenerSchema.description)
             writer?.writeString("input", contextListenerSchema.input ?: "")
             writer?.writeEndDocument()
         }
@@ -86,6 +87,7 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         for (settingChangerSchema in value?.settingChangerSchemas ?: listOf()) {
             writer?.writeStartDocument()
             writer?.writeString("type", settingChangerSchema.type.name)
+            writer?.writeString("desc", settingChangerSchema.description)
             writer?.writeString("input", settingChangerSchema.input ?: "")
             writer?.writeEndDocument()
         }
@@ -101,15 +103,16 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         reader?.readStartDocument()
         val id = reader?.readObjectId().toString()
         val title = reader?.readString("title") ?: ""
-        val description = reader?.readString("description")
+        val description = reader?.readString("description")?:""
         val conjunctionLogic = reader?.readString("conjunctionLogic") ?: ""
         val contextListenerSchemas = mutableListOf<ContextListenerCloudData>()
         reader?.readStartArray()
         while (reader?.currentBsonType == BsonType.ARRAY) {
             reader.readStartDocument()
             val contextListenerType = ContextListenerType.valueOf(reader.readString("type"))
+            val desc = reader.readString("desc")
             val input = reader.readString("input")
-            contextListenerSchemas.add(ContextListenerCloudData(contextListenerType, if(input.isNotBlank()) input else null))
+            contextListenerSchemas.add(ContextListenerCloudData(contextListenerType, desc, if(input.isNotBlank()) input else null))
             reader.readEndDocument()
         }
         reader?.readEndArray()
@@ -118,8 +121,9 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         while (reader?.currentBsonType == BsonType.ARRAY) {
             reader.readStartDocument()
             val settingChangerType = SettingChangerType.valueOf(reader.readString("type"))
+            val desc = reader.readString("desc")
             val input = reader.readString("input")
-            settingChangerSchemas.add(SettingChangerCloudData(settingChangerType, if(input.isNotBlank()) input else null))
+            settingChangerSchemas.add(SettingChangerCloudData(settingChangerType, desc, if(input.isNotBlank()) input else null))
             reader.readEndDocument()
         }
         reader?.readEndArray()

@@ -11,7 +11,7 @@ import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.utils.LocationUtils
 import kotlinx.android.synthetic.main.fragment_location_input.*
 
-class LocationInputFragment(val locationData: LocationData?) : Fragment(), SmartSettingInputView<LocationData> {
+class LocationInputFragment(private val locationData: LocationData?, val description : String) : Fragment(), SmartSettingInputView<LocationData> {
 
     private var googleMap: GoogleMap? = null
 
@@ -23,7 +23,7 @@ class LocationInputFragment(val locationData: LocationData?) : Fragment(), Smart
 
         val radius = LocationUtils.getDistanceInMetre(Pair(lat, lon), Pair(leftLat, leftLon))
 
-        return LocationData(lat, lon, radius)
+        return LocationData(lat, lon, radius, locationData?.isExitOrIn?:false)
     }
 
     override fun validate(): Boolean {
@@ -48,6 +48,7 @@ class LocationInputFragment(val locationData: LocationData?) : Fragment(), Smart
             it.uiSettings.isZoomControlsEnabled = true
             it.uiSettings.isZoomGesturesEnabled = true
         }
+        descText.text = description
     }
 
     override fun onResume() {

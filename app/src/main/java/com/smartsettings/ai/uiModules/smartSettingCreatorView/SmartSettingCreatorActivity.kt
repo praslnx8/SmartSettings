@@ -3,6 +3,7 @@ package com.smartsettings.ai.uiModules.smartSettingCreatorView
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
@@ -67,13 +68,16 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     }
 
     override fun addInputView(contextListenerSchemaViewData: ContextListenerSchemaViewData): SmartSettingInputView<out Any> {
+
+        inputFragmentsLayout.addView(LayoutInflater.from(this).inflate(R.layout.view_divider, null))
+
         return if (contextListenerSchemaViewData.type == ContextListenerType.LOCATION_LISTENER) {
             val inputData = if (contextListenerSchemaViewData.input != null) {
                 Gson().fromJson(contextListenerSchemaViewData.input, LocationData::class.java)
             } else {
                 null
             }
-            val locationInputFragment = LocationInputFragment(inputData)
+            val locationInputFragment = LocationInputFragment(inputData, contextListenerSchemaViewData.description)
             supportFragmentManager.inTransaction {
                 add(
                     inputFragmentsLayout.id,
@@ -94,7 +98,7 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
             } else {
                 null
             }
-            val phoneVolumeInputFragment = PhoneVolumeInputFragment(inputData)
+            val phoneVolumeInputFragment = PhoneVolumeInputFragment(inputData, settingChangerSchemaViewData.description)
             supportFragmentManager.inTransaction {
                 add(
                     inputFragmentsLayout.id,

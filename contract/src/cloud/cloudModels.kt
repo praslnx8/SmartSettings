@@ -13,7 +13,7 @@ data class SmartSettingSchemaCloudData(
     val title: String,
 
     @SerializedName("description")
-    val description: String?,
+    val description: String,
 
     @SerializedName("settingChangerSchemas")
     val settingChangerSchemas: List<SettingChangerCloudData>,
@@ -26,7 +26,7 @@ data class SmartSettingSchemaCloudData(
 ) {
     constructor(
         title: String,
-        description: String?,
+        description: String,
         settingChangerSchemas: List<SettingChangerCloudData>,
         contextListenerSchemas: List<ContextListenerCloudData>,
         conjunctionLogic: String
@@ -46,6 +46,9 @@ data class SettingChangerCloudData(
     @SerializedName("type")
     val type: SettingChangerType,
 
+    @SerializedName("description")
+    val description:String,
+
     @SerializedName("input")
     val input: String?
 )
@@ -55,6 +58,10 @@ data class ContextListenerCloudData(
 
     @SerializedName("type")
     val type: ContextListenerType,
+
+
+    @SerializedName("description")
+    val description:String,
 
     @SerializedName("input")
     val input: String?

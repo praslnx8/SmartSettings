@@ -6,14 +6,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.smartsettings.ai.core.contextListeners.contextData.LocationContext
 import com.smartsettings.ai.core.serializables.SerializableData
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.di.DependencyProvider
@@ -27,6 +25,8 @@ class LocationContextListener(locationData: LocationData) :
     val context: Context = DependencyProvider.getContext
 
     private var locationContext: LocationContext? = null
+    private var prevLocationContext: LocationContext? = null
+
 
     private val fusedLocationProviderClient: FusedLocationProviderClient = DependencyProvider.fusedLocationProviderClient
 
@@ -73,8 +73,8 @@ class LocationContextListener(locationData: LocationData) :
 
         override fun onLocationResult(p0: LocationResult?) {
             super.onLocationResult(p0)
-            Log.d("XDFCE", "location callback received")
             if (p0 != null && p0.lastLocation != null) {
+                prevLocationContext = locationContext?.copy()
                 locationContext = LocationContext(p0.lastLocation.latitude, p0.lastLocation.longitude)
                 onContextChange()
             }
@@ -97,14 +97,27 @@ class LocationContextListener(locationData: LocationData) :
     }
 
     override fun isCriteriaMatches(criteriaData: LocationData): Boolean {
-        if (LocationUtils.getDistanceInMetre(
-                Pair(locationContext?.lat ?: 0.0, locationContext?.lon ?: 0.0),
-                Pair(criteriaData.lat, criteriaData.lon)
-            ) < criteriaData.radiusInMetre
-        ) {
-            Log.d("XDFCE", "criteria matched")
-            return true
+        if(criteriaData.isExitOrIn) {
+            if (LocationUtils.getDistanceInMetre(
+                    Pair(locationContext?.lat ?: 0.0, locationContext?.lon ?: 0.0),
+                    Pair(criteriaData.lat, criteriaData.lon)
+                ) > criteriaData.radiusInMetre
+                && LocationUtils.getDistanceInMetre(
+                    Pair(prevLocationContext?.lat ?: 0.0, prevLocationContext?.lon ?: 0.0),
+                    Pair(criteriaData.lat, criteriaData.lon)
+                ) < criteriaData.radiusInMetre) {
+                return true
+            }
+        } else {
+            if (LocationUtils.getDistanceInMetre(
+                    Pair(locationContext?.lat ?: 0.0, locationContext?.lon ?: 0.0),
+                    Pair(criteriaData.lat, criteriaData.lon)
+                ) < criteriaData.radiusInMetre
+            ) {
+                return true
+            }
         }
+
 
         return false
     }
@@ -113,3 +126,8 @@ class LocationContextListener(locationData: LocationData) :
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 }
+
+data class LocationContext(
+    val lat: Double,
+    val lon: Double
+)

@@ -53,9 +53,9 @@ class SmartSettingSchemaRepo {
             SmartSettingSchemaDBModel(
                 "",
                 "Mute volume at location",
-                null,
-                listOf(SettingChangerSchemaDBModel(SettingChangerType.VOLUME_CHANGER, null)),
-                listOf(ContextListenerSchemaDBModel(ContextListenerType.LOCATION_LISTENER, null)),
+                "",
+                listOf(SettingChangerSchemaDBModel(SettingChangerType.VOLUME_CHANGER, "", null)),
+                listOf(ContextListenerSchemaDBModel(ContextListenerType.LOCATION_LISTENER, "", null)),
                 SmartSetting.AND
             )
         )
@@ -127,12 +127,12 @@ class SmartSettingSchemaRepo {
 
     private fun convertSettingChangerSchemaToDBModel(settingChangerSchemas: List<SettingChangerCloudData>): List<SettingChangerSchemaDBModel> {
         return settingChangerSchemas.asSequence()
-            .map { data -> SettingChangerSchemaDBModel(data.type, data.input) }.toList()
+            .map { data -> SettingChangerSchemaDBModel(data.type, data.description, data.input) }.toList()
     }
 
     private fun convertContextListenerSchemaToDBModel(contextListenerSchemas: List<ContextListenerCloudData>): List<ContextListenerSchemaDBModel> {
         return contextListenerSchemas.asSequence()
-            .map { data -> ContextListenerSchemaDBModel(data.type, data.input) }.toList()
+            .map { data -> ContextListenerSchemaDBModel(data.type, data.description, data.input) }.toList()
     }
 
     fun syncSchemaCompletely() {

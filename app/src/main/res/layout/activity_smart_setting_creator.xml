@@ -76,13 +76,6 @@
                         tools:text="Control your volume based on device location such as lower your phone volume when entering home or work location" />
 
 
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
-
                 <LinearLayout
                         android:id="@+id/inputFragmentsLayout"
                         android:layout_width="match_parent"

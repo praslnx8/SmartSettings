@@ -58,7 +58,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
                 ) {
                     val contextListenerInputMap = mutableMapOf<ContextListenerSchemaDBModel, Any>()
                     for(contextListenerPair in contextListenerTypes) {
-                        val smartSettingInputView = contextListenerInputViews[ContextListenerSchemaViewData(contextListenerPair.first.type, contextListenerPair.first.input)]
+                        val smartSettingInputView = contextListenerInputViews[ContextListenerSchemaViewData(contextListenerPair.first.type, contextListenerPair.first.description, contextListenerPair.first.input)]
                         smartSettingInputView?.let {
                             contextListenerInputMap[contextListenerPair.first] = it.getInput()
                         }
@@ -73,7 +73,7 @@ class SmartSettingCreatorViewModel : ViewModel(), SmartSettingCreatorPresenter {
                 ) {
                     val settingChangerInputMap = mutableMapOf<SettingChangerSchemaDBModel, Any>()
                     for(settingChangerPair in settingChangerTypes) {
-                        val smartSettingInputView = settingChangerInputViews[SettingChangerSchemaViewData(settingChangerPair.first.type, settingChangerPair.first.input)]
+                        val smartSettingInputView = settingChangerInputViews[SettingChangerSchemaViewData(settingChangerPair.first.type, settingChangerPair.first.description, settingChangerPair.first.input)]
                         smartSettingInputView?.let {
                             settingChangerInputMap[settingChangerPair.first] = it.getInput()
                         }

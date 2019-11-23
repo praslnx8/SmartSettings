@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <com.smartsettings.ai.custom.CustomMapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <TextView
+            android:id="@+id/descText"
+            style="@style/Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Enter your phone volume that to be changed" />
 
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="80dp"
-            android:scaleType="fitCenter"
-            android:contentDescription="@string/map_circle"
-            android:background="@drawable/map_circle"/>
 
-</FrameLayout>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="8dp">
+
+        <com.smartsettings.ai.custom.CustomMapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="80dp"
+                android:background="@drawable/map_circle"
+                android:contentDescription="@string/map_circle"
+                android:scaleType="fitCenter" />
+
+    </FrameLayout>
+
+</LinearLayout>

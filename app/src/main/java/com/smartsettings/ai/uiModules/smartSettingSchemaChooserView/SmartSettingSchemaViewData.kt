@@ -9,7 +9,7 @@ data class SmartSettingSchemaViewData(
 
     val name: String,
 
-    val description: String?,
+    val description: String,
 
     val settingChangerSchemas: List<SettingChangerSchemaViewData>,
 
@@ -20,10 +20,12 @@ data class SmartSettingSchemaViewData(
 
 data class SettingChangerSchemaViewData(
     val type:SettingChangerType,
+    val description: String,
     val input:String?
 )
 
 data class ContextListenerSchemaViewData(
     val type:ContextListenerType,
+    val description: String,
     val input:String?
 )

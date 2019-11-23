@@ -10,7 +10,7 @@ import com.smartsettings.ai.R
 import com.smartsettings.ai.data.actionData.VolumeActionData
 import kotlinx.android.synthetic.main.fragment_volume_action_input.*
 
-class PhoneVolumeInputFragment(val volumeActionData: VolumeActionData?) : Fragment(), SmartSettingInputView<VolumeActionData> {
+class PhoneVolumeInputFragment(private val volumeActionData: VolumeActionData?, val description : String) : Fragment(), SmartSettingInputView<VolumeActionData> {
 
     override fun getInput(): VolumeActionData {
         val input = inputText.text.toString()
@@ -42,5 +42,6 @@ class PhoneVolumeInputFragment(val volumeActionData: VolumeActionData?) : Fragme
         volumeActionData?.let {
             inputText.setText(it.volumeToBeSet.toString())
         }
+        descText.text = description
     }
 }

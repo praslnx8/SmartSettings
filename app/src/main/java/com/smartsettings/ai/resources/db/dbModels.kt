@@ -48,7 +48,7 @@ data class SmartSettingSchemaDBModel(
 
     @ColumnInfo(name = "title") val title: String,
 
-    @ColumnInfo(name = "description") val description: String?,
+    @ColumnInfo(name = "description") val description: String,
 
     @ColumnInfo(name = "setting_changer_schemas") val settingChangerSchemas: List<SettingChangerSchemaDBModel>,
 
@@ -62,6 +62,9 @@ data class SettingChangerSchemaDBModel(
     @SerializedName("type")
     val type : SettingChangerType,
 
+    @SerializedName("desc")
+    val description: String,
+
     @SerializedName("input")
     val input: String?
 )
@@ -70,6 +73,9 @@ data class SettingChangerSchemaDBModel(
 data class ContextListenerSchemaDBModel (
     @SerializedName("type")
     val type : ContextListenerType,
+
+    @SerializedName("desc")
+    val description: String,
 
     @SerializedName("input")
     val input: String?

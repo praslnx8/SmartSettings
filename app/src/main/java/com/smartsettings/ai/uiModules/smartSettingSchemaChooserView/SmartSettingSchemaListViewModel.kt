@@ -34,12 +34,14 @@ class SmartSettingSchemaListViewModel : ViewModel(),
                             smartSettingSchemaDbModel.settingChangerSchemas.asSequence().map { data ->
                                 SettingChangerSchemaViewData(
                                     data.type,
+                                    data.description,
                                     data.input
                                 )
                             }.toList(),
                             smartSettingSchemaDbModel.contextListenerSchemas.asSequence().map { data ->
                                 ContextListenerSchemaViewData(
                                     data.type,
+                                    data.description,
                                     data.input
                                 )
                             }.toList(),

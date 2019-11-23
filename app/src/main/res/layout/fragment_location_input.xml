@@ -1,41 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/screen_padding"
-        android:layout_marginEnd="@dimen/screen_padding"
         android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/descText"
-            style="@style/TextCardInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            tools:text="Enter your phone volume that to be changed" />
+    <include layout="@layout/view_divider" />
 
-
-    <androidx.cardview.widget.CardView
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:orientation="vertical">
 
-        <com.smartsettings.ai.custom.CustomMapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/map_circle"
+        <TextView
+                android:id="@+id/descText"
+                style="@style/TextCardInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@string/map_circle"
-                android:scaleType="centerCrop" />
+                tools:text="Enter your phone volume that to be changed" />
 
-    </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="8dp">
+
+            <com.smartsettings.ai.custom.CustomMapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/map_circle"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/map_circle" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
 </LinearLayout>

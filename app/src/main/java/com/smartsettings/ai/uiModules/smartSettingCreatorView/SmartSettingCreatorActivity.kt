@@ -83,12 +83,6 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
     override fun addInputView(contextListenerSchemaViewData: ContextListenerSchemaViewData): SmartSettingInputView<out Any> {
 
-        inputFragmentsLayout.addView(
-            LayoutInflater.from(this).inflate(
-                R.layout.view_divider,
-                null
-            )
-        )
         return if (contextListenerSchemaViewData.type == ContextListenerType.LOCATION_LISTENER) {
             val inputData = if (contextListenerSchemaViewData.input != null) {
                 Gson().fromJson(contextListenerSchemaViewData.input, LocationData::class.java)

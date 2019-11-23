@@ -21,6 +21,7 @@ import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SmartSetting
 import core.ContextListenerType
 import core.SettingChangerType
 import kotlinx.android.synthetic.main.activity_smart_setting_creator.*
+import kotlinx.android.synthetic.main.item_toolbar.*
 
 
 class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView {
@@ -31,7 +32,11 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
 
         const val SCHEMA_DATA_STR = "schema_data"
 
-        fun open(activity : Activity, smartSettingSchemaViewData: SmartSettingSchemaViewData, reqCode : Int) {
+        fun open(
+            activity: Activity,
+            smartSettingSchemaViewData: SmartSettingSchemaViewData,
+            reqCode: Int
+        ) {
             val intent = Intent(activity, SmartSettingCreatorActivity::class.java)
             intent.putExtra(SCHEMA_DATA_STR, Gson().toJson(smartSettingSchemaViewData))
             activity.startActivityForResult(intent, reqCode)
@@ -51,7 +56,8 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
         smartSettingCreatorPresenter.setView(this)
 
         val schemaDataStr = intent.getStringExtra(SCHEMA_DATA_STR)
-        smartSettingSchemaViewData = Gson().fromJson(schemaDataStr, SmartSettingSchemaViewData::class.java)
+        smartSettingSchemaViewData =
+            Gson().fromJson(schemaDataStr, SmartSettingSchemaViewData::class.java)
 
         activateButton.setOnClickListener {
             smartSettingCreatorPresenter.parseSchema()
@@ -61,23 +67,36 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
             smartSettingCreatorPresenter.setSchema(it)
         }
 
-        titleText.setOnClickListener {
+        settingTitleText.setOnClickListener {
             titleEditText.visibility = View.VISIBLE
-            titleText.visibility = View.GONE
+            settingTitleText.visibility = View.GONE
+        }
+
+        titleEditText.visibility = View.GONE
+        settingTitleText.visibility = View.VISIBLE
+
+        titleText.text = "Create Smart Setting"
+        backArrowButton.setOnClickListener {
+            onBackPressed()
         }
     }
 
     override fun addInputView(contextListenerSchemaViewData: ContextListenerSchemaViewData): SmartSettingInputView<out Any> {
 
-        inputFragmentsLayout.addView(LayoutInflater.from(this).inflate(R.layout.view_divider, null))
-
+        inputFragmentsLayout.addView(
+            LayoutInflater.from(this).inflate(
+                R.layout.view_divider,
+                null
+            )
+        )
         return if (contextListenerSchemaViewData.type == ContextListenerType.LOCATION_LISTENER) {
             val inputData = if (contextListenerSchemaViewData.input != null) {
                 Gson().fromJson(contextListenerSchemaViewData.input, LocationData::class.java)
             } else {
                 null
             }
-            val locationInputFragment = LocationInputFragment(inputData, contextListenerSchemaViewData.description)
+            val locationInputFragment =
+                LocationInputFragment(inputData, contextListenerSchemaViewData.description)
             supportFragmentManager.inTransaction {
                 add(
                     inputFragmentsLayout.id,
@@ -92,13 +111,22 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
     }
 
     override fun addInputView(settingChangerSchemaViewData: SettingChangerSchemaViewData): SmartSettingInputView<out Any> {
+
+        inputFragmentsLayout.addView(
+            LayoutInflater.from(this).inflate(
+                R.layout.view_divider,
+                null
+            )
+        )
+
         return if (settingChangerSchemaViewData.type == SettingChangerType.VOLUME_CHANGER) {
             val inputData = if (settingChangerSchemaViewData.input != null) {
                 Gson().fromJson(settingChangerSchemaViewData.input, VolumeActionData::class.java)
             } else {
                 null
             }
-            val phoneVolumeInputFragment = PhoneVolumeInputFragment(inputData, settingChangerSchemaViewData.description)
+            val phoneVolumeInputFragment =
+                PhoneVolumeInputFragment(inputData, settingChangerSchemaViewData.description)
             supportFragmentManager.inTransaction {
                 add(
                     inputFragmentsLayout.id,
@@ -116,10 +144,10 @@ class SmartSettingCreatorActivity : AppCompatActivity(), SmartSettingCreatorView
         return titleEditText.text.toString()
     }
 
-    override fun setSmartSettingData(title: String, description: String?) {
-        titleText.text = title
+    override fun setSmartSettingData(title: String, description: String) {
+        settingTitleText.text = title
         titleEditText.setText(title)
-        descText.text = description?:""
+        descText.text = description
     }
 
     override fun showErrorAndClose() {

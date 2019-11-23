@@ -10,12 +10,15 @@
             android:id="@+id/smartSettingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_padding"
-            app:cardCornerRadius="8dp">
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="@dimen/card_padding"
+            android:layout_marginBottom="@dimen/card_padding"
+            app:cardCornerRadius="@dimen/card_padding">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
             <LinearLayout
@@ -37,7 +40,8 @@
                         android:id="@+id/moreButton"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:background="@drawable/ic_more_vert_grey_24dp" />
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/ic_more_vert_white_24dp" />
 
 
             </LinearLayout>
@@ -54,7 +58,7 @@
 
                 <TextView
                         android:id="@+id/appliedText"
-                        style="@style/Text"
+                        style="@style/TextCard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
@@ -73,7 +77,7 @@
                     tools:visibility="gone">
 
                 <TextView
-                        style="@style/Text"
+                        style="@style/TextCard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
@@ -86,7 +90,7 @@
                     android:id="@+id/enableButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/colorAccent">
 
                 <LinearLayout
                         android:layout_width="match_parent"
@@ -96,7 +100,7 @@
                         android:padding="4dp">
 
                     <TextView
-                            style="@style/Text"
+                            style="@style/TextCard"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Enable"

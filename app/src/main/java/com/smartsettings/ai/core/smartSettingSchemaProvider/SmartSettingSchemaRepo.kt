@@ -1,6 +1,7 @@
 package com.smartsettings.ai.core.smartSettingSchemaProvider
 
 import cloud.ContextListenerCloudData
+import cloud.SchemaCategory
 import cloud.SettingChangerCloudData
 import cloud.SmartSettingSchemaCloudData
 import com.smartsettings.ai.core.smartSettings.SmartSetting
@@ -54,6 +55,7 @@ class SmartSettingSchemaRepo {
                 "",
                 "Mute volume at location",
                 "",
+                SchemaCategory.LOCATION,
                 listOf(SettingChangerSchemaDBModel(SettingChangerType.VOLUME_CHANGER, "", null)),
                 listOf(ContextListenerSchemaDBModel(ContextListenerType.LOCATION_LISTENER, "", null)),
                 SmartSetting.AND
@@ -109,6 +111,7 @@ class SmartSettingSchemaRepo {
                             smartSettingSchemaCloudData.id ?: "",
                             smartSettingSchemaCloudData.title,
                             smartSettingSchemaCloudData.description,
+                            smartSettingSchemaCloudData.category,
                             convertSettingChangerSchemaToDBModel(smartSettingSchemaCloudData.settingChangerSchemas),
                             convertContextListenerSchemaToDBModel(smartSettingSchemaCloudData.contextListenerSchemas),
                             smartSettingSchemaCloudData.conjunctionLogic

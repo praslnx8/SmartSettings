@@ -18,6 +18,7 @@
     <!--Text-->
     <style name="Text">
         <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/textSecondary</item>
     </style>
 
@@ -25,6 +26,12 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/textPrimary</item>
     </style>
+
+    <style name="TextHeading" parent="Text">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
 
     <style name="TextCardInfo" parent="Text">
         <item name="android:textSize">18sp</item>
@@ -36,8 +43,8 @@
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
-    <style name="TextCardTitle" parent="Text">
-        <item name="android:textSize">24sp</item>
+    <style name="TextCardTitle" parent="TextCard">
+        <item name="android:textSize">20sp</item>
         <item name="android:titleCondensed">true</item>
     </style>
     <style name="TextCard" parent="Text">
@@ -49,10 +56,15 @@
     <style name="Button">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ButtonRounded" parent="Button">
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
     <style name="ButtonRoundedAccent" parent="Button">
         <item name="android:background">@drawable/round_button_accent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
 
     </style>
     <!--Button-->

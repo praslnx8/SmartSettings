@@ -21,7 +21,7 @@ class LocationInputFragment(private val locationData: LocationData?, val descrip
         val leftLat = googleMap?.projection?.visibleRegion?.farLeft?.latitude ?: 0.0
         val leftLon = googleMap?.projection?.visibleRegion?.farLeft?.longitude ?: 0.0
 
-        val radius = LocationUtils.getDistanceInMetre(Pair(lat, lon), Pair(leftLat, leftLon))
+        val radius = LocationUtils.getDistanceInMetre(Pair(lat, lon), Pair(leftLat, leftLon))/2
 
         return LocationData(lat, lon, radius, locationData?.isExitOrIn?:false)
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.uiModules.smartSettingCreatorView.SmartSettingCreatorActivity
 import kotlinx.android.synthetic.main.activity_smart_setting_schema_list.*
+import kotlinx.android.synthetic.main.item_toolbar.*
 import java.lang.ref.WeakReference
 
 
@@ -35,6 +36,11 @@ class SmartSettingSchemaListActivity : AppCompatActivity(), SmartSettingSchemaVi
         setContentView(R.layout.activity_smart_setting_schema_list)
         smartSettingSchemaPresenter.setView(WeakReference(this))
         smartSettingSchemaPresenter.getSmartSettingSchemas()
+
+        titleText.text = "Choose Smart Setting"
+        backArrowButton.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun showSmartSettingSchemas(smartSettingSchemas: List<SmartSettingSchemaViewData>) {

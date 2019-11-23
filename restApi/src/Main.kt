@@ -30,7 +30,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import modules.schema.SmartSettingSchemaRepo
 
-fun main(args : Array<String>) {
+fun main(args: Array<String>) {
     embeddedServer(
         Netty,
         watchPaths = listOf(""),
@@ -46,9 +46,9 @@ fun Application.main() {
         basic(name = "adminAuth") {
             realm = "Admin authentication"
             validate { credentials ->
-                if(credentials.name == "admin" && credentials.password == "admin!!!") {
+                if (credentials.name == "admin" && credentials.password == "admin!!!") {
                     BackendUser.AdminUser("admin")
-                } else if(credentials.name == "guest"){
+                } else if (credentials.name == "guest") {
                     BackendUser.Guest(listOf())
                 } else {
                     null
@@ -66,24 +66,35 @@ fun Application.main() {
             call.respondText("Smart Setting API Working! Success.", ContentType.Text.Plain)
         }
         get("/schema") {
-            val smartSettingSchemas = SmartSettingSchemaRepo().getSmartSettingSchemas()
-            if(smartSettingSchemas.isNotEmpty()) {
-                call.respond(smartSettingSchemas)
-            } else {
-                call.respond(HttpStatusCode.NoContent)
+            try {
+                val smartSettingSchemas = SmartSettingSchemaRepo().getSmartSettingSchemas()
+                if (smartSettingSchemas.isNotEmpty()) {
+                    call.respond(smartSettingSchemas)
+                } else {
+                    call.respond(HttpStatusCode.NoContent)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                call.respond(status = HttpStatusCode.InternalServerError, message = "")
             }
         }
         authenticate("adminAuth") {
 
 
             post("/schema") {
-                val backendUser = call.authentication.principal<BackendUser>()
-                if(backendUser is BackendUser.AdminUser){
-                    val smartSettingSchema = call.receive<SmartSettingSchemaCloudData>()
-                    SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
-                    call.respond(HttpStatusCode.OK)
-                } else {
-                    call.respond(status = HttpStatusCode.Unauthorized, message = "")
+
+                try {
+                    val backendUser = call.authentication.principal<BackendUser>()
+                    if (backendUser is BackendUser.AdminUser) {
+                        val smartSettingSchema = call.receive<SmartSettingSchemaCloudData>()
+                        SmartSettingSchemaRepo().insertSmartSettingSchema(smartSettingSchema)
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(status = HttpStatusCode.Unauthorized, message = "")
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    call.respond(status = HttpStatusCode.InternalServerError, message = "")
                 }
             }
         }

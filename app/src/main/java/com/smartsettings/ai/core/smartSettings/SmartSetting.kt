@@ -40,13 +40,18 @@ class SmartSetting(
 
     fun setEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
+        reset()
+    }
+
+    private fun reset() {
+        changesAppliedTime = 0L
     }
 
     fun isEnabled(): Boolean {
         return isEnabled
     }
 
-    fun isChangesApplied(): Boolean {
+    private fun isChangesApplied(): Boolean {
         return changesAppliedTime > 0L
     }
 

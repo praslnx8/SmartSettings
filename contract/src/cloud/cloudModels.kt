@@ -15,6 +15,9 @@ data class SmartSettingSchemaCloudData(
     @SerializedName("description")
     val description: String,
 
+    @SerializedName("category")
+    val category: SchemaCategory,
+
     @SerializedName("settingChangerSchemas")
     val settingChangerSchemas: List<SettingChangerCloudData>,
 
@@ -27,6 +30,7 @@ data class SmartSettingSchemaCloudData(
     constructor(
         title: String,
         description: String,
+        category: SchemaCategory,
         settingChangerSchemas: List<SettingChangerCloudData>,
         contextListenerSchemas: List<ContextListenerCloudData>,
         conjunctionLogic: String
@@ -34,6 +38,7 @@ data class SmartSettingSchemaCloudData(
         null,
         title,
         description,
+        category,
         settingChangerSchemas,
         contextListenerSchemas,
         conjunctionLogic
@@ -66,3 +71,8 @@ data class ContextListenerCloudData(
     @SerializedName("input")
     val input: String?
 )
+
+enum class SchemaCategory {
+
+    LOCATION
+}

@@ -5,6 +5,7 @@ import android.media.AudioManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.smartsettings.ai.core.SmartSettingRepository
 import com.smartsettings.ai.core.smartSettingCreator.SmartSettingCreator
+import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaProvider
 import com.smartsettings.ai.core.smartSettingSchemaProvider.SmartSettingSchemaRepo
 import com.smartsettings.ai.di.AbstractDependencyInjector
 import com.smartsettings.ai.resources.cloud.ApiService
@@ -45,6 +46,10 @@ abstract class TestAppInjector : AbstractDependencyInjector() {
     }
 
     override fun provideSmartSettingSchemaDao(): SmartSettingSchemaDao {
+        throw IllegalArgumentException("Should be overrided by child class")
+    }
+
+    override fun provideSmartSettingSchemaProvider(): SmartSettingSchemaProvider {
         throw IllegalArgumentException("Should be overrided by child class")
     }
 }

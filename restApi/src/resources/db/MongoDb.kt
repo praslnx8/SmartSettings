@@ -2,6 +2,7 @@ package resources.db
 
 import ApplicationConfig
 import cloud.ContextListenerCloudData
+import cloud.SchemaCategory
 import cloud.SettingChangerCloudData
 import cloud.SmartSettingSchemaCloudData
 import com.mongodb.MongoClient
@@ -73,6 +74,7 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         writer?.writeStartDocument()
         writer?.writeString("title", value?.title)
         writer?.writeString("description", value?.description)
+        writer?.writeString("category", value?.category?.name)
         writer?.writeString("conjunctionLogic", value?.conjunctionLogic)
         writer?.writeStartArray("contextListenerSchemas")
         for (contextListenerSchema in value?.contextListenerSchemas ?: listOf()) {
@@ -104,6 +106,7 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
         val id = reader?.readObjectId().toString()
         val title = reader?.readString("title") ?: ""
         val description = reader?.readString("description")?:""
+        val category = SchemaCategory.valueOf(reader?.readString("category")?:"")
         val conjunctionLogic = reader?.readString("conjunctionLogic") ?: ""
         val contextListenerSchemas = mutableListOf<ContextListenerCloudData>()
         reader?.readStartArray()
@@ -133,6 +136,7 @@ class ResponseCodec : Codec<SmartSettingSchemaCloudData> {
             id,
             title,
             description,
+            category,
             settingChangerSchemas,
             contextListenerSchemas,
             conjunctionLogic

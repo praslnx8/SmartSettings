@@ -1,6 +1,7 @@
 package com.smartsettings.ai.resources.db
 
 import androidx.room.TypeConverter
+import cloud.SchemaCategory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -45,6 +46,18 @@ class ListConverter {
     @TypeConverter
     fun fromArrayList(contextListenerDBModels: List<String>): String {
         return Gson().toJson(contextListenerDBModels)
+    }
+}
+
+class CategoryConverter {
+    @TypeConverter
+    fun fromString(value: String): SchemaCategory {
+        return  SchemaCategory.valueOf(value)
+    }
+
+    @TypeConverter
+    fun fromArrayList(schemaCategory: SchemaCategory): String {
+        return schemaCategory.name
     }
 }
 

@@ -3,6 +3,7 @@ package com.smartsettings.ai.resources.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cloud.SchemaCategory
 import com.google.gson.annotations.SerializedName
 import core.ContextListenerType
 import core.SettingChangerType
@@ -49,6 +50,8 @@ data class SmartSettingSchemaDBModel(
     @ColumnInfo(name = "title") val title: String,
 
     @ColumnInfo(name = "description") val description: String,
+
+    @ColumnInfo(name = "category") val category: SchemaCategory,
 
     @ColumnInfo(name = "setting_changer_schemas") val settingChangerSchemas: List<SettingChangerSchemaDBModel>,
 

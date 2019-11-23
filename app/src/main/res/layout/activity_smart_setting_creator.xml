@@ -13,10 +13,8 @@
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/detailToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+        <include
+                layout="@layout/item_toolbar"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -26,7 +24,6 @@
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/screen_padding"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -41,10 +38,13 @@
 
                 <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/screen_padding"
+                        android:layout_marginTop="@dimen/screen_padding"
+                        android:layout_marginEnd="@dimen/screen_padding">
 
                     <TextView
-                            android:id="@+id/titleText"
+                            android:id="@+id/settingTitleText"
                             style="@style/TextItemHeading"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -63,16 +63,16 @@
                 </FrameLayout>
 
                 <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
+                        android:layout_width="0dp"
+                        android:layout_height="16dp" />
 
                 <TextView
                         android:id="@+id/descText"
+                        style="@style/Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/screen_padding"
+                        android:layout_marginEnd="@dimen/screen_padding"
                         tools:text="Control your volume based on device location such as lower your phone volume when entering home or work location" />
 
 
@@ -82,12 +82,16 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
 
+               <include layout="@layout/view_divider" />
+
                 <Button
                         android:id="@+id/activateButton"
-                        style="@style/ButtonRoundedAccent"
+                        style="@style/ButtonRounded"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/screen_padding"
+                        android:layout_marginStart="@dimen/screen_padding"
+                        android:layout_marginEnd="@dimen/screen_padding"
+                        android:layout_marginBottom="@dimen/screen_padding"
                         android:text="Done" />
 
             </LinearLayout>

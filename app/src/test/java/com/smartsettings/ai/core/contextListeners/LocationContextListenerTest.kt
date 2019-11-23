@@ -1,24 +1,25 @@
 package com.smartsettings.ai.core.contextListeners
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Looper
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.smartsettings.ai.TestAppInjector
 import com.smartsettings.ai.data.criteriaData.LocationData
 import com.smartsettings.ai.di.DependencyProvider
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 class LocationContextListenerTest {
 
-    val mockFusedLocationProviderClient = mock(FusedLocationProviderClient::class.java)
+    val mockFusedLocationProviderClient: FusedLocationProviderClient = mock(FusedLocationProviderClient::class.java)
+    val mockContext : Context = mock(Context::class.java)
 
     @Before
     fun setup() {
@@ -28,7 +29,7 @@ class LocationContextListenerTest {
             }
 
             override fun provideContext(): Context {
-                return mock(Context::class.java)
+                return mockContext
             }
         })
     }
@@ -38,6 +39,17 @@ class LocationContextListenerTest {
         val locationData = mock(LocationData::class.java)
         Assert.assertNotNull(LocationContextListener(locationData).context)
     }
+
+
+    @Test
+    fun check_is_listening_permission_granted_returns_true() {
+        val locationData = mock(LocationData::class.java)
+
+        Mockito.`when`(mockContext.checkPermission(any(), any(), any())).thenReturn(PackageManager.PERMISSION_GRANTED)
+
+        assert(LocationContextListener(locationData).isListeningPermissionGranted ())
+    }
+
 
     @Test
     fun start_listening_to_context_should_call_fused_location_provider() {
@@ -51,6 +63,6 @@ class LocationContextListenerTest {
 
 
         Mockito.verify(mockFusedLocationProviderClient)
-            .requestLocationUpdates(eq(locationRequest), any(LocationCallback::class.java), eq(Looper.getMainLooper()))
+            .requestLocationUpdates(eq(locationRequest), any(), eq(Looper.getMainLooper()))
     }
 }

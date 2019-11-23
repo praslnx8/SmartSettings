@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsettings.ai.R
 import com.smartsettings.ai.runner.MainForeGroundService
 import com.smartsettings.ai.uiModules.smartSettingSchemaChooserView.SmartSettingSchemaListActivity
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.fragment_smart_settings_view.*
+import kotlinx.android.synthetic.main.item_toolbar.*
 import java.lang.ref.WeakReference
 
 class SmartSettingViewFragment : Fragment(), SmartSettingView {
@@ -27,24 +27,28 @@ class SmartSettingViewFragment : Fragment(), SmartSettingView {
     })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_smart_settings_view, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         smartSettingViewPresenter.setHomeView(WeakReference(this))
         smartSettingViewPresenter.getSmartSettings(this)
 
-
         context?.let { context ->
             MainForeGroundService.startService(context)
-            view.recyclerView.layoutManager = LinearLayoutManager(context)
-            view.recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.adapter = adapter
 
 
-            view.fab.setOnClickListener {
+            fab.setOnClickListener {
                 SmartSettingSchemaListActivity.open(context)
             }
         }
 
-        return view
+        backArrowButton.visibility = View.GONE
+        titleText.text = "SmartSettings"
     }
 
     override fun showSmartSettings(smartSettingViewDataList: List<SmartSettingViewData>) {

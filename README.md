@@ -1,7 +1,7 @@
 # SmartSettings 
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/prasilabs/smartsettings)  ![GitHub issues](https://img.shields.io/github/issues/praslnx8/smartsettings) ![GitHub](https://img.shields.io/github/license/praslnx8/smartsettings)   ![GitHub last commit](https://img.shields.io/github/last-commit/praslnx8/smartsettings)
 
-We are following Model Driven Development here.
+We are following Domain Driven Design here.
 
 SmartSettings Android app code and Ktor API Code.
 
